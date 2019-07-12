@@ -2121,6 +2121,7 @@ BOOL    GIF_GetInfo(HGIF hGIF,IMAGE_INFO *Info);
 UINT    GIF_GetFrameCount(HGIF hGIF);
 GIF_DELAY    GIF_GetFrameDelay(HGIF gif_dec,UINT frame_idx);
 GIF_DELAY    GIF_DrawFrame(HDC hdc,int x,int y,COLORREF bk_color,HGIF hGIF,UINT frame_idx);
+LRESULT DrawFrame(HDC hdc, HWND hwnd);
 void    GIF_Close(HGIF hGIF);
 
 

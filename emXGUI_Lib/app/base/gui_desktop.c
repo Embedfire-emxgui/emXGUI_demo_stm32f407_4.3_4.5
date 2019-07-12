@@ -140,7 +140,7 @@ static	void	_EraseBackgnd(HDC hdc,const RECT *lprc,HWND hwnd)
   rc.x = 360;
   rc.w = 100;
   rc.h = 40;
-  rc.y = 480-45-25;
+  rc.y = 480-45-22;
   SetPenColor(hdc, MapRGB(hdc, 250, 250, 250));
   DrawRoundRect(hdc, &rc, MIN(rc.w, rc.h)>>1);
 //  rc.y -= 20;

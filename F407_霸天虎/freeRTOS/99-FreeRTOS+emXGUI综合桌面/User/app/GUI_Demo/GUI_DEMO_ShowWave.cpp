@@ -1143,7 +1143,7 @@ static	LRESULT	WinProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
 			rc_label.x =LEFT_OFFSET-10;
       rc_label.h =64;
 			rc_label.y =rc_main.h-rc_label.h;
-			rc_label.w =620-LEFT_OFFSET-RIGHT_OFFSET+20;
+			rc_label.w =620-LEFT_OFFSET-RIGHT_OFFSET+25;
 
 			rc_button.w =150;
 			rc_button.h =rc_main.h-80;
@@ -1165,7 +1165,7 @@ static	LRESULT	WinProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
         
         rc.w =70;
         rc.h =70;
-        rc.x = 730;
+        rc.x = 784;
         rc.y =0;  
              
         /* 关闭按钮 */  
@@ -1318,7 +1318,7 @@ static	LRESULT	WinProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
 					
           rc.x =0;
 					rc.y =40;
-					rc.w =620;
+					rc.w =670;
 					rc.h =rc_main.h-rc.y-70;
 					////创建"波形显示"的控件.
 					CreateWindow(&wcex,L"---",WS_CLIPCHILDREN|WS_VISIBLE,rc.x,rc.y,rc.w,rc.h,hwnd,ID_WAVE,NULL,NULL);

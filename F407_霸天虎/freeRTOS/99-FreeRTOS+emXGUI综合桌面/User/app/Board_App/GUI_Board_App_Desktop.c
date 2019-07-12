@@ -47,7 +47,7 @@ static void dummy(void *p)
 }
 //extern void GUI_DEMO_DrawJPEG(void);
 //extern void App_LED_DIALOG(void);
-//extern void	GUI_App_Desktop(void);
+extern void	GUI_App_Desktop(void);
 //extern void App_GUI_Tutorial_DEMO(void);
 //extern void	GUI_MUSICPLAYER_DIALOG(void);
 //extern void	GUI_VideoPlayer_DIALOG(void);
@@ -129,30 +129,30 @@ static const struct __obj_list menu_list_1[] = {
     //L"Radiobox",		app_1, 		NULL,	 	RGB_WHITE,			dummy,
     //L"Textbox",		app_1, 		NULL,	 	RGB_WHITE,			dummy,
 
-      L"GUI应用",		NULL, 	L"J", 	RGB_WHITE,			dummy,//GUI_App_Desktop,//
-      L"MP3播放器",		NULL,	  L"I", RGB_WHITE,				dummy,//GUI_MUSICPLAYER_DIALOG,
-      L"视频播放器",		NULL,	  L"D", RGB_WHITE,				dummy,//GUI_VideoPlayer_DIALOG,
+      L"GUI应用",	   NULL, 	  L"J", RGB_WHITE,			  GUI_App_Desktop,//dummy,//
+      L"MP3播放器",  NULL,	  L"I", RGB_WHITE,				dummy,//GUI_MUSICPLAYER_DIALOG,
+      L"视频播放器", NULL,	  L"D", RGB_WHITE,				dummy,//GUI_VideoPlayer_DIALOG,
 
-      L"RGB彩灯",		NULL,	  L"L", RGB_WHITE,				dummy,//GUI_LED_DIALOG,
-      L"摄像头",		NULL,	  L"M",RGB_WHITE, 				dummy,//GUI_Camera_DIALOG,
+      L"RGB彩灯",		 NULL,	  L"L", RGB_WHITE,				dummy,//GUI_LED_DIALOG,
+      L"摄像头",		 NULL,	  L"M", RGB_WHITE, 				dummy,//GUI_Camera_DIALOG,
 
-      L"图片浏览器",	NULL, 	L"G", RGB_WHITE,				dummy,//GUI_PicViewer_Dialog,
-      L"温湿度",	NULL,   L"O", RGB_WHITE,				dummy,//
-      L"电压表",		NULL,	  L"W", RGB_WHITE,				dummy,  
-      L"模拟U盘",	NULL,	  L"N", RGB_WHITE,				dummy, 
-      L"陀螺仪",	  NULL,	  L"R", 	RGB_WHITE,			dummy,
+      L"图片浏览器", NULL,  	L"G", RGB_WHITE,				dummy,//GUI_PicViewer_Dialog,
+      L"温湿度",	   NULL,    L"O", RGB_WHITE,				dummy,//
+      L"电压表",		 NULL,	  L"W", RGB_WHITE,				dummy,  
+      L"模拟U盘",	   NULL,	  L"N", RGB_WHITE,				dummy, 
+      L"陀螺仪",	   NULL,	  L"R", RGB_WHITE,			  dummy,
 
-      L"以太网",		NULL,	  L"Q", RGB_WHITE,				dummy,
-      L"WiFi",		NULL,	  L"P", RGB_WHITE,				dummy,
-      L"游戏",	NULL,	  L"S", RGB_WHITE,				dummy,
+      L"以太网",		 NULL,	  L"Q", RGB_WHITE,				dummy,
+      L"WiFi",		   NULL,	  L"P", RGB_WHITE,				dummy,
+      L"游戏",	     NULL,	  L"S", RGB_WHITE,				dummy,
 
-      L"电话",	NULL, 	L"T", RGB_WHITE,				dummy,
-      L"短信",	NULL,   L"U", RGB_WHITE,				dummy,
-      L"二维码",	NULL,	  L"V", RGB_WHITE,				dummy,
+      L"电话",	     NULL, 	  L"T", RGB_WHITE,				dummy,
+      L"短信",	     NULL,    L"U", RGB_WHITE,				dummy,
+      L"二维码",	   NULL,	  L"V", RGB_WHITE,				dummy,
 
 
-        L"时钟",		NULL,	  L"H", RGB_WHITE,				dummy,
-        L"录音机",	  NULL,	  L"Y", 	RGB_WHITE,			dummy,
+      L"时钟",		   NULL,	  L"H", RGB_WHITE,				dummy,
+      L"录音机",	   NULL,	  L"Y", RGB_WHITE,		  	dummy,
 //        L"Checkbox",	NULL,	  L"J", RGB_WHITE,				dummy,
 //            L"Checkbox",	NULL, 	L"D", RGB_WHITE,				dummy,
 //        L"Radiobox",	NULL,   L"E", RGB_WHITE,				dummy,
@@ -171,7 +171,7 @@ static const struct __obj_list menu_list_1[] = {
 //        L"Hello",		NULL,	  L"H", RGB_WHITE,				dummy,
 //        L"Button",	  NULL,	  L"I", 	RGB_WHITE,			dummy,
 //        L"Checkbox",	NULL,	  L"J", RGB_WHITE,				
-        L"FlashWriter",	  NULL,	  L"b", 	RGB_WHITE,		dummy,//	GUI_RES_Writer_Dialog,
+      L"FlashWriter",	NULL,	  L"b", 	RGB_WHITE,		  dummy,//	GUI_RES_Writer_Dialog,
 
         NULL,	NULL,	NULL,NULL, NULL,//结束标志!
 
@@ -220,13 +220,12 @@ static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
     //	DrawCircle(hdc,rc.x+rc.w/2,rc.x+rc.w/2,rc.w/2); //画矩形外框
 
       /* 使用控制图标字体 */
-//    SetFont(hdc, controlFont_64);
+    SetFont(hdc, controlFont_64);
     //  SetTextColor(hdc,MapRGB(hdc,255,255,255));
 
     GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字
 
     DrawText(hdc, wbuf, -1, &rc, DT_VCENTER | DT_CENTER);//绘制文字(居中对齐方式)
-
 
     /* 恢复默认字体 */
     SetFont(hdc, defaultFont);
@@ -243,7 +242,6 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
         list_menu_cfg_t cfg;
         RECT rc;
-        HWND chwnd;
 
         //			win_pos =0;
         //			GetTime(&hour,&min,&sec);
@@ -257,14 +255,14 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
               //ListMenu控件，需要在创建时传入一个 list_menu_cfg_t 的结构体参数.
         cfg.list_objs = menu_list_1; //指定list列表.
-        cfg.x_num = 4; //水平项数.
+        cfg.x_num = 5; //水平项数.
         cfg.y_num = 3; //垂直项数.
         cfg.bg_color = COLOR_DESKTOP_BACK_GROUND_HEX;
 
-        chwnd = CreateWindow(&wcex_ListMenu,
+        CreateWindow(&wcex_ListMenu,
                                 L"ListMenu1",
                                 WS_VISIBLE | LMS_PAGEMOVE,
-                                rc.x + 60, rc.y + 20, rc.w - 120, rc.h - 10,
+                                rc.x + 65, rc.y + 20, rc.w - 130, rc.h - 10,
                                 hwnd,
                                 ID_LIST_1,
                                 NULL,
@@ -273,12 +271,12 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         ///* 上一步按钮 */
         wnd = CreateWindow(BUTTON, L"L", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
             0, (rc.h - 30) / 2, 70, 70, hwnd, ICON_VIEWER_ID_PREV, NULL, NULL);
-//        SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
+        SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
 
          /* 下一步按钮 */
         wnd = CreateWindow(BUTTON, L"K", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
             rc.w - 65, (rc.h - 30) / 2, 70, 70, hwnd, ICON_VIEWER_ID_NEXT, NULL, NULL);
-//        SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
+        SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
 
         SetTimer(hwnd, 1, 50, TMR_START, NULL);
     }

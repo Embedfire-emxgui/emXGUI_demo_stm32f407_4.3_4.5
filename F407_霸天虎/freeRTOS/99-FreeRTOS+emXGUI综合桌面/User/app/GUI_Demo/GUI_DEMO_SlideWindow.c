@@ -49,11 +49,11 @@ extern unsigned int res_slogan_size(void);
   * @param  hwnd 窗口对象句柄
   * @retval 无
   */
+//  
 static void CreateSlogan(HDC hdc, const RECT *lprc, HWND hwnd)
 {
 	RECT rc;
 	JPG_DEC *dec;
-
 	const wchar_t *p_header;
 	const wchar_t *p_string;
 
@@ -132,7 +132,7 @@ static void CreateSlogan(HDC hdc, const RECT *lprc, HWND hwnd)
       dec = JPG_Open(jpeg_buf, jpeg_size);
 
       /* 绘制至内存对象 */
-      JPG_Draw(hdc, 480, HEAD_INFO_HEIGHT + 40, dec);
+      JPG_Draw(hdc, 520, HEAD_INFO_HEIGHT + 20, dec);
 
       /* 关闭JPG_DEC句柄 */
       JPG_Close(dec);
@@ -160,7 +160,7 @@ static LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	RECT rc;
 	static int win_pos = 0;
-	static HDC hdc_mem = NULL;
+	HDC hdc_mem = NULL;
 
 	switch (msg)
 	{
@@ -168,12 +168,14 @@ static LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		GetClientRect(hwnd, &rc); //获得窗口的客户区矩形
 
-  /* 创建内存对象 */
-		hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
+//    /* 创建内存对象 */
+//		hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
 
-		/* 绘制slogan到内存设备 */
-		CreateSlogan(hdc_mem, NULL, hwnd);
+//		/* 绘制slogan到内存设备 */
+//		CreateSlogan(hdc_mem, NULL, hwnd);
 
+//    DeleteDC(hdc_mem);
+//    
 		SetTimer(hwnd, 1, 5, TMR_START, NULL);
 
 	}
@@ -206,7 +208,7 @@ static LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			if (rc.y > 0)
 			{
-				OffsetRect(&rc, 0, -(rc.h >> 3));
+				OffsetRect(&rc, 0, -480);//-(rc.h >> 2));
 				rc.y = MAX(rc.y, 0);
 				MoveWindow(hwnd, rc.x, rc.y, rc.w, rc.h, TRUE);
 			}
@@ -263,17 +265,20 @@ static LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		PAINTSTRUCT ps;
 		HDC hdc;
-		//			WCHAR wbuf[128];
-		RECT rc0;
+    GetClientRect(hwnd, &rc);       // 获得窗口的客户区矩形
+    hdc = BeginPaint(hwnd, &ps);    // 开始画图
+    /* 创建内存对象 */
+		hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
+    
+    /* 绘制slogan到内存设备 */
+		CreateSlogan(hdc_mem, NULL, hwnd);
 
-		hdc = BeginPaint(hwnd, &ps);
-
-		////用户的绘制内容...
-		GetClientRect(hwnd, &rc0);
 		/* 把内存对象绘制至屏幕 */
-		BitBlt(hdc, 0, 0, rc0.w, rc0.h, hdc_mem, 0, 0, SRCCOPY);
-
-		EndPaint(hwnd, &ps);
+		BitBlt(hdc, 0, 0, rc.w, rc.h, hdc_mem, 0, 0, SRCCOPY);
+    
+		EndPaint(hwnd, &ps);     // 结束画图
+    
+    DeleteDC(hdc_mem);
 		//////////
 	}
 	break;
@@ -332,7 +337,7 @@ void	GUI_DEMO_SlideWindow(void *p)
 		&wcex,
 		L"SlideWindow",
 		//								/*WS_MEMSURFACE|*/WS_CAPTION|WS_DLGFRAME|WS_BORDER|WS_CLIPCHILDREN,
-		/*WS_MEMSURFACE|*/WS_CLIPCHILDREN|WS_OVERLAPPED,
+		/*WS_MEMSURFACE|*/WS_CLIPCHILDREN|WS_OVERLAPPED|WS_VISIBLE,
 
 		0, GUI_YSIZE, GUI_XSIZE, GUI_YSIZE,
 		GetDesktopWindow(), ID_SLIDE_WINDOW, NULL, NULL);

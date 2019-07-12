@@ -82,7 +82,7 @@ void* GUI_VMEM_Alloc(u32 size)
 	{
 	    GUI_ERROR("GUI_VMEM_Alloc,no enough space(for %d byte)",size);
 	}
-  
+//  printf("…Í«Î£∫%d,  £”‡£∫%d\n",size,1024*1024 - heap_vmem.used_cur);
 	return p;
 #endif
 }
@@ -98,6 +98,7 @@ void GUI_VMEM_Free(void *p)
 	GUI_MutexLock(mutex_vmem,5000);
 	x_heap_free(&heap_vmem,p);
 	GUI_MutexUnlock(mutex_vmem);
+//  printf(" Õ∑≈£¨  £”‡£∫%d\n", 1024*1024 - heap_vmem.used_cur);
 #endif
 
 }
@@ -153,7 +154,6 @@ void	GUI_MEM_Free(void *p)
 */
 void*	GUI_GRAM_Alloc(U32 size)
 {
-  GUI_DEBUG("…Í«Î£∫%d",size);
 	return GUI_VMEM_Alloc(size);
 }
 

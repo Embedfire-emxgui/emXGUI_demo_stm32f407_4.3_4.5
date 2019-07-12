@@ -203,7 +203,7 @@ static	LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
   return	WM_NULL;                                     
 }
 
-extern void 	GUI_Board_App_Desktop(void);
+extern void 	GUI_Board_App_Desktop(void *p);
 extern void	GUI_RES_Writer_Dialog(void *param);
 extern void	GUI_DEMO_SlideWindow(void *p);
 
@@ -304,12 +304,12 @@ void	GUI_Boot_Interface_Dialog(void *param)
                               NULL, /* 任务入口函数参数 */
                               5,    /* 任务的优先级 */
                               10); /* 任务时间片，部分任务不支持 */
-//       GUI_Thread_Create(GUI_Board_App_Desktop,  /* 任务入口函数 */
-//                              "GUI_APP",/* 任务名字 */
-//                              3*1024,  /* 任务栈大小 */
-//                              NULL, /* 任务入口函数参数 */
-//                              5,    /* 任务的优先级 */
-//                              10); /* 任务时间片，部分任务不支持 */
+       GUI_Thread_Create(GUI_Board_App_Desktop,  /* 任务入口函数 */
+                              "GUI_APP",/* 任务名字 */
+                              4*1024,  /* 任务栈大小 */
+                              NULL, /* 任务入口函数参数 */
+                              5,    /* 任务的优先级 */
+                              10); /* 任务时间片，部分任务不支持 */
      }   
     /* 部分操作系统在退出任务函数时，必须删除线程自己 */
     GUI_Thread_Delete(GUI_GetCurThreadHandle());

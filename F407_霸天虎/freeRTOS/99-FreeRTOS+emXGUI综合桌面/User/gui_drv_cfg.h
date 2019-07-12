@@ -148,14 +148,13 @@
   /* ICON使用的字体 */
   #define   GUI_ICON_FONT_50         "APP_ICON_50_4BPP.xft"
   #define   GUI_ICON_FONT_252         "app_icon_252_252_4BPP.xft"
+  #define   GUI_ICON_FONT_100     "APP_ICON_100_100_4BPP.xft"
   /* 控制ICON使用的字体 */
-  #define   GUI_CONTROL_FONT_12      "CONTROL_ICON_48_48_4BPP.xft"
+  #define   GUI_CONTROL_FONT_48      "CONTROL_ICON_48_48_4BPP.xft"
   #define   GUI_CONTROL_FONT_32      "CONTROL_ICON_32_32_4BPP.xft"
-
   #define   GUI_CONTROL_FONT_72      "CONTROL_ICON_72_72_4BPP.xft"
-  #define   GUI_CONTROL_FONT_100     "CONTROL_ICON_100_100_4BPP.xft"
-  #define   GUI_CONTROL_FONT_48      "CONTROL_ICON_48_4BPP.xft"
-  #define   GUI_CONTROL_FONT_32      "CONTROL_ICON_32_32_4BPP.xft"
+//  #define   GUI_CONTROL_FONT_48      "CONTROL_ICON_48_4BPP.xft"
+  #define   GUI_CONTROL_FONT_64      "CONTROL_ICON_64_64_4BPP.xft"
   #define   GUI_CONTROL_FONT_24      "CONTROL_ICON_24_4BPP.xft"
 #endif
 

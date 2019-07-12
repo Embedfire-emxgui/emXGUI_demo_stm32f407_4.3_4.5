@@ -66,6 +66,7 @@ HFONT iconFont_252 =NULL;
 HFONT controlFont_12 =NULL;
 HFONT controlFont_24 =NULL;
 HFONT controlFont_48 =NULL;
+HFONT controlFont_64 =NULL;
 HFONT controlFont_32 =NULL;
 HFONT controlFont_16 =NULL;
 HFONT controlFont_72 =NULL;
@@ -252,10 +253,12 @@ HFONT GUI_Init_Extern_Font(void)
 #else
    /* 使用流设备加载字体，按需要读取 */
   {
-    defaultFont =GUI_Init_Extern_Font_Stream(GUI_DEFAULT_EXTERN_FONT);  
-    controlFont_72 =GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_72); 
-    logoFont =GUI_Init_Extern_Font_Stream( GUI_LOGO_FONT);
-    iconFont_100 =GUI_Init_Extern_Font_Stream( GUI_CONTROL_FONT_100);
+    defaultFont    = GUI_Init_Extern_Font_Stream( GUI_DEFAULT_EXTERN_FONT);  
+    controlFont_72 = GUI_Init_Extern_Font_Stream( GUI_CONTROL_FONT_72); 
+    logoFont       = GUI_Init_Extern_Font_Stream( GUI_LOGO_FONT);
+    iconFont_100   = GUI_Init_Extern_Font_Stream( GUI_ICON_FONT_100);
+    controlFont_64 = GUI_Init_Extern_Font_Stream( GUI_CONTROL_FONT_64);
+    controlFont_48 = GUI_Init_Extern_Font_Stream( GUI_CONTROL_FONT_48);
   }
 #endif 
  
