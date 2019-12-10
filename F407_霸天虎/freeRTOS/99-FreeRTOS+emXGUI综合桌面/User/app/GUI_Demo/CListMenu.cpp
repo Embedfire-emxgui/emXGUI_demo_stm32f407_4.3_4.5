@@ -1001,15 +1001,16 @@ LRESULT	CListMenu::OnPaint(HWND hwnd)
     RECT rc;
 
     GetClientRect(hwnd, &rc);
-    hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
-    DrawFrame(hdc_mem, hwnd);
+//    hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
+
 
 
     hdc = BeginPaint(hwnd, &ps);
-    BitBlt(hdc, 0, 0, rc_main.w, rc_main.h, hdc_mem, 0, 0, SRCCOPY);
+	  DrawFrame(hdc, hwnd);
+//    BitBlt(hdc, 0, 0, rc_main.w, rc_main.h, hdc_mem, 0, 0, SRCCOPY);
     EndPaint(hwnd, &ps);
 
-    DeleteDC(hdc_mem);
+//    DeleteDC(hdc_mem);
     return TRUE;
 }
 

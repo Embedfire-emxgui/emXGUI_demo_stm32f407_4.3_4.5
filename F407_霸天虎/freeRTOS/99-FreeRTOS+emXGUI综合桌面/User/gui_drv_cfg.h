@@ -27,39 +27,39 @@
 //#define	LCD_FORMAT	  COLOR_FORMAT_XRGB8888
 
 /* 当前使用液晶的宽高 */
-#define	LCD_XSIZE	    854
-#define	LCD_YSIZE	    480 
+#define	LCD_XSIZE	        800//854
+#define	LCD_YSIZE	        480 
 
 /* 使用最大液晶屏的宽高，用于计算显存空间 */
-#define	LCD_MAX_XSIZE	    854//LCD_MAX_PIXEL_WIDTH
+#define	LCD_MAX_XSIZE	    800//LCD_MAX_PIXEL_WIDTH
 #define	LCD_MAX_YSIZE	    480//LCD_MAX_PIXEL_HEIGHT
 
 /* 使用的LCD种类数，方便支持不同的分辨率，使用不同的字体 */
 #define  GUI_LCD_TYPE_NUM     LCD_TYPE_NUM
 
 //屏幕旋转，默认
-//#define	LCD_ROTATE      ROTATE_0
+//#define	LCD_ROTATE         ROTATE_0
 
 /* 是否使用硬件图形加速器（DMA2D之类，驱动需要重新定制） */
-#define	DMA2D_EN                   0
+#define	DMA2D_EN                    0
 
 /* 是否使用缓冲型控件，使用的话会增加一层液晶像素数据的消耗，显示效果减少闪烁*/
-#define  FRAME_BUFFER_EN            0
+#define  FRAME_BUFFER_EN            1
 
 /*==========输入设备配置===gui_input_port.c==================================================*/
 /* 是否使用输入设备 */
-#define  GUI_INPUT_DEV_EN        1
+#define  GUI_INPUT_DEV_EN           1
 
 /* 是否使能键盘、鼠标、触摸屏 */
-#define	GUI_TOUCHSCREEN_EN      1
-#define	GUI_KEYBOARD_EN          0
-#define	GUI_MOUSE_EN             0
+#define	GUI_TOUCHSCREEN_EN          1
+#define	GUI_KEYBOARD_EN             0
+#define	GUI_MOUSE_EN                0
 
 /* 是否需要触摸校准-电阻屏才需要 */
-#define	GUI_TOUCHSCREEN_CALIBRATE       0
+#define	GUI_TOUCHSCREEN_CALIBRATE   0
 
 /* 是否显示光标 */
-#define  GUI_SHOW_CURSOR_EN        0
+#define  GUI_SHOW_CURSOR_EN         0
 
 /*===========存储器配置===gui_mem_port.c===============================================*/
 /* 通常GUI内核使用MEM内存堆，VMEM内存堆给用户使用 */
@@ -155,7 +155,7 @@
   #define   GUI_CONTROL_FONT_72      "CONTROL_ICON_72_72_4BPP.xft"
 //  #define   GUI_CONTROL_FONT_48      "CONTROL_ICON_48_4BPP.xft"
   #define   GUI_CONTROL_FONT_64      "CONTROL_ICON_64_64_4BPP.xft"
-  #define   GUI_CONTROL_FONT_24      "CONTROL_ICON_24_4BPP.xft"
+  #define   GUI_CONTROL_FONT_24      "CONTROL_ICON_24_24_4BPP.xft"
 #endif
 
 /*===========日志输出设备配置===gui_log_port.c===============================================*/
@@ -163,7 +163,7 @@
 /* 是否开启调试输出、数组输出、进入函数的输出功能 */
 #define GUI_DEBUG_EN         	      1
 #define GUI_DEBUG_ARRAY_EN          0
-#define GUI_DEBUG_FUNC_EN   	       0
+#define GUI_DEBUG_FUNC_EN   	      0
 
 
 
@@ -172,23 +172,23 @@
 #define GUI_RES_DEV_EN         1
 
 /* 是否支持文件系统接口,需要移植fatfs文件系统 */
-#define GUI_FS_EN         1
+#define GUI_FS_EN              1
 
 /* 资源所在的基地址 */
-#define GUI_RES_BASE             4096
+#define GUI_RES_BASE           4096
 
 /* 存储在FLASH中的资源目录大小 */
-#define GUI_CATALOG_SIZE         (8*1024)
+#define GUI_CATALOG_SIZE       (8*1024)
 
 /*===========图片接口配置===gui_picture_port.c===============================================*/
 /* 是否支持文件系统图片接口,需要移植fatfs文件系统 */
-#define GUI_PIC_FS_EN         0
+#define GUI_PIC_FS_EN           1
 
 /* 是否支持显示JPEG图片,需要添加jpeg解码库 */
-#define GUI_PIC_JPEG_EN       0
+#define GUI_PIC_JPEG_EN         0
 
 /* 是否支持显示JPEG图片,需要添加png解码库 */
-#define GUI_PIC_PNG_EN        0
+#define GUI_PIC_PNG_EN          0
 
 /* 截图 */
 #define GUI_PIC_CAPTURE_SCREEN_EN  ( 0 && GUI_PIC_FS_EN)

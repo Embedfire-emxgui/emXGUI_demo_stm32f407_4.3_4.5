@@ -9,7 +9,7 @@
 
 /*=========================================================================================*/
 //野火的4.5寸屏854x480
-
+void LCD_Clear ( uint16_t usX, uint16_t usY, uint16_t usWidth, uint16_t usHeight );
 
 #define	LCD_CMD_ADDR	EXT_LCD_BASE
 #define	LCD_DAT_ADDR	(EXT_LCD_BASE+0xFFFE)//)0x03FFFFFE
@@ -50,6 +50,8 @@ static	INLINE void write_dat(u8 a)
 
 static INLINE void __lcd_write_start(u16 sx,u16 sy,u16 ex,u16 ey)
 {
+	sx += 27;
+	ex += 27;
 	__lcd_write_cmd(0x2A);
 	__lcd_write_dat(sx>>8);
 	__lcd_write_dat(sx);
@@ -70,6 +72,8 @@ static INLINE void __lcd_read_start(u16 sx,u16 sy,u16 ex,u16 ey)
 {
 	volatile u16 c;
 
+	sx += 27;
+	ex += 27;
 	__lcd_write_cmd(0x2A);
 	__lcd_write_dat(sx>>8);
 	__lcd_write_dat(sx);
@@ -578,6 +582,7 @@ void	LCD_Init(void)
 	GUI_msleep(50);
   
 	ILI9806_Init();
+	LCD_Clear( 0, 0, 854, 480);
 
 #ifdef	EXT_LCD_DMA
 	LCD_DMA_Init(LCD_DAT_ADDR);
@@ -607,6 +612,79 @@ void	LCD_Init(void)
 	}
 #endif
 }
+/**
+ * @brief  在ILI9806G显示器上开辟一个窗口
+ * @param  usX ：在特定扫描方向下窗口的起点X坐标
+ * @param  usY ：在特定扫描方向下窗口的起点Y坐标
+ * @param  usWidth ：窗口的宽度
+ * @param  usHeight ：窗口的高度
+ * @retval 无
+ */
+void ILI9806G_OpenWindow ( uint16_t usX, uint16_t usY, uint16_t usWidth, uint16_t usHeight )
+{	
+	__lcd_write_cmd ( 0x2A ); 				 /* 设置X坐标 */
+	__lcd_write_dat ( usX >> 8  );	 /* 先高8位，然后低8位 */
+	__lcd_write_dat ( usX & 0xff  );	 /* 设置起始点和结束点*/
+	__lcd_write_dat ( ( usX + usWidth - 1 ) >> 8  );
+	__lcd_write_dat ( ( usX + usWidth - 1 ) & 0xff  );
 
+	__lcd_write_cmd ( 0x2B ); 			     /* 设置Y坐标*/
+	__lcd_write_dat ( usY >> 8  );
+	__lcd_write_dat ( usY & 0xff  );
+	__lcd_write_dat ( ( usY + usHeight - 1 ) >> 8 );
+	__lcd_write_dat ( ( usY + usHeight - 1) & 0xff );
+	
+}
+
+
+/**
+ * @brief  设定ILI9806G的光标坐标
+ * @param  usX ：在特定扫描方向下光标的X坐标
+ * @param  usY ：在特定扫描方向下光标的Y坐标
+ * @retval 无
+ */
+static void ILI9806G_SetCursor ( uint16_t usX, uint16_t usY )	
+{
+	ILI9806G_OpenWindow ( usX, usY, 1, 1 );
+}
+
+
+/**
+ * @brief  在ILI9806G显示器上以某一颜色填充像素点
+ * @param  ulAmout_Point ：要填充颜色的像素点的总数目
+ * @param  usColor ：颜色
+ * @retval 无
+ */
+static __inline void ILI9806G_FillColor ( uint32_t ulAmout_Point, uint16_t usColor )
+{
+	uint32_t i = 0;
+	
+	
+	/* memory write */
+	__lcd_write_cmd ( 0x2C );	
+		
+	for ( i = 0; i < ulAmout_Point; i ++ )
+		__lcd_write_dat ( usColor );
+		
+	
+}
+
+
+/**
+ * @brief  对ILI9806G显示器的某一窗口以某种颜色进行清屏
+ * @param  usX ：在特定扫描方向下窗口的起点X坐标
+ * @param  usY ：在特定扫描方向下窗口的起点Y坐标
+ * @param  usWidth ：窗口的宽度
+ * @param  usHeight ：窗口的高度
+ * @note 可使用LCD_SetBackColor、LCD_SetTextColor、LCD_SetColors函数设置颜色
+ * @retval 无
+ */
+void LCD_Clear ( uint16_t usX, uint16_t usY, uint16_t usWidth, uint16_t usHeight )
+{
+	ILI9806G_OpenWindow ( usX, usY, usWidth, usHeight );
+
+	ILI9806G_FillColor ( usWidth * usHeight, 0x0000 );		
+	
+}
 
 /*=========================================================================================*/
