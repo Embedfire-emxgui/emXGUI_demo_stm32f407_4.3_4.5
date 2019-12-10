@@ -15,9 +15,9 @@
   */ 
 
 
-#include "GUI_AppDef.h"
-#include "emXGUI.h"
 
+#include "emXGUI.h"
+#include "GUI_AppDef.h"
 
 /* 外部资源加载完成标志 */
 BOOL Load_state = FALSE;
@@ -41,7 +41,7 @@ void	gui_app_thread(void *p)
     		if(i++>10)
     		{
     			ShowCursor(FALSE);
-          #ifdef  GUI_TOUCHSCREEN_CALIBRATE
+          #ifdef  STM32F10X_HD
             TouchScreenCalibrate();
           #endif
     			ShowCursor(TRUE);
@@ -80,101 +80,86 @@ static	void	_EraseBackgnd(HDC hdc,const RECT *lprc,HWND hwnd)
 		CopyRect(&rc,lprc);
 	}
 
-  if (Theme_Flag == 0) 
-  {
-    BitBlt(hdc, rc.x, rc.h - HEAD_INFO_HEIGHT, rc.w, HEAD_INFO_HEIGHT, hdc_home_bk, rc.x, rc.h - HEAD_INFO_HEIGHT, SRCCOPY);
-  }
-  else if (Theme_Flag == 1)
-  {
-    SetBrushColor(hdc,MapRGB(hdc,82,85,82));
-    FillRect(hdc,&rc);
-  }
-  else
-  {
-    SetBrushColor(hdc, MapRGB(hdc, 100, 100, 100));
-    FillRect(hdc, &rc);
-  }
-
+	SetBrushColor(hdc,MapRGB(hdc,COLOR_DESKTOP_BACK_GROUND));
+	FillRect(hdc,&rc);
+  	
   SetTextColor(hdc,MapRGB(hdc,255,255,255));
   
 //  SetFont(hdc, iconFont_100);
 //	DrawText(hdc,L" A B C D E \r\n F G H I J",-1,&rc,DT_LEFT|DT_VCENTER);
-//  SetFont(hdc, GB2312_32_Font);
+  SetFont(hdc, defaultFont);
   
 	SetTextColor(hdc,MapRGB(hdc,255,255,255));
-  rc.y +=10;
-//  DrawText(hdc,L"emXGUI@Embedfire STM32F103 ",-1,&rc,DT_CENTER);
+  rc.y +=20;
+  DrawText(hdc,L"emXGUI@Embedfire STM32F407 ",-1,&rc,DT_CENTER);
     
   /* 背景 */
-  // GetClientRect(hwnd,&rc);
-  // SetBrushColor(hdc,MapRGB(hdc,82,85,82));
-  // rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
-  // rc.h = HEAD_INFO_HEIGHT;
-  // FillRect(hdc,&rc);
+  GetClientRect(hwnd,&rc);
+  SetBrushColor(hdc,MapRGB(hdc,82,85,82));
+  rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
+  rc.h = HEAD_INFO_HEIGHT;
+  FillRect(hdc,&rc);
   
     /* 首栏 */ 
+  logoFont = GUI_Init_Extern_Font_Stream( GUI_LOGO_FONT);
   SetFont(hdc, logoFont);
   /* 显示logo */
   GetClientRect(hwnd,&rc);
-  rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT-2;
+  rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT-10;
   rc.h = HEAD_INFO_HEIGHT;
   
   SetTextColor(hdc,MapRGB(hdc,255,255,255)); 
-  DrawText(hdc,L"B",-1,&rc,DT_LEFT|DT_VCENTER);
+  DrawText(hdc,L" B",-1,&rc,DT_LEFT|DT_VCENTER);
   
+  DeleteFont(logoFont);
   
   GetClientRect(hwnd,&rc);
-  rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT-2;
+  rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
   rc.h = HEAD_INFO_HEIGHT;
 
   /* 恢复默认字体 */
   SetFont(hdc, defaultFont);
-  rc.x += 20;
-  DrawText(hdc,L"野火@emXGUI",-1,&rc,DT_LEFT|DT_VCENTER);
+  rc.x +=50;
+  DrawText(hdc,L" 野火@emXGUI",-1,&rc,DT_LEFT|DT_VCENTER);
 
   GetClientRect(hwnd,&rc);
-  rc.w = 52;
-  rc.x = GUI_XSIZE/2 - rc.w/2;
-  rc.h = 20;
-  rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT+9;
-  
-  
+  rc.x = 370;
+  rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT+15;
+  rc.h = HEAD_INFO_HEIGHT;
+  rc.w = 80;    
   /* 控制图标字体 */
-  SetFont(hdc, controlFont_32);
 
   /* 向上图标 */
   SetTextColor(hdc,MapRGB(hdc,255,255,255)); 
-  DrawText(hdc,L"f",-1,&rc,DT_LEFT|DT_VCENTER);
-  
-  SetPenColor(hdc, MapRGB(hdc, 250, 250, 250));
-  EnableAntiAlias(hdc, ENABLE);
-  DrawRoundRect(hdc, &rc, MIN(rc.w, rc.h)>>1);
-  EnableAntiAlias(hdc, DISABLE);
+//  DrawText(hdc,L"D",-1,&rc,DT_TOP|DT_CENTER);
+  DrawText(hdc,L"f",-1,&rc,DT_TOP);
 
- /* 恢复默认字体 */
+// /* 恢复默认字体 */
   SetFont(hdc, defaultFont);
-//  OffsetRect(&rc,0,-3);
-  DrawText(hdc,L" 说明",-1,&rc,DT_CENTER|DT_VCENTER);
-  
-
+  OffsetRect(&rc,20,-15);
+  DrawText(hdc,L"广告",-1,&rc,DT_LEFT|DT_VCENTER);
+  rc.x = 360;
+  rc.w = 100;
+  rc.h = 40;
+  rc.y = 480-45-22;
+  SetPenColor(hdc, MapRGB(hdc, 250, 250, 250));
+  DrawRoundRect(hdc, &rc, MIN(rc.w, rc.h)>>1);
 //  rc.y -= 20;
 //  DrawText(hdc,L"\r\n\r\n详细",-1,&rc,DT_BOTTOM|DT_CENTER);
   GetClientRect(hwnd,&rc);
   rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
   rc.h = HEAD_INFO_HEIGHT;
 
-  DrawText(hdc,L"www.embedFire.com",-1,&rc,DT_RIGHT|DT_VCENTER);  
+  DrawText(hdc,L"www.embedFire.com ",-1,&rc,DT_RIGHT|DT_VCENTER);  
 
 }
 
-extern GUI_SEM *Input_Sem;
 /* 使用专用的线程来处理输入 */
 #if 0
 static	int	gui_input_thread(void *p)
 {
 	while(1)
 	{
-		GUI_SemWait(Input_Sem, 0xFFFFFFFF);
 		GUI_InputHandler(); //处理输入设备
 		GUI_msleep(20);
 	}
@@ -197,7 +182,7 @@ static 	 LRESULT  	desktop_proc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
     /* 桌面创建时,会产生该消息,可以在这里做一些初始化工作. */
 		case	WM_CREATE:	
 			   //创建1个20ms定时器，处理循环事件.
-				 SetTimer(hwnd,1,20,TMR_START,NULL);
+				 SetTimer(hwnd,1,25,TMR_START,NULL);
 
 				//创建App线程						
 				{
@@ -209,12 +194,6 @@ static 	 LRESULT  	desktop_proc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
                               NULL, /* 任务入口函数参数 */
                               5,    /* 任务的优先级 */
                               10); /* 任务时间片，部分任务不支持 */
-//				GUI_Thread_Create(gui_input_thread,  /* 任务入口函数 */
-//															"gui_input_thread",/* 任务名字 */
-//															1*1024,  /* 任务栈大小 */
-//															NULL, /* 任务入口函数参数 */
-//															11,    /* 任务的优先级 */
-//															10); /* 任务时间片，部分任务不支持 */
 #else
           
         GUI_Thread_Create(gui_app_thread,  /* 任务入口函数 */
@@ -242,31 +221,29 @@ static 	 LRESULT  	desktop_proc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
         }
       #endif
 		break;
-				
-				
-		/* 检测是否触摸到“详细”一栏 */    
-    case WM_LBUTTONDOWN:
-		{
+        
+//    /* 检测是否触摸到“详细”一栏 */    
+//    case WM_LBUTTONDOWN:
+//		{
 
-			POINT pt;
-			RECT rc;
+//			POINT pt;
+//			RECT rc;
 
-			pt.x =GET_LPARAM_X(lParam);
-			pt.y =GET_LPARAM_Y(lParam);
+//			pt.x =GET_LPARAM_X(lParam);
+//			pt.y =GET_LPARAM_Y(lParam);
 
-			GetClientRect(hwnd,&rc);
-      
-      rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
-      rc.h = HEAD_INFO_HEIGHT;          
+//			GetClientRect(hwnd,&rc);
+//      
+//      rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
+//      rc.h = HEAD_INFO_HEIGHT;          
 
-      /* 若触摸到，则发送消息到slide window */
-			if(PtInRect(&rc,&pt))
-			{
-        PostMessage(GetDlgItem(hwnd,ID_SLIDE_WINDOW), WM_MSG_FRAME_DOWN,0,0);
-			}
-		}
-		break;
-		
+//      /* 若触摸到，则发送消息到slide window */
+//			if(PtInRect(&rc,&pt))
+//			{
+//        PostMessage(GetDlgItem(hwnd,ID_SLIDE_WINDOW), WM_MSG_FRAME_DOWN,0,0);
+//			}
+//		}
+//		break;
 
     /* 客户区背景需要被擦除 */
 		case	WM_ERASEBKGND:
@@ -275,15 +252,17 @@ static 	 LRESULT  	desktop_proc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
 			HDC hdc =(HDC)wParam; 
       
         /* 字体资源加载完成后才显示正常界面，刚开始时只显示纯色 */
-       if(Load_state == TRUE)
-       {
-          _EraseBackgnd(hdc,NULL,hwnd);
-       }
-       else
-       {
-          SetBrushColor(hdc, MapRGB(hdc, 255, 0, 0));
-          FillRect(hdc, &rc);
-       }
+//       if(Load_state == TRUE)
+//       {
+//          _EraseBackgnd(hdc,NULL,hwnd);
+//       }
+//       else
+//       {
+//          SetBrushColor(hdc, MapRGB(hdc, 255, 0, 0));
+//          FillRect(hdc, &rc);
+//       }
+       SetBrushColor(hdc, MapRGB(hdc, 255, 0, 0));
+       FillRect(hdc, &rc);
 		}
 		return TRUE;  
 
@@ -334,6 +313,7 @@ void GUI_DesktopStartup(void)
 	//设置系统打开光标显示(可以按实际情况看是否需要).
 	ShowCursor(TRUE);
 #endif
+
 	while(GetMessage(&msg,hwnd))
 	{
 		TranslateMessage(&msg);
