@@ -119,18 +119,18 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       u32 jpeg_size;
       JPG_DEC *dec;
       res = RES_Load_Content(GUI_UDISK_BACKGROUNG_PIC, (char**)&jpeg_buf, &jpeg_size);
-      hdc_bk = CreateMemoryDC(SURF_SCREEN, GUI_XSIZE, GUI_YSIZE);
-      if(res)
-      {
-       /* 根据图片数据创建JPG_DEC句柄 */
-       dec = JPG_Open(jpeg_buf, jpeg_size);
+//      hdc_bk = CreateMemoryDC(SURF_SCREEN, GUI_XSIZE, GUI_YSIZE);
+//      if(res)
+//      {
+//       /* 根据图片数据创建JPG_DEC句柄 */
+//       dec = JPG_Open(jpeg_buf, jpeg_size);
 
-       /* 绘制至内存对象 */
-       JPG_Draw(hdc_bk, 0, 0, dec);
+//       /* 绘制至内存对象 */
+//       JPG_Draw(hdc_bk, 0, 0, dec);
 
-       /* 关闭JPG_DEC句柄 */
-       JPG_Close(dec);
-      }
+//       /* 关闭JPG_DEC句柄 */
+//       JPG_Close(dec);
+//      }
       /* 释放图片内容空间 */
       RES_Release_Content((char **)&jpeg_buf);
       

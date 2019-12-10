@@ -4,25 +4,6 @@
 #ifndef _GUI_CLOCK_DIALOG_H
 #define _GUI_CLOCK_DIALOG_H
 
-/* 图片资源名 */
-#define GUI_CLOCK_BACKGROUNG_PIC      "settingsdesktop.jpg"      // 与设置界面使用同一张背景      
-#define GUI_CLOCK_BTN_PIC             "clock_but.png"              
-#define GUI_CLOCK_BTN_PRESS_PIC       "clock_but_press.png"        
-#define GUI_CLOCK_CALENDAR_PIC        "settings_calendar.png"       
-//#define GUI_CLOCK_00BACK_PIC          "clock_00_background.png"     
-//#define GUI_CLOCK_00H_PIC             "clock_00_hour_hand.png"   
-//#define GUI_CLOCK_00M_PIC             "clock_00_minute_hand.png" 
-//#define GUI_CLOCK_00S_PIC             "clock_00_second_hand.png"  
-//#define GUI_CLOCK_01BACK_PIC          "clock_01_background.png"     
-//#define GUI_CLOCK_01H_PIC             "clock_01_hour_hand.png"   
-//#define GUI_CLOCK_01M_PIC             "clock_01_minute_hand.png"  
-//#define GUI_CLOCK_01S_PIC             "clock_01_second_hand.png"  
-#define GUI_CLOCK_02BACK_PIC          "clock_02_background.png"     
-#define GUI_CLOCK_02H_PIC             "clock_02_hour_hand.png"    
-#define GUI_CLOCK_02M_PIC             "clock_02_minute_hand.png"  
-#define GUI_CLOCK_02S_PIC             "clock_02_second_hand.png" 
-//#define GUI_CLOCK_CHCKED_PIC          "blue_glow.png"               
-
 
 typedef enum 
 { 
