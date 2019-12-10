@@ -1021,16 +1021,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\emXGUI_Lib\arch\OS_Options\X_GUI_FreeRTOS.c</FilePath>
             </File>
-            <File>
-              <FileName>GUI_TouchPanel.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\emXGUI_Lib\arch\GUI_TouchPanel.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUI_TouchPanel_Calibration.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\emXGUI_Lib\arch\GUI_TouchPanel_Calibration.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

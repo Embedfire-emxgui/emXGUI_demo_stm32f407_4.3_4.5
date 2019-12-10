@@ -11,7 +11,6 @@
 #include	"CListMenu.h"
 #include "GUI_AppDef.h"
 
-
  /*============================================================================*/
 
 #define	ID_EXIT		0x1000
@@ -38,7 +37,7 @@
 //static const void *pDefIcon = app_1;
 //static const void *pIcon_app2 =app_2;
 
-uint8_t Theme_Flag = 0;   // 主题标志
+uint8_t Theme_Flag = 1;   // 主题标志
 HWND	hwnd_home;
 
 /*
@@ -77,27 +76,27 @@ extern void GUI_LED_KEY_Dialog(void);
 extern BOOL player_state;
 int thread_ctrl = 1;
 
-
+extern void	GUI_DEMO_Listbox_OwnerDraw(void);
 static const struct __obj_list menu_list_1[] = {
   
       L"GUI应用",		  NULL, 	L"J", RGB_WHITE, GUI_App_Desktop,//dummy,//
-      L"MP3播放器",	  NULL,	  L"I", RGB_WHITE, GUI_MUSICPLAYER_DIALOG,//dummy,//
+//      L"MP3播放器",	  NULL,	  L"I", RGB_WHITE, GUI_MUSICPLAYER_DIALOG,//dummy,//
       L"RGB彩灯",		  NULL,	  L"L", RGB_WHITE, GUI_LED_DIALOG,//dummy,//
-      L"摄像头",		  NULL,	  L"M", RGB_WHITE, GUI_Camera_DIALOG,//dummy,//
+//      L"摄像头",		  NULL,	  L"M", RGB_WHITE, GUI_Camera_DIALOG,//dummy,//
 
-      L"WiFi",		    NULL,	  L"P", RGB_WHITE, gui_wifi_dialog,
-      L"以太网",		  NULL,	  L"Q", RGB_WHITE, gui_network_dialog,
-      L"模拟U盘",     NULL,	  L"N", RGB_WHITE, GUI_SimulateUDisk_Dialog,
+//      L"WiFi",		    NULL,	  L"P", RGB_WHITE, gui_wifi_dialog,
+//      L"以太网",		  NULL,	  L"Q", RGB_WHITE, gui_network_dialog,
+//      L"模拟U盘",     NULL,	  L"N", RGB_WHITE, GUI_SimulateUDisk_Dialog,
       L"LED&KEY",    NULL,	  L"j", RGB_WHITE, GUI_LED_KEY_Dialog,
 
-      L"时钟",		    NULL,	  L"H", RGB_WHITE, GUI_CLOCK_DIALOG,
+//      L"时钟",		    NULL,	  L"H", RGB_WHITE, GUI_CLOCK_DIALOG,
       L"电话",	      NULL, 	L"T", RGB_WHITE, GUI_Phone_Dialog,
       L"短信",	      NULL,   L"U", RGB_WHITE, GUI_SMS_Dialog,
-      L"设置",	     NULL,	  L"h", RGB_WHITE, GUI_Settings_DIALOG,
+//      L"设置",	     NULL,	  L"h", RGB_WHITE, GUI_Settings_DIALOG,
   
       L"电压表",		  NULL,	  L"W", RGB_WHITE, GUI_ADC_CollectVoltage_Dialog,  
       L"温湿度",	    NULL,   L"O", RGB_WHITE, GUI_T_RH_Dialog,
-      L"录音机",	    NULL,	  L"Y", RGB_WHITE, GUI_RECORDER_DIALOG,
+//      L"录音机",	    NULL,	  L"Y", RGB_WHITE, GUI_RECORDER_DIALOG,
       L"FlashWriter", NULL,	  L"b", RGB_WHITE, GUI_RES_Writer_Dialog,
       
       NULL,	NULL,	NULL,NULL, NULL,//结束标志!
@@ -109,31 +108,15 @@ static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 {
     HWND hwnd;
     HDC hdc;
-    RECT rc, rc_temp;
+    RECT rc;
     WCHAR wbuf[128];
 
     hwnd = ds->hwnd; //button的窗口句柄.
     hdc = ds->hDC;   //button的绘图上下文句柄.
     rc = ds->rc;     //button的绘制矩形区.
-  
-    if (Theme_Flag == 0) 
-    {
-      GetClientRect(hwnd, &rc_temp);//得到控件的位置
-      WindowToScreen(hwnd, (POINT *)&rc_temp, 1);//坐标转换
-      BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_home_bk, rc_temp.x, rc_temp.y, SRCCOPY);
-    }
-    else if (Theme_Flag == 1)
-    {
-      SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
-      FillRect(hdc, &rc); //用矩形填充背景
-    }
-    else
-    {
-      SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
-      FillRect(hdc, &rc); //用矩形填充背景
-    }
 
-    
+//    SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
+//    FillRect(hdc, &rc); //用矩形填充背景
 
     if (IsWindowEnabled(hwnd) == FALSE)
     {
@@ -154,16 +137,7 @@ static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
     }
 
 
-    //	SetBrushColor(hdc,COLOR_BACK_GROUND);
-
-    //	FillRect(hdc,&rc); //用矩形填充背景
-    //	DrawRect(hdc,&rc); //画矩形外框
-    //  
-    //  FillCircle(hdc,rc.x+rc.w/2,rc.x+rc.w/2,rc.w/2); //用矩形填充背景FillCircle
-    //	DrawCircle(hdc,rc.x+rc.w/2,rc.x+rc.w/2,rc.w/2); //画矩形外框
-
       /* 使用控制图标字体 */
-    SetFont(hdc, controlFont_32);
     //  SetTextColor(hdc,MapRGB(hdc,255,255,255));
 
     GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字
@@ -179,20 +153,43 @@ static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 
 static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    HWND wnd;
     switch (msg)
     {
     case WM_CREATE:
     {
         list_menu_cfg_t cfg;
         RECT rc;
-        HWND chwnd;
 
         //			win_pos =0;
         //			GetTime(&hour,&min,&sec);
 
         GetClientRect(hwnd, &rc);
+      #if ICON_BMP_ENABLE
+        menu_list_1[0].bmp = bmp_icon[bmp_guiuse_icon];
+        menu_list_1[1].bmp = bmp_icon[bmp_music_icon];
+        menu_list_1[2].bmp = bmp_icon[bmp_video_icon];
 
+        menu_list_1[3].bmp = bmp_icon[bmp_clock_icon];
+        menu_list_1[4].bmp = bmp_icon[bmp_gyro_icon];
+   
+        menu_list_1[5].bmp = bmp_icon[bmp_keyled_icon];
+        menu_list_1[6].bmp = bmp_icon[bmp_sudish_icon];
+        menu_list_1[7].bmp = bmp_icon[bmp_entwork_icon];
+        menu_list_1[8].bmp = bmp_icon[bmp_beeper_icon];
+        menu_list_1[9].bmp = bmp_icon[bmp_rgbled_icon];
+        menu_list_1[10].bmp = bmp_icon[bmp_camera_icon];
+
+        menu_list_1[11].bmp = bmp_icon[bmp_photo_icon];
+        menu_list_1[12].bmp = bmp_icon[bmp_humiture_icon];
+        menu_list_1[13].bmp = bmp_icon[bmp_adc_icon];
+        menu_list_1[14].bmp = bmp_icon[bmp_setting_icon];
+        menu_list_1[15].bmp = bmp_icon[bmp_phone_icon];
+        menu_list_1[16].bmp = bmp_icon[bmp_note_icon];
+        menu_list_1[17].bmp = bmp_icon[bmp_QRcode_icon];
+        menu_list_1[18].bmp = bmp_icon[bmp_record_icon];
+        menu_list_1[19].bmp = bmp_icon[bmp_widget_icon];
+        menu_list_1[20].bmp = bmp_icon[bmp_flash_icon];
+       #endif
         //			rc.x =0;
         //			rc.y =0;
         //			rc.w =rc0.w;
@@ -201,30 +198,29 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
               //ListMenu控件，需要在创建时传入一个 list_menu_cfg_t 的结构体参数.
         cfg.list_objs = menu_list_1; //指定list列表.
         cfg.x_num = 4; //水平项数.
-        cfg.y_num = 3; //垂直项数.
-        cfg.bg_color = 1;//COLOR_DESKTOP_BACK_GROUND_HEX    // 颜色值为1时使用图片作为背景
+        cfg.y_num = 4; //垂直项数.
+        cfg.bg_color = COLOR_DESKTOP_BACK_GROUND_HEX;    // 为 1 时不使用这个颜色作为背景色
 
-        chwnd = CreateWindow(&wcex_ListMenu,
+        CreateWindow(&wcex_ListMenu,
                                 L"ListMenu1",
                                 WS_VISIBLE | LMS_PAGEMOVE,
-                                rc.x + 30, rc.y + 10
-                                , rc.w - 60, rc.h - 10,
+                                rc.x + 60, rc.y + 20, rc.w - 120, rc.h - 20,
                                 hwnd,
                                 ID_LIST_1,
                                 NULL,
-                                &cfg);                                
+                                &cfg);
 
         ///* 上一步按钮 */
-        wnd = CreateWindow(BUTTON, L"L", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
-            2, (rc.h) / 2, 30, 30, hwnd, ICON_VIEWER_ID_PREV, NULL, NULL);
-        SetWindowFont(wnd, controlFont_32); //设置控件窗口字体.
+//        wnd = CreateWindow(BUTTON, L"L", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE | WS_TRANSPARENT,
+//            0, (rc.h - 30) / 2, 70, 70, hwnd, ICON_VIEWER_ID_PREV, NULL, NULL);
+//        SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
 
-         /* 下一步按钮 */
-        wnd = CreateWindow(BUTTON, L"K", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
-            rc.w - 30, (rc.h ) / 2, 30, 30, hwnd, ICON_VIEWER_ID_NEXT, NULL, NULL);
-        SetWindowFont(wnd, controlFont_32); //设置控件窗口字体.
-
-        SetTimer(hwnd, 1, 50, TMR_START, NULL);
+//         /* 下一步按钮 */
+//        wnd = CreateWindow(BUTTON, L"K", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE | WS_TRANSPARENT,
+//            rc.w - 65, (rc.h - 30) / 2, 70, 70, hwnd, ICON_VIEWER_ID_NEXT, NULL, NULL);
+//        SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
+ 
+//        SetTimer(hwnd, 1, 50, TMR_START, NULL);
     }
     break;
     ////
@@ -271,27 +267,27 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_ERASEBKGND:
     {
-      HDC hdc = (HDC)wParam;
-      RECT rc = {0, 0, GUI_XSIZE, GUI_YSIZE};
+        HDC hdc = (HDC)wParam;
+        RECT rc =*(RECT*)lParam;
+        if (Theme_Flag == 0) 
+        {
+//            BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_home_bk, rc.x, rc.y, SRCCOPY);
+        }
+        else if (Theme_Flag == 1)
+        {
+            GetClientRect(hwnd, &rc);
+            SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
+            FillRect(hdc, &rc);
+        }
+        else
+        {
+            GetClientRect(hwnd, &rc);
+            SetBrushColor(hdc, MapRGB(hdc, 100, 100, 100));
+            FillRect(hdc, &rc);
+        }
 
-      if (Theme_Flag == 0) 
-      {
-          BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_home_bk, rc.x, rc.y, SRCCOPY);
-      }
-      else if (Theme_Flag == 1)
-      {
-          GetClientRect(hwnd, &rc);
-          SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
-          FillRect(hdc, &rc);
-      }
-      else
-      {
-          GetClientRect(hwnd, &rc);
-          SetBrushColor(hdc, MapRGB(hdc, 100, 100, 100));
-          FillRect(hdc, &rc);
-      }
+      return TRUE;
     }
-    return FALSE;
 
     case WM_PAINT:
     {
@@ -321,7 +317,6 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         ds = (DRAWITEM_HDR*)lParam;
 
         button_owner_draw(ds); //执行自绘制按钮
-
       //			if(ds->ID == ICON_VIEWER_ID_PREV)
       //			{
       //				button_owner_draw(ds); //执行自绘制按钮
@@ -405,6 +400,7 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /*============================================================================*/
 
 void	GUI_Board_App_Desktop(void *p)
+//static void	AppMain(void)
 {
     WNDCLASS	wcex;
     MSG msg;
@@ -427,8 +423,8 @@ void	GUI_Board_App_Desktop(void *p)
         //								/*WS_MEMSURFACE|*/WS_CAPTION|WS_DLGFRAME|WS_BORDER|WS_CLIPCHILDREN,
         /*WS_MEMSURFACE|*/WS_CLIPCHILDREN,
 
-        0, 0, GUI_XSIZE, GUI_YSIZE-HEAD_INFO_HEIGHT,
-        NULL, NULL, NULL, NULL);//GetDesktopWindow()
+        0, 0, GUI_XSIZE, GUI_YSIZE,
+        NULL, NULL, NULL, NULL);
 
     //显示主窗口
     ShowWindow(hwnd_home, SW_SHOW);
@@ -436,8 +432,8 @@ void	GUI_Board_App_Desktop(void *p)
     //开始窗口消息循环(窗口关闭并销毁时,GetMessage将返回FALSE,退出本消息循环)。
     while (GetMessage(&msg, hwnd_home))
     {
-      TranslateMessage(&msg);
-      DispatchMessage(&msg);
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
 }
 

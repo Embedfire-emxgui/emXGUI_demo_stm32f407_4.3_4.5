@@ -22,7 +22,7 @@
 /*============================================================================*/
 
 enum eID
-{ 
+{
     ID_EXIT = 0x1000,
     ID_OK,
     ID_PREV_PAGE,
@@ -71,7 +71,6 @@ public:
     void draw_icon_obj(HDC hdc, struct __x_obj_item *obj, u32 flag, u32 style);
     struct __x_obj_item *focus_list_obj;
     void ListDragEnable(BOOL en);
-    void set_bg_color(u32 temp_bg_color);
 
 
 private:
@@ -120,14 +119,12 @@ static WCHAR* LoadLanguage(WCHAR *buf, const WCHAR *str)
 
 static BOOL is_ver_list(HWND hwnd)
 {
-    if (GetWindowLong(hwnd, GWL_STYLE) & LMS_VER)
+    if (GetWindowLong(hwnd, GWL_STYLE)&LMS_VER)
     {
         return TRUE;
     }
     return FALSE;
 }
-
-
 
 static BOOL is_page_move(HWND hwnd)
 {
@@ -144,11 +141,6 @@ static BOOL is_page_move(HWND hwnd)
 
 #define	OBJ_ACTIVE	(1<<0)
 
-void CListMenu::set_bg_color(u32 temp_bg_color)
-{
-  bg_color = temp_bg_color;
-}
-
 void CListMenu::draw_icon_obj(HDC hdc, struct __x_obj_item *obj, u32 flag, u32 style)
 {
 
@@ -162,29 +154,28 @@ void CListMenu::draw_icon_obj(HDC hdc, struct __x_obj_item *obj, u32 flag, u32 s
 
     //hdc_ico =CreateMemoryDC(BM_DEVICE,obj->rc.w,obj->rc.h);
     rc = obj->rc;
-    rc.y += 5;
+
     if (flag&OBJ_ACTIVE)
     {
         /* 矩形背景 */
         if (style& LMS_TOUCHSHADOW)
         {
-//            rc = obj->rc;
+            rc = obj->rc;
 
             SetBrushColor(hdc, MapRGB(hdc, 160, 100, 100));
-//            InflateRect(&rc, -20, -20);
-            
-            InflateRect(&rc, -5, -8);
+            InflateRect(&rc, -20, -20);
 
             FillRect(hdc, &rc);
         }
 
         if (style& LMS_ICONFRAME)
         {
-//            rc = obj->rc;
+            rc = obj->rc;
+
             ////
             /* 矩形外框 */
             SetPenColor(hdc, MapRGB(hdc, 105, 105, 105));
-            InflateRect(&rc, -5, -8);
+            InflateRect(&rc, -20, -20);
             DrawRect(hdc, &rc);
 
             SetPenColor(hdc, MapRGB(hdc, 105, 105, 105));
@@ -203,7 +194,7 @@ void CListMenu::draw_icon_obj(HDC hdc, struct __x_obj_item *obj, u32 flag, u32 s
         if (style& LMS_ICONFRAME)
         {
             SetPenColor(hdc, MapRGB(hdc, 255, 255, 255));
-            InflateRect(&rc, -5, -8);
+            InflateRect(&rc, -20, -20);
             DrawRect(hdc, &rc);
 
             SetPenColor(hdc, MapRGB(hdc, 255, 255, 255));
@@ -235,10 +226,10 @@ void CListMenu::draw_icon_obj(HDC hdc, struct __x_obj_item *obj, u32 flag, u32 s
     {
         icon_color = obj_tbl[obj->id].color;
         /* 显示APP对应的字体图标 */
-        SetFont(hdc, iconFont_50);
+        SetFont(hdc, iconFont_100);
 
         rc0.w = rc.w;
-        rc0.h = rc.h * 3 / 4; 
+        rc0.h = rc.h * 2 / 3;
         rc0.x = rc.x;
         rc0.y = rc.y;
 
@@ -256,7 +247,7 @@ void CListMenu::draw_icon_obj(HDC hdc, struct __x_obj_item *obj, u32 flag, u32 s
         if (style& LMS_ICONINNERFRAME)
         {
             //矩形内框，图标字体宽度为100*100，所以减去它们的宽度除以2
-            InflateRect(&rc0, -(rc0.w - 50) / 2, -(rc0.h - 50) / 2);
+            InflateRect(&rc0, -(rc0.w - 100) / 2, -(rc0.h - 100) / 2);
             if (flag&OBJ_ACTIVE)
                SetPenColor(hdc, MapRGB(hdc, 105, 105, 105));
             else
@@ -271,9 +262,9 @@ void CListMenu::draw_icon_obj(HDC hdc, struct __x_obj_item *obj, u32 flag, u32 s
     //SetTextColor(hdc,MapRGB(hdc,255,255,255));
 
     rc0.w = rc.w;
-    rc0.h = rc.h / 3;
+    rc0.h = rc.h * 1 / 3;
     rc0.x = rc.x;
-    rc0.y = rc.y + rc.h - rc0.h+2;
+    rc0.y = rc.y + rc.h - rc0.h - 6;
     DrawText(hdc, obj->pszText, -1, &rc0, DT_VCENTER | DT_CENTER);
 
 }
@@ -574,7 +565,7 @@ LRESULT CListMenu::DrawFrame(HDC hdc, HWND hwnd)
 {
     int i, a, x, y, style;
     WCHAR wbuf[128], wstr[64];
-    RECT rc,rc_tmp;
+    RECT rc;
     struct __x_obj_item *obj;
     ////////
   
@@ -583,16 +574,7 @@ LRESULT CListMenu::DrawFrame(HDC hdc, HWND hwnd)
     ////backgroup
     //StretchBlt(hdc,0,0,rc_main.w,rc_main.h,hdc_bkgnd,0,0,bkgnd_w,bkgnd_h,SRCCOPY);
     //BitBlt(hdc,0,0,rc_main.w,rc_main.h,hdc_bkgnd,0,0,SRCCOPY);
-    GetClientRect(hwnd, &rc_tmp);//得到控件的位置
-    WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
-    if (bg_color != 1)
-    {
-        ClrDisplay(hdc, NULL, MapXRGB8888(hdc, bg_color));
-    }
-    else 
-    {
-        BitBlt(hdc, 0,0,rc_main.w,rc_main.h, hdc_home_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
-    }
+    ClrDisplay(hdc, NULL, MapXRGB8888(hdc, bg_color));
     //BMP_Draw(hdc,0,0,bkgnd_bmp,NULL);
 
 #if 0
@@ -790,11 +772,10 @@ LRESULT CListMenu::DrawFrame(HDC hdc, HWND hwnd)
         {
             i = MIN(0 - obj->rc.x, page_num*rc_list.w);
 
-            /* 绘制进度条 */
-            rc.w = 80;
-            rc.h = 10;
+            rc.w = 150;
+            rc.h = 20;
             rc.x = (rc_main.w - rc.w) >> 1;
-            rc.y = rc_main.h - rc.h - 8;
+            rc.y = rc_main.h - rc.h - 15;
             MakeProgressRect(m_rc, &rc, page_num*rc_list.w, i, PB_ORG_LEFT);
 
             SetPenColor(hdc, MapRGB(hdc, 250, 220, 220));
@@ -988,7 +969,7 @@ LRESULT CListMenu::OnCreate(HWND hwnd, list_menu_cfg_t *cfg)
   //	hFontSEG_32 =XFT_CreateFont(SEG_NUM_32);
 
 
-    SetTimer(hwnd, ID_TMR_100, 1, TMR_START, NULL);
+    SetTimer(hwnd, ID_TMR_100, 20, TMR_START, NULL);
     //	SetTimer(hwnd,ID_TMR_500,500,TMR_START,NULL);
     delete m_rc;
 
@@ -1020,15 +1001,16 @@ LRESULT	CListMenu::OnPaint(HWND hwnd)
     RECT rc;
 
     GetClientRect(hwnd, &rc);
-    hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
-    DrawFrame(hdc_mem, hwnd);
+//    hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
+
 
 
     hdc = BeginPaint(hwnd, &ps);
-    BitBlt(hdc, 0, 0, rc_main.w, rc_main.h, hdc_mem, 0, 0, SRCCOPY);
+	  DrawFrame(hdc, hwnd);
+//    BitBlt(hdc, 0, 0, rc_main.w, rc_main.h, hdc_mem, 0, 0, SRCCOPY);
     EndPaint(hwnd, &ps);
 
-    DeleteDC(hdc_mem);
+//    DeleteDC(hdc_mem);
     return TRUE;
 }
 
@@ -1542,11 +1524,11 @@ LRESULT	CListMenu::OnTimer(HWND hwnd, int tmr_id)
                         }
                         else if ((x - x_move_to) > 20)
                         {
-                            x = MIN(obj->rc.w >> 3, x - x_move_to);
+                            x = MIN(obj->rc.w >> 4, x - x_move_to);
                         }
                         else
                         {
-                            x = MIN(3, x - x_move_to);
+                            x = MIN(1, x - x_move_to);
                         }
 
                         OffsetObjs(-x, 0);
@@ -1561,11 +1543,11 @@ LRESULT	CListMenu::OnTimer(HWND hwnd, int tmr_id)
                         }
                         else if ((x_move_to - x) > 20)
                         {
-                            x = MIN(obj->rc.w >> 3, x_move_to - x);
+                            x = MIN(obj->rc.w >> 4, x_move_to - x);
                         }
                         else
                         {
-                            x = MIN(3, x_move_to - x);
+                            x = MIN(1, x_move_to - x);
                         }
                         OffsetObjs(x, 0);
                         need_draw = TRUE;
@@ -1606,14 +1588,14 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         return pApp->OnCreate(hwnd, cfg);
     }
 
-    case 	MSG_SET_SEL:
-    {
-        int idx =wParam;
+		case 	MSG_SET_SEL:
+		{
+			int idx =wParam;
 
-        pApp->SetSelObj(idx);
+			pApp->SetSelObj(idx);
 
-    }
-    break;
+		}
+		break;
 
     case	MSG_MOVE_PREV:
     {
@@ -1755,14 +1737,7 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     break;
     /////
 
-    case MSG_SET_BGCOLOR:
-    {
-        u32 color;
 
-        color = wParam;
-        pApp->set_bg_color(color);
-    }
-    break;
 
     case WM_ERASEBKGND:
     {
@@ -1782,8 +1757,7 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return DefWindowProc(hwnd, msg, wParam, lParam);
 
-    default:			
-        return DefWindowProc(hwnd, msg, wParam, lParam);
+    default:			return DefWindowProc(hwnd, msg, wParam, lParam);
 
     }
 
