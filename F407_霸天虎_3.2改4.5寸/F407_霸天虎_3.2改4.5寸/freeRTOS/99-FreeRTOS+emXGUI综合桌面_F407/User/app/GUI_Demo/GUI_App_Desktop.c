@@ -15,8 +15,6 @@
  /*============================================================================*/
 
 #define	ID_EXIT		0x3000
-//#define ICON_VIEWER_ID_PREV   0x1003
-//#define	ICON_VIEWER_ID_NEXT		0x1004
 #define	ID_RB1		0x1101
 #define	ID_RB2		0x1102
 #define	ID_RB3		0x1103
@@ -24,30 +22,16 @@
 #define	ID_RB5		0x1105
 #define	ID_RB6		0x1106
 
-
-//static int win_pos=0;
-//static u8 hour,min,sec;
-//static const WCHAR *pOEMText=NULL;
-//static u8 List1_Col,List1_Row;
-
 #define	ID_LIST_1 0x1000
 #define ID_LIST_2 0x1001
-
-//extern const char app_1[];
-
-//static const void *pIcon_app1 =app_1;
-//static const void *pIcon_app2 =app_2;
-
 
 static void dummy(void )
 {
 
 }
 
-
 extern void	GUI_DEMO_Graphics_Accelerator(void);
 extern void	GUI_DEMO_ShowWave(void);
-
 
 #if 0
 static void App_GUI_DEMO_Hello(HWND hwnd)
@@ -86,9 +70,6 @@ static void App_GUI_DEMO_Hello(HWND hwnd)
 }
 #endif
 
-
-
-
 static struct __obj_list menu_list_1[] = {
 
 //  L"图形加速器",	NULL, 	L"d", RGB_WHITE,  dummy,//GUI_DEMO_Graphics_Accelerator,
@@ -100,7 +81,6 @@ static struct __obj_list menu_list_1[] = {
 
   NULL,	NULL,NULL,	NULL, NULL,//结束标志!
 };
-
 
 static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 {
@@ -122,30 +102,15 @@ static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 	}
 	else if (ds->State & BST_PUSHED)
 	{ //按钮是按下状态
-//    GUI_DEBUG("ds->ID=%d,BST_PUSHED",ds->ID);
-//		SetBrushColor(hdc,MapRGB(hdc,150,200,250)); //设置填充色(BrushColor用于所有Fill类型的绘图函数)
-//		SetPenColor(hdc,MapRGB(hdc,250,0,0));        //设置绘制色(PenColor用于所有Draw类型的绘图函数)
 		SetTextColor(hdc, MapRGB(hdc, 105, 105, 105));      //设置文字色
 	}
 	else
 	{ //按钮是弹起状态
-//		SetBrushColor(hdc,MapRGB(hdc,255,255,255));
-//		SetPenColor(hdc,MapRGB(hdc,0,250,0));
 		SetTextColor(hdc, MapRGB(hdc, 255, 255, 255));
 	}
 
-
-	//	SetBrushColor(hdc,COLOR_BACK_GROUND);
-
-	//	FillRect(hdc,&rc); //用矩形填充背景
-	//	DrawRect(hdc,&rc); //画矩形外框
-	//  
-	//  FillCircle(hdc,rc.x+rc.w/2,rc.x+rc.w/2,rc.w/2); //用矩形填充背景FillCircle
-	//	DrawCircle(hdc,rc.x+rc.w/2,rc.x+rc.w/2,rc.w/2); //画矩形外框
-
 	  /* 使用控制图标字体 */
 	SetFont(hdc, controlFont_64);
-	//  SetTextColor(hdc,MapRGB(hdc,255,255,255));
 
 	GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字
 
@@ -181,26 +146,12 @@ static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 	}
 	else if (ds->State & BST_PUSHED)
 	{ //按钮是按下状态
-//    GUI_DEBUG("ds->ID=%d,BST_PUSHED",ds->ID);
-//		SetBrushColor(hdc,MapRGB(hdc,150,200,250)); //设置填充色(BrushColor用于所有Fill类型的绘图函数)
-//		SetPenColor(hdc,MapRGB(hdc,250,0,0));        //设置绘制色(PenColor用于所有Draw类型的绘图函数)
 		SetTextColor(hdc, MapRGB(hdc, 105, 105, 105));      //设置文字色
 	}
 	else
 	{ //按钮是弹起状态
-//		SetBrushColor(hdc,MapRGB(hdc,255,255,255));
-//		SetPenColor(hdc,MapRGB(hdc,0,250,0));
 		SetTextColor(hdc, MapRGB(hdc, 255, 255, 255));
 	}
-
-
-	//	SetBrushColor(hdc,COLOR_BACK_GROUND);
-
-	//	FillRect(hdc,&rc); //用矩形填充背景
-	//	DrawRect(hdc,&rc); //画矩形外框
-	//  
-	//  FillCircle(hdc,rc.x+rc.w/2,rc.x+rc.w/2,rc.w/2); //用矩形填充背景FillCircle
-	//	DrawCircle(hdc,rc.x+rc.w/2,rc.x+rc.w/2,rc.w/2); //画矩形外框
 
 	  /* 使用控制图标字体 */
 	SetFont(hdc, controlFont_48);
@@ -228,22 +179,8 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		RECT rc;
     HWND chwnd;
 
-		//			win_pos =0;
-		//			GetTime(&hour,&min,&sec);
 
 		GetClientRect(hwnd, &rc);
-
-		//			rc.x =0;
-		//			rc.y =0;
-		//			rc.w =rc0.w;
-		//			rc.h =200;
-
-
-    ///* 设置字符 */
-    //wnd = CreateWindow(TEXTBOX, L"A", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
-    //  0, rc.h * 1 / 3, 70, 70, hwnd, ICON_VIEWER_ID_PREV, NULL, NULL);
-    //SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
-
 
 					//ListMenu控件，需要在创建时传入一个 list_menu_cfg_t 的结构体参数.
 		cfg.list_objs = menu_list_1; //指定list列表.

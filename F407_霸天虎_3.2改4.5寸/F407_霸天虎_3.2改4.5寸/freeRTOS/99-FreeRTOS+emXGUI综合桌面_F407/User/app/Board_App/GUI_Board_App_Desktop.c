@@ -86,7 +86,7 @@ static const struct __obj_list menu_list_1[] = {
 
 //      L"WiFi",		    NULL,	  L"P", RGB_WHITE, gui_wifi_dialog,
 //      L"ÒÔÌ«Íø",		  NULL,	  L"Q", RGB_WHITE, gui_network_dialog,
-//      L"Ä£ÄâUÅÌ",     NULL,	  L"N", RGB_WHITE, GUI_SimulateUDisk_Dialog,
+      L"Ä£ÄâUÅÌ",     NULL,	  L"N", RGB_WHITE, GUI_SimulateUDisk_Dialog,
       L"LED&KEY",    NULL,	  L"j", RGB_WHITE, GUI_LED_KEY_Dialog,
 
 //      L"Ê±ÖÓ",		    NULL,	  L"H", RGB_WHITE, GUI_CLOCK_DIALOG,

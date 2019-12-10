@@ -145,9 +145,9 @@ int main(void)
    /* 创建AppTaskCreate任务 */
   xReturn = xTaskCreate((TaskFunction_t )GUI_Thread_Entry,  /* 任务入口函数 */
                         (const char*    )"gui",/* 任务名字 */
-                        (uint16_t       )2*1024,  /* 任务栈大小 */
+                        (uint16_t       )1024,  /* 任务栈大小 */
                         (void*          )NULL,/* 任务入口函数参数 */
-                        (UBaseType_t    )14, /* 任务的优先级 */
+                        (UBaseType_t    )13, /* 任务的优先级 */
                         (TaskHandle_t*  )NULL);/* 任务控制块指针 */ 
   /* 启动任务调度 */           
   if(pdPASS == xReturn)
