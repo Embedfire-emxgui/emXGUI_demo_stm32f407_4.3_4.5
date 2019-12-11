@@ -22,10 +22,7 @@
 
 #if defined(CPU_MIMXRT1052DVL6B)
 #define QSPIFLASH_ADDR 0x60000000         //外部FLASH的映射地址
-#elif defined (STM32H750xx)
-#define RES_OFFSET 0x90000000
 #endif
-
 /*=========================================================================================*/
 /*访问资源设备的互斥信号量*/
 static GUI_MUTEX *mutex_lock=NULL;
@@ -45,22 +42,17 @@ BOOL RES_DevInit(void)
     return TRUE;
   }
 #elif defined(STM32H743xx)
-  #if defined(STM32H750xx)
-    if (1)
-      return TRUE;
-  #else
-    if(QSPI_FLASH_Init() == 0)
-    {
-      QSPI_FLASH_WriteStatusReg(1,0X00);
-      QSPI_FLASH_WriteStatusReg(2,0X00);
-      QSPI_FLASH_WriteStatusReg(3,0X61);
-      GUI_DEBUG("\r\nFlash Status Reg1 is 0x%02X", QSPI_FLASH_ReadStatusReg(1));	
-      GUI_DEBUG("\r\nFlash Status Reg2 is 0x%02X", QSPI_FLASH_ReadStatusReg(2));
-      GUI_DEBUG("\r\nFlash Status Reg3 is 0x%02X", QSPI_FLASH_ReadStatusReg(3));    
-      //RES_DevTest();
-      return TRUE;
-    }
-  #endif
+  if(QSPI_FLASH_Init() == 0)
+  {
+    QSPI_FLASH_WriteStatusReg(1,0X00);
+    QSPI_FLASH_WriteStatusReg(2,0X00);
+    QSPI_FLASH_WriteStatusReg(3,0X61);
+    GUI_DEBUG("\r\nFlash Status Reg1 is 0x%02X", QSPI_FLASH_ReadStatusReg(1));	
+    GUI_DEBUG("\r\nFlash Status Reg2 is 0x%02X", QSPI_FLASH_ReadStatusReg(2));
+    GUI_DEBUG("\r\nFlash Status Reg3 is 0x%02X", QSPI_FLASH_ReadStatusReg(3));    
+    //RES_DevTest();
+    return TRUE;
+  }
 #elif defined(STM32F767xx)
   if(QSPI_FLASH_Init() == 0)
   {
@@ -101,11 +93,7 @@ U32 RES_DevGetID(void)
 #if defined(STM32F429_439xx)
 	id =SPI_FLASH_ReadID();
 #elif defined(STM32H743xx)
-  #if defined(STM32H750xx)
-    id = 0;
-  #else
-    id = QSPI_FLASH_ReadID();
-  #endif
+  id = QSPI_FLASH_ReadID();
 #elif defined(STM32F767xx)
   id = QSPI_FLASH_ReadID();
 #elif defined(STM32F10X_HD) || defined(STM32F40_41xxx)
@@ -130,12 +118,7 @@ BOOL RES_DevWrite(u8 *buf,u32 addr,u32 size)
 #if defined(STM32F429_439xx)
 	SPI_FLASH_BufferWrite(buf,addr,size);
 #elif defined(STM32H743xx)
-  #if defined(STM32H750xx)
-    GUI_MutexUnlock(mutex_lock);
-    return FALSE;
-  #else
-    BSP_QSPI_Write(buf,addr,size);
-  #endif
+  BSP_QSPI_Write(buf,addr,size);
 #elif defined(STM32F767xx)
   BSP_QSPI_Write(buf,addr,size);
 #elif defined(STM32F10X_HD) || defined(STM32F40_41xxx)
@@ -159,11 +142,8 @@ BOOL RES_DevRead(u8 *buf,u32 addr,u32 size)
 #if defined(STM32F429_439xx)
 	SPI_FLASH_BufferRead(buf,addr,size);
 #elif defined(STM32H743xx)
-  #if defined(STM32H750xx)
-    memcpy(buf,(u8*)addr+RES_OFFSET,size);
-  #else
-    BSP_QSPI_FastRead(buf,addr,size);
-  #endif
+//  BSP_QSPI_Read(buf,addr,size);
+  BSP_QSPI_FastRead(buf,addr,size);
 #elif defined(STM32F767xx)
 //BSP_QSPI_Read(buf,addr,size);
   BSP_QSPI_FastRead(buf,addr,size);

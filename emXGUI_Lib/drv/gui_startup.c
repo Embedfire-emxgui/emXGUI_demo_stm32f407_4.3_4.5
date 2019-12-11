@@ -86,7 +86,6 @@ void	GUI_Startup(void)
 #endif
   
 /***********************第5部分*************************/
-
   /* 初始化液晶屏 */
 	pSurf =GUI_DisplayInit(); 
 	if(pSurf==NULL)

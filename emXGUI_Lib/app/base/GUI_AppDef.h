@@ -9,6 +9,7 @@
 #ifndef	__GUI_APPDEF_H__
 #define	__GUI_APPDEF_H__
 
+#include "def.h"
 #include "emXGUI.h"
 
 /* 启动界面 */
@@ -20,8 +21,6 @@ extern BOOL Load_state;
 
 /* 启动界面的进度条句柄 */
 extern HWND Boot_progbar;
-
-extern uint8_t Theme_Flag;   // 主题标志
 
 
 #define ID_SLIDE_WINDOW   1200
@@ -42,6 +41,5 @@ extern uint8_t Theme_Flag;   // 主题标志
 
 extern int thread_ctrl;
 
-int SelectDialogBox(HWND hwndParent, RECT rc,const WCHAR *pText,const WCHAR *pCaption,const MSGBOX_OPTIONS *ops);
 
 #endif	/*__GUI_APPDEF_H__*/

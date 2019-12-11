@@ -37,7 +37,7 @@ enum
   eRES_OK = QSPI_OK,
   eRES_ERROR = QSPI_ERROR
 };
-#elif defined(STM32F429_439xx) || defined(STM32F10X_HD) 
+#elif defined(STM32F429_439xx) || defined(STM32F10X_HD) || defined(STM32F40_41xxx) 
 extern void SPI_FLASH_BulkErase_GUI(void);
 enum 
 {
@@ -409,7 +409,7 @@ void Burn_Catalog(void)
     GUI_msleep(20);
 
     /* 把dir信息烧录到FLASH中 */  
-    state = SPI_FLASH_BufferWrite((u8*)&dir,RESOURCE_BASE_ADDR + sizeof(dir)*i,sizeof(dir));
+  SPI_FLASH_BufferWrite((u8*)&dir,RESOURCE_BASE_ADDR + sizeof(dir)*i,sizeof(dir));
 //    rx_buff = (uint8_t *)GUI_VMEM_Alloc(sizeof(dir));
 //    SPI_FLASH_BufferRead(rx_buff,RESOURCE_BASE_ADDR + sizeof(dir)*i,sizeof(dir));
 //    
@@ -442,7 +442,7 @@ FRESULT Burn_Content(void)
   FRESULT result;   
   UINT  bw;            					    /* File R/W count */
   uint32_t write_addr=0;
-  uint8_t tempbuf[512];
+  uint8_t tempbuf[256];
   
   /* 重置进度条 */
   SendMessage(wnd_res_writer_progbar,PBM_SET_VALUE,TRUE,0);
@@ -465,7 +465,7 @@ FRESULT Burn_Content(void)
     BURN_INFO("-------------------------------------"); 
     BURN_INFO("准备烧录内容：%s",full_file_name);
     
-    x_wsprintf((WCHAR*)tempbuf,L"Writing file %d/%d.\r\nWriting big files will take a long \r\ntime.Please wait...",i,file_num);
+    x_wsprintf((WCHAR*)tempbuf,L"Writing file %d/%d.\r\nWriting big files will take a long time.\r\nPlease wait...",i,file_num);
     SetWindowText(wnd_res_writer_info_textbox,(WCHAR*)tempbuf);
     SendMessage(wnd_res_writer_progbar,PBM_SET_VALUE,TRUE,i);
 
@@ -486,10 +486,10 @@ FRESULT Burn_Content(void)
       write_addr = dir.offset + RESOURCE_BASE_ADDR;
       while(result == FR_OK) 
       {
-        result = f_read( fp, tempbuf, 512, &bw);//读取数据	 
+        result = f_read( fp, tempbuf, 256, &bw);//读取数据	 
         if(result!=FR_OK)			 //执行错误
         {
-          BURN_ERROR("读取文件失败！->(%d)", result);
+          BURN_ERROR("读取文件失败！");
           LED_RED;
           return result;
         }      
@@ -505,7 +505,7 @@ FRESULT Burn_Content(void)
 
         
         write_addr+=bw;				
-        if(bw !=512)break;
+        if(bw !=256)break;
       }
       BURN_INFO("内容写入完毕");          
            
@@ -667,14 +667,14 @@ FRESULT BurnFile(void)
   if(result != FR_OK)
   {
     GUI_ERROR("请插入带‘srcdata’烧录数据的SD卡,并重新复位开发板！ result = %d",result);
-    SetWindowText(wnd_res_writer_info_textbox,L"1.Please insert an SD card with \r\n[srcdata] resources.\r\n2.Powerup again the board.");
+    SetWindowText(wnd_res_writer_info_textbox,L"1.Please insert an SD card with [srcdata] resources.\r\n2.Powerup again the board.");
     GUI_msleep(20);
     
     goto exit;
   }
   f_closedir(&dir);
   
-  SetWindowText(wnd_res_writer_info_textbox,L"  Erasing FLASH,it will take a long \r\ntime,please wait...");
+  SetWindowText(wnd_res_writer_info_textbox,L"Erasing FLASH,it will take a long time,\r\nplease wait...");
   GUI_msleep(20);
   
   BURN_INFO("正在进行整片擦除，时间很长，请耐心等候...");  
