@@ -105,12 +105,13 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         ops.Flag =MB_ICONERROR;
         ops.pButtonText =btn;
         ops.ButtonCount =2;
-        RC.w = 140;
-        RC.h = 100;
+        RC.w = 300;
+        RC.h = 200;
         RC.x = (GUI_XSIZE - RC.w) >> 1;
         RC.y = (GUI_YSIZE - RC.h) >> 1;
-        SelectDialogBox(hwnd, RC, L"没有检测到OV5640模块\n请重新检查连接。", L"错误", &ops);    // 显示错误提示框
-        PostCloseMessage(hwnd);                                                              // 发送关闭窗口的消息
+        SelectDialogBox(hwnd, RC, L"没有检测到OV7725摄像头，\n请重新检查连接。", L"错误", &ops);
+        OV5640_State = 1;     // 没有检测到摄像头
+        PostCloseMessage(hwnd);
       }
       
 			else if(OV5640_State == 0)
@@ -155,7 +156,7 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       {   
         
         hdc_mem =CreateDC(pSurf,NULL);
-        BitBlt(hdc,-16, 0, cam_mode.cam_out_width,cam_mode.cam_out_height,  hdc_mem, 0 , 0, SRCCOPY);
+        BitBlt(hdc,0, 0, cam_mode.cam_out_width,cam_mode.cam_out_height,  hdc_mem, 0 , 0, SRCCOPY);
 
         DeleteDC(hdc_mem);
 				HAL_DCMI_Start_DMA((uint32_t)cam_buff,cam_mode.cam_out_height*cam_mode.cam_out_width/2);
@@ -198,7 +199,7 @@ void	GUI_Camera_DIALOG(void)
 
 	wcex.Tag = WNDCLASS_TAG;  
   
-  cam_buff = (uint16_t *)GUI_VMEM_Alloc(400*300*2);
+//  cam_buff = (uint16_t *)GUI_VMEM_Alloc(800*480*2);
   
 	wcex.Style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WinProc; //设置主窗口消息处理的回调函数.

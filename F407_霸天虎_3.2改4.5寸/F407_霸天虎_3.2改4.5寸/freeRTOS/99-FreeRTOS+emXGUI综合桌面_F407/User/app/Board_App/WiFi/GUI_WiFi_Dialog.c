@@ -30,7 +30,7 @@ uint8_t ucTcpClosedFlag;
 static uint8_t IsChange=1;
 static char ssid[21]={"embedfire2"};
 static char pwd[21]={"wildfire"};
-static char host_ip[16]={"192.168.0.205"};
+static char host_ip[16]={"192.168.0.206"};
 static char host_port[6]={"8080"};
 static uint8_t wifistat=0;
 
@@ -157,7 +157,7 @@ void wifi_dispose_task(HWND hwnd)
 			else if(timecount>=20)
 			{
 //				BUTTON_SetText(WM_GetDialogItem(hWin, GUI_ID_BUTTON0), "通信中");
-				WM_EnableWindow(WM_GetDialogItem(hWin, GUI_ID_BUTTON1));
+//				WM_EnableWindow(WM_GetDialogItem(hWin, GUI_ID_BUTTON1));
 				//接收到数据
 				if(strEsp8266_Fram_Record.InfBit.FramFinishFlag)
 				{
@@ -408,7 +408,7 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       
       xTaskCreate((TaskFunction_t )wifi_dispose_task,      /* 任务入口函数 */
                   (const char*    )"wifi dispose task",    /* 任务名字 */
-                  (uint16_t       )3*1024/4,               /* 任务栈大小FreeRTOS的任务栈以字为单位 */
+                  (uint16_t       )4*1024/4,               /* 任务栈大小FreeRTOS的任务栈以字为单位 */
                   (void*          )hwnd,                   /* 任务入口函数参数 */
                   (UBaseType_t    )5,                      /* 任务的优先级 */
                   (TaskHandle_t*  )&wifi_task_handle);     /* 任务控制块指针 */
@@ -480,7 +480,7 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_VCENTER | DT_CENTER | DT_BKGND);
 
       OffsetRect(&rc, rc.w+8, 0);
-      Temp_Handle = CreateWindow(TEXTBOX, L"205", WS_VISIBLE|WS_OWNERDRAW, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemoteIP4, NULL, NULL);//
+      Temp_Handle = CreateWindow(TEXTBOX, L"206", WS_VISIBLE|WS_OWNERDRAW, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemoteIP4, NULL, NULL);//
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_VCENTER | DT_CENTER | DT_BKGND);
 
       rc.w = 138;
