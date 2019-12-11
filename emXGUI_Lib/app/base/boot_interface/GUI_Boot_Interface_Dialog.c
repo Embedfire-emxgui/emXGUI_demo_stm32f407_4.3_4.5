@@ -32,18 +32,8 @@ static void App_Load_Res(void )
 {
   static int thread=0;
 
-  if(thread==0)
-  { 
-    /* 创建线程运行自己 */
-    GUI_Thread_Create((void(*)(void*))App_Load_Res,  /* 任务入口函数 */
-                        "Load Res",/* 任务名字 */
-                        10*1024,  /* 任务栈大小 */
-                        NULL, /* 任务入口函数参数 */
-                        1,    /* 任务的优先级 */
-                        10); /* 任务时间片，部分任务不支持 */
-    thread =1;
-    return;
-  }
+  thread =1;
+
   while(thread) //线程已创建了
   { 
     HFONT hFont;
@@ -151,7 +141,12 @@ static	LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_TIMER:
     {
       /* 启动界面创建后timer时间后才开始加载 */
-      App_Load_Res();
+      GUI_Thread_Create((void(*)(void*))App_Load_Res,  /* 任务入口函数 */
+                        "Load Res",/* 任务名字 */
+                        10*1024,  /* 任务栈大小 */
+                        NULL, /* 任务入口函数参数 */
+                        1,    /* 任务的优先级 */
+                        10); /* 任务时间片，部分任务不支持 */
       break;         
     }
     case WM_ERASEBKGND:
@@ -203,9 +198,9 @@ static	LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
   return	WM_NULL;                                     
 }
 
-extern void 	GUI_Board_App_Desktop(void *p);
+extern void 	GUI_Board_App_Desktop(void *param);
 extern void	GUI_RES_Writer_Dialog(void *param);
-extern void	GUI_DEMO_SlideWindow(void *p);
+extern void	GUI_DEMO_SlideWindow(void *param);
 
 void	GUI_Boot_Interface_Dialog(void *param)
 {
@@ -250,7 +245,7 @@ void	GUI_Boot_Interface_Dialog(void *param)
   wcex.hCursor		= NULL;//LoadCursor(NULL, IDC_ARROW);
 
   //创建启动提示
-  GUI_Boot_hwnd = CreateWindowEx(	WS_EX_LOCKPOS|WS_EX_FRAMEBUFFER,
+  GUI_Boot_hwnd = CreateWindowEx(	WS_EX_LOCKPOS|WS_EX_FRAMEBUFFER,//
                               &wcex,
                               L"Booting",
                               WS_VISIBLE|WS_CLIPCHILDREN|WS_OVERLAPPED,
@@ -280,7 +275,7 @@ void	GUI_Boot_Interface_Dialog(void *param)
         /* 若找不到资源，进入资源烧录应用 */      
         GUI_Thread_Create(GUI_RES_Writer_Dialog,  /* 任务入口函数 */
                               "GUI_FLASH_WRITER",/* 任务名字 */
-                              5*1024,  /* 任务栈大小 */
+                              3*1024,  /* 任务栈大小 */
                               NULL, /* 任务入口函数参数 */
                               5,    /* 任务的优先级 */
                               10); /* 任务时间片，部分任务不支持 */
@@ -288,29 +283,33 @@ void	GUI_Boot_Interface_Dialog(void *param)
 
      }
 #endif     
-     else
-     {	
+		 else
+		 {
+		         GUI_Thread_Create(GUI_Board_App_Desktop, /* 任务入口函数 */
+                              "GUI_FLASH_WRITER",     /* 任务名字 */
+                              4*1024,                 /* 任务栈大小 */
+                              NULL,                   /* 任务入口函数参数 */
+                              8,                      /* 任务的优先级 */
+                              10);                    /* 任务时间片，部分任务不支持 */
+       
+//             GUI_Thread_Create(GUI_DEMO_SlideWindow, /* 任务入口函数 */
+//                              "GUI_DEMO_SlideWindow",     /* 任务名字 */
+//                              2*1024,                 /* 任务栈大小 */
+//                              NULL,                   /* 任务入口函数参数 */
+//                              8,                      /* 任务的优先级 */
+//                              10);                    /* 任务时间片，部分任务不支持 */
+
+		 }
+//     else
+//     {	
 //        /* 找到资源，正常跑应用*/ 
 //     
 //        h=rt_thread_create("GUI_APP",GUI_Board_App_Desktop,NULL,8*1024,5,5);
 //        rt_thread_startup(h);			
 //        h=rt_thread_create("GUI_SLIDE_WIN",GUI_DEMO_SlideWindow,NULL,4096,5,5);
 //        rt_thread_startup(h);
-
- /* 找到资源，正常跑应用*/      
-        GUI_Thread_Create(GUI_DEMO_SlideWindow,  /* 任务入口函数 */
-                              "GUI Slide Window",/* 任务名字 */
-                              1*1024,  /* 任务栈大小 */
-                              NULL, /* 任务入口函数参数 */
-                              5,    /* 任务的优先级 */
-                              10); /* 任务时间片，部分任务不支持 */
-       GUI_Thread_Create(GUI_Board_App_Desktop,  /* 任务入口函数 */
-                              "GUI_APP",/* 任务名字 */
-                              4*1024,  /* 任务栈大小 */
-                              NULL, /* 任务入口函数参数 */
-                              5,    /* 任务的优先级 */
-                              10); /* 任务时间片，部分任务不支持 */
-     }   
+//     }   
+//  } 
     /* 部分操作系统在退出任务函数时，必须删除线程自己 */
     GUI_Thread_Delete(GUI_GetCurThreadHandle());
 

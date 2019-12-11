@@ -47,31 +47,18 @@ extern const char ASCII_32_4BPP[];
 /* 默认字体 */
 HFONT defaultFont =NULL;
 HFONT logoFont100 =NULL;
+
+/* logo字体 */
+HFONT logoFont =NULL;
+
+/* 图标字体 */
+HFONT iconFont_100 =NULL;
+
 /* 默认英文字体 */
 HFONT defaultFontEn = NULL;
 
 /* 用于标记是否有资源文件无法找到 */
 BOOL res_not_found_flag = FALSE;
-
-#if(GUI_ICON_LOGO_EN)  
-/* logo字体 */
-HFONT logoFont =NULL;
-HFONT logoFont_200 =NULL;
-/* 图标字体 */
-HFONT iconFont_50 =NULL;
-HFONT iconFont_200 =NULL;
-HFONT iconFont_100 =NULL;
-HFONT iconFont_252 =NULL;
-/* 控制图标字体 */
-HFONT controlFont_12 =NULL;
-HFONT controlFont_24 =NULL;
-HFONT controlFont_48 =NULL;
-HFONT controlFont_64 =NULL;
-HFONT controlFont_32 =NULL;
-HFONT controlFont_16 =NULL;
-HFONT controlFont_72 =NULL;
-HFONT controlFont_100 =NULL;
-#endif
 
 /** 
   * @brief  字体参数
@@ -163,6 +150,63 @@ HFONT GUI_Init_Extern_Font_Stream(const char* res_name)
   if(font_base > 0)
   {
     hFont =XFT_CreateFontEx(font_read_data_exFlash,font_base);
+    #if 0
+    
+    uint32_t loop = 0;
+    
+    FRESULT result; 
+    UINT  bw;            					    /* File R/W count */
+    uint32_t read_addr=0,j=0;
+    uint8_t tempbuf[256],flash_buf[256];
+    FIL file_temp;
+   
+//    res_name = strcat(",res_name);
+    
+      result = f_open(&file_temp,"0:/srcdata/GB2312_16_4BPP.xft",FA_OPEN_EXISTING | FA_READ);
+      if(result != FR_OK)
+      {
+          printf("打开文件失败！\n");
+          LED_RED;
+      }
+      else
+      {
+        printf("打开文件：%s  成功\n", res_name);
+      }
+      
+       //校验数据
+      read_addr = font_base;
+     
+      f_lseek(&file_temp,0);
+      loop = 0;
+      while(result == FR_OK) 
+      {
+        loop++;
+        result = f_read( &file_temp, tempbuf, 256, &bw);//读取数据	 
+        if(result!=FR_OK)			 //执行错误
+        {
+          printf("读取文件失败！\n");
+          LED_RED;
+        }    
+
+        if(bw == 0)break;//为0时不进行读写，跳出
+  
+        SPI_FLASH_BufferRead(flash_buf,read_addr,bw);  //从FLASH中读取数据
+        read_addr+=bw;		
+        
+        for(j=0;j<bw;j++)
+        {
+          if(tempbuf[j] != flash_buf[j])
+          {
+            printf("数据校验失败！\n");
+            LED_RED;
+          }   
+        }  
+     
+        if(bw !=256)break;//到了文件尾
+      }   
+      printf("数据校验OK\n");
+    
+    #endif
   }
   else
   {
@@ -253,12 +297,9 @@ HFONT GUI_Init_Extern_Font(void)
 #else
    /* 使用流设备加载字体，按需要读取 */
   {
-    defaultFont    = GUI_Init_Extern_Font_Stream( GUI_DEFAULT_EXTERN_FONT);  
-    controlFont_72 = GUI_Init_Extern_Font_Stream( GUI_CONTROL_FONT_72); 
-    logoFont       = GUI_Init_Extern_Font_Stream( GUI_LOGO_FONT);
-    iconFont_100   = GUI_Init_Extern_Font_Stream( GUI_ICON_FONT_100);
-    controlFont_64 = GUI_Init_Extern_Font_Stream( GUI_CONTROL_FONT_64);
-    controlFont_48 = GUI_Init_Extern_Font_Stream( GUI_CONTROL_FONT_48);
+    defaultFont    = GUI_Init_Extern_Font_Stream(GUI_DEFAULT_EXTERN_FONT); 
+//    controlFont_64 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_64);
+    iconFont_100   = GUI_Init_Extern_Font_Stream(GUI_ICON_FONT_100);    
   }
 #endif 
  
@@ -281,7 +322,7 @@ HFONT GUI_Default_FontInit(void)
     */
   
     /* 默认英文字体 */ 
-#if (STM32F10X_HD) || (STM32F40_41xxx)
+#if (STM32F10X_HD) || (STM32F40_41xxx)|| (STM32F429_439xx) || (STM32H750xx) || (STM32H743xx)
     defaultFontEn =XFT_CreateFont(GUI_DEFAULT_FONT_EN);
 #endif
     /* 如果使用了启动界面，在启动界面再加载外部字体 */

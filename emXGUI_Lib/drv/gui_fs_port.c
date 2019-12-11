@@ -16,7 +16,14 @@
 #if defined(STM32F429_439xx)
 #include "sdio/bsp_sdio_sd.h"
 #elif defined(STM32H743xx)
-#include "./sd_card/bsp_sdio_sd.h"
+  #if defined(STM32H750xx)
+  #include "./sd_card/bsp_sdio_sd.h"
+  #include "ff_gen_drv.h"
+  char SDPath[4]; /* SD逻辑驱动器路径 */
+  extern Diskio_drvTypeDef  SD_Driver;
+  #else
+  #include "./sd_card/bsp_sdio_sd.h"
+  #endif
 #elif defined(STM32F767xx)
 #include "./sdmmc/bsp_sdmmc_sd.h"
 #include "ff_gen_drv.h"
@@ -63,7 +70,7 @@ BOOL FileSystem_Init(void)
 #if defined(STM32F429_439xx)
   BL8782_PDN_INIT();
 #elif defined(STM32H743xx)
-WIFI_PDN_INIT();
+//WIFI_PDN_INIT();
 #elif defined(STM32F767xx)
   WIFI_PDN_INIT();
 #endif  
@@ -72,7 +79,7 @@ WIFI_PDN_INIT();
 #if defined(STM32F429_439xx) || defined(STM32H743xx) || defined(STM32F767xx) || defined(STM32F10X_HD) || defined(STM32F40_41xxx)
 	//在外部SPI Flash挂载文件系统，文件系统挂载时会对SPI设备初始化
   FRESULT res_sd; 
-#if defined(STM32F767xx)
+#if defined(STM32F767xx) || defined(STM32H750xx)
   FATFS_LinkDriver(&SD_Driver, SDPath);
 #endif
 	res_sd = f_mount(&fs,"0:",1);

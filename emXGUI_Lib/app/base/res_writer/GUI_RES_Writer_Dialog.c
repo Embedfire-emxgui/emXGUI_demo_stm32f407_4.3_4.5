@@ -29,6 +29,136 @@ HWND wnd_res_writer_progbar;
 /* 用于标记是否有资源文件无法找到 */
 extern BOOL res_not_found_flag;
 
+static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
+{
+  HDC hdc;
+  RECT rc;
+//  HWND hwnd;
+
+	hdc = ds->hDC;   
+	rc = ds->rc; 
+//  hwnd = ds->hwnd;
+
+//  GetClientRect(hwnd, &rc_tmp);//得到控件的位置
+//  WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
+
+//  BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
+  SetBrushColor(hdc, MapRGB(hdc, 0, 0, 0));
+  FillRect(hdc, &rc);
+
+  if (ds->State & BST_PUSHED)
+	{ //按钮是按下状态
+		SetPenColor(hdc, MapRGB(hdc, 120, 120, 120));      //设置文字色
+	}
+	else
+	{ //按钮是弹起状态
+
+		SetPenColor(hdc, MapRGB(hdc, 250, 250, 250));
+	}
+  
+  // SetBrushColor(hdc, MapRGB(hdc, 242, 242, 242));
+  // FillRect(hdc, &rc);
+
+  SetPenSize(hdc, 2);
+
+  InflateRect(&rc, 0, -1);
+  
+  for(int i=0; i<4; i++)
+  {
+    HLine(hdc, rc.x, rc.y, rc.w);
+    rc.y += 9;
+  }
+}
+
+static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
+{
+  HDC hdc;
+  RECT rc;
+  WCHAR wbuf[128];
+
+	hdc = ds->hDC;   
+	rc = ds->rc; 
+  
+  SetBrushColor(hdc, MapRGB(hdc, 0, 0, 0));
+  FillRect(hdc, &rc);
+
+  if (ds->Style & WS_DISABLED)
+  {
+    SetBrushColor(hdc, MapRGB(hdc, 100, 100, 100));
+		SetTextColor(hdc, MapRGB(hdc, 10, 10, 10));
+  }
+  else if (ds->State & BST_PUSHED)
+	{ //按钮是按下状态
+    InflateRect(&rc, -2, -2);
+    SetBrushColor(hdc, MapRGB(hdc, 150, 150, 120));
+    SetTextColor(hdc, MapRGB(hdc, 10, 10, 10));      //设置文字色
+	}
+	else
+	{ //按钮是弹起状态
+    SetBrushColor(hdc, MapRGB(hdc, 250, 250, 250));
+		SetTextColor(hdc, MapRGB(hdc, 10, 10, 10));
+	}
+  EnableAntiAlias(hdc, ENABLE);
+  FillRoundRect(hdc, &rc, MIN(rc.h/2, rc.w/2));
+  EnableAntiAlias(hdc, DISABLE);
+  GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字 
+  DrawText(hdc, wbuf,-1,&rc,DT_VCENTER|DT_CENTER);//绘制文字(居中对齐方式)DT_CENTER
+}
+
+/**
+  * @brief  进度条重绘
+  */
+static void progbar_owner_draw(DRAWITEM_HDR *ds)
+{
+	HWND hwnd;
+	HDC hdc, hdc_mem;
+	RECT rc,m_rc[2];
+//	int range,val;
+	PROGRESSBAR_CFG cfg;
+  
+	hwnd =ds->hwnd;
+	hdc =ds->hDC;
+   /*************第一步***************/
+   //获取客户区矩形位置，大小
+   GetClientRect(hwnd,&rc);
+
+  hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
+  SetBrushColor(hdc_mem,MapRGB(hdc,0,0,0));
+	FillRect(hdc_mem,&ds->rc); 
+
+   //设置进度条的背景颜色
+	SetBrushColor(hdc,MapRGB(hdc,250,250,250));
+   //填充进度条的背景
+  EnableAntiAlias(hdc, TRUE);
+	FillRoundRect(hdc,&ds->rc, MIN(rc.w,rc.h)/2);   
+//   //设置画笔颜色
+	SetPenColor(hdc,MapRGB(hdc,100,10,10));
+//   //绘制进度条的背景边框
+//   DrawRect(hdc,&rc);
+   /*************第二步***************/	
+   cfg.cbSize =sizeof(cfg);
+	cfg.fMask =PB_CFG_ALL;
+	SendMessage(hwnd,PBM_GET_CFG,0,(LPARAM)&cfg);
+   //生成进度条矩形
+	MakeProgressRect(m_rc,&rc,cfg.Rangle,cfg.Value,PB_ORG_LEFT);
+   //设置进度条的颜色
+	SetBrushColor(hdc_mem,MapRGB(hdc,0,255,0));
+  EnableAntiAlias(hdc, FALSE);
+   //填充进度条
+  // InflateRect(&m_rc[0],-1,-1);
+  EnableAntiAlias(hdc_mem, TRUE);
+	FillRoundRect(hdc_mem, &rc, rc.h/2);
+  EnableAntiAlias(hdc_mem, FALSE);
+  BitBlt(hdc, m_rc[0].x, m_rc[0].y, m_rc[0].w, m_rc[0].h, hdc_mem, 0, 0, SRCCOPY);
+  
+  
+   //绘制进度条的边框，采用圆角边框
+	//DrawRoundRect(hdc,&m_rc[0],MIN(rc.w,rc.h)/2);
+   /************显示进度值****************/
+	DeleteDC(hdc_mem);
+	//InflateRect(&rc,40,0);
+	//DrawText(hdc,L"加载中...",-1,&rc,DT_CENTER);
+}
 
 /**
   * @brief  烧录应用线程
@@ -117,7 +247,7 @@ If you really want to reload resources:\r\n\
           rc0.x = 0;
           rc0.y = 0;
           rc0.w = rc.w;
-          rc0.h = rc.h/5;
+          rc0.h = rc.h/5-3;
           
           wnd = CreateWindow(TEXTBOX,L"GUI FLASH Writer" ,WS_VISIBLE,
                                 rc0.x, rc0.y, rc0.w, rc0.h, hwnd, ID_TITLE, NULL, NULL); 
@@ -128,11 +258,12 @@ If you really want to reload resources:\r\n\
           if(!res_not_found_flag)
           {  
             /* 退出按钮 */
-            rc0.w = 60;
+            rc0.w = 36;
             rc0.x = rc.w - rc0.w - 5*2;
-            rc0.h = 30;
+            rc0.h = 36;
+            rc0.y = (rc.h/5-rc0.h)/2;
 
-            CreateWindow(BUTTON, L"Exit",BS_FLAT | WS_VISIBLE,
+            CreateWindow(BUTTON, L"Exit",BS_FLAT | WS_VISIBLE | WS_OWNERDRAW,
                           rc0.x, rc0.y, rc0.w, rc0.h, hwnd, ID_EXIT, NULL, NULL); 
           }
           
@@ -146,9 +277,9 @@ If you really want to reload resources:\r\n\
                         rc0.x, rc0.y, rc0.w, rc0.h, hwnd, ID_INFO, NULL, NULL); 
 
           /* 进度条 */
-          rc0.x = 5;
-          rc0.w = rc.w - rc0.x*2;
+          rc0.x = 100;
           rc0.h = 30;
+          rc0.w = rc.w - 200;
           rc0.y = 4*rc.h/5 - rc0.h-10;
  
           //PROGRESSBAR_CFG结构体的大小
@@ -159,7 +290,7 @@ If you really want to reload resources:\r\n\
 					cfg.TextFlag = DT_VCENTER|DT_CENTER;  
 
 					wnd_res_writer_progbar = CreateWindow(PROGRESSBAR,L"",
-                                  PBS_TEXT|PBS_ALIGN_LEFT,
+                                  PBS_TEXT| PBS_ALIGN_LEFT | WS_OWNERDRAW,
                                   rc0.x, rc0.y, rc0.w, rc0.h,hwnd,ID_PROGBAR,NULL,NULL);
 
           SendMessage(wnd_res_writer_progbar,PBM_GET_CFG,TRUE,(LPARAM)&cfg);
@@ -167,21 +298,23 @@ If you really want to reload resources:\r\n\
           SendMessage(wnd_res_writer_progbar,PBM_SET_VALUE,TRUE,0);
 
           /* 烧录按钮 */
-          rc0.x = 5;
-          rc0.w = rc.w/2- rc0.x*2;
+          
+          rc0.w = rc.w/2- 5*2;
           rc0.h = 45;
           rc0.y = rc.h - rc0.h - 10;
-
-          CreateWindow(BUTTON, L"Click me to load resources",BS_FLAT | WS_VISIBLE,
+          rc0.x = (rc.w - rc0.w)/2;
+          
+          CreateWindow(BUTTON, L"Click me to load resources",BS_FLAT | WS_VISIBLE| WS_OWNERDRAW,
                         rc0.x, rc0.y, rc0.w, rc0.h, hwnd, ID_BURN, NULL, NULL); 
 
           /* 复位按钮 */
-          rc0.x = rc.w/2 +5;
+          
           rc0.w = rc.w/2 - 5*2;
           rc0.h = 45;
           rc0.y = rc.h - rc0.h - 10;
+          rc0.x = (rc.w - rc0.w)/2;
           
-          CreateWindow(BUTTON, L"Click me to reset system",BS_FLAT ,
+          CreateWindow(BUTTON, L"Click me to reset system",BS_FLAT | WS_OWNERDRAW,
                         rc0.x, rc0.y, rc0.w, rc0.h, hwnd, ID_RESET, NULL, NULL); 
           break;
 	}
@@ -240,6 +373,30 @@ If you really want to reload resources:\r\n\
       
 		break;
 	}
+  
+  //重绘制函数消息
+      case WM_DRAWITEM:
+      {
+         DRAWITEM_HDR *ds;
+         ds = (DRAWITEM_HDR*)lParam;        
+         if(ds->ID == ID_EXIT)
+         {
+            exit_owner_draw(ds);
+            return TRUE;
+         }
+         else if(ds->ID == ID_BURN || ds->ID == ID_RESET)
+         {
+            button_owner_draw(ds);
+            return TRUE;
+         }
+         else if (ds->ID == ID_PROGBAR)
+         {
+           progbar_owner_draw(ds);
+           return TRUE;
+         }
+         
+       }
+      break;
 
    case	WM_CTLCOLOR:
    {
@@ -296,26 +453,44 @@ If you really want to reload resources:\r\n\
 			}
       
    }   
-   case WM_ERASEBKGND:
-   {
-      HDC hdc =(HDC)wParam;
-      RECT rc;
-      GetClientRect(hwnd, &rc);
-      
-      SetBrushColor(hdc, MapRGB(hdc, 0, 0, 0));
-      FillRect(hdc, &rc);
-      
-      
-      return TRUE;
-      
-   }
+  case WM_ERASEBKGND:
+  {
+    HDC hdc =(HDC)wParam;
+    RECT rc,rc0;
+    GetClientRect(hwnd, &rc);
+
+    SetBrushColor(hdc, MapRGB(hdc, 0, 0, 0));
+    SetPenColor(hdc, MapRGB(hdc, 250, 250, 250));
+    FillRect(hdc, &rc);
+
+    CopyRect(&rc0,&rc);
+
+    /* 本窗口垂直分为5份 */
+
+    /* 标题 */
+    rc0.x = 0;
+    rc0.y = 0;
+    rc0.w = rc.w;
+    rc0.h = rc.h/5-1; 
+
+    HLine(hdc, 0, rc0.h, GUI_XSIZE);
+
+    rc0.h = 45;
+    rc0.y = rc.h - rc0.h - 10;
+
+    SetPenColor(hdc, MapRGB(hdc, 200, 200, 200));
+    HLine(hdc, 0, rc0.y+rc0.h/2, GUI_XSIZE);
+
+    return FALSE;
+  }
 
 	case	WM_PAINT: //窗口需要重绘制时，会自动收到该消息.
 	{	
       PAINTSTRUCT ps;
 //      HDC hdc;//屏幕hdc
 //      hdc = BeginPaint(hwnd, &ps); 
-    BeginPaint(hwnd, &ps); 
+    BeginPaint(hwnd, &ps);
+       
 
 		EndPaint(hwnd, &ps);
 		return	TRUE;
@@ -327,7 +502,7 @@ If you really want to reload resources:\r\n\
 }
 
 
-void	GUI_RES_Writer_Dialog(void *param)
+void	GUI_RES_Writer_Dialog(void )
 {
 	HWND	hwnd;
 	WNDCLASS	wcex;

@@ -23,33 +23,21 @@ typedef struct
 /* 字体参数配置 */
 extern const FONT_PARAM_TypeDef gui_font_param[];
 extern HFONT logoFont100;
+
+/* logo字体 */
+extern HFONT logoFont;
+
 /* 默认字体 */
 extern HFONT defaultFont;
+
+/* 图标字体 */
+extern HFONT iconFont_100;
+
 /* 默认英文字体 */
 extern HFONT defaultFontEn;
   
 /* 用于标记是否有资源文件无法找到 */
 extern BOOL res_not_found_flag;
-
-/* logo字体 */
-extern HFONT logoFont;
-/* 图标字体 */
-extern HFONT iconFont_50;
-extern HFONT iconFont_252;
-extern HFONT iconFont_100;
-/* 控制图标字体 */
-extern HFONT controlFont_48;
-extern HFONT controlFont_32;
-extern HFONT controlFont_16;
-extern HFONT controlFont_24;
-extern HFONT controlFont_64;
-extern HFONT controlFont_72;
-extern HFONT controlFont_48;
-extern HFONT controlFont_100;
-/* 其它 */
-extern HFONT GB2312_24_Font;
-extern HFONT iconFont_200;
-extern HFONT logoFont_200;
 
 HFONT GUI_Default_FontInit(void);
 HFONT GUI_Init_Extern_Font_Stream(const char* res_name);

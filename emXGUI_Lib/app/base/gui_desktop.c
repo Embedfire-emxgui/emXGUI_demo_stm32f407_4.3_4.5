@@ -101,6 +101,7 @@ static	void	_EraseBackgnd(HDC hdc,const RECT *lprc,HWND hwnd)
   FillRect(hdc,&rc);
   
     /* 首栏 */ 
+  logoFont = GUI_Init_Extern_Font_Stream( GUI_LOGO_FONT);
   SetFont(hdc, logoFont);
   /* 显示logo */
   GetClientRect(hwnd,&rc);
@@ -110,6 +111,7 @@ static	void	_EraseBackgnd(HDC hdc,const RECT *lprc,HWND hwnd)
   SetTextColor(hdc,MapRGB(hdc,255,255,255)); 
   DrawText(hdc,L" B",-1,&rc,DT_LEFT|DT_VCENTER);
   
+  DeleteFont(logoFont);
   
   GetClientRect(hwnd,&rc);
   rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
@@ -126,7 +128,6 @@ static	void	_EraseBackgnd(HDC hdc,const RECT *lprc,HWND hwnd)
   rc.h = HEAD_INFO_HEIGHT;
   rc.w = 80;    
   /* 控制图标字体 */
-  SetFont(hdc, controlFont_72);
 
   /* 向上图标 */
   SetTextColor(hdc,MapRGB(hdc,255,255,255)); 
@@ -149,7 +150,7 @@ static	void	_EraseBackgnd(HDC hdc,const RECT *lprc,HWND hwnd)
   rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
   rc.h = HEAD_INFO_HEIGHT;
 
-  DrawText(hdc,L"www.embedFire.com  ",-1,&rc,DT_RIGHT|DT_VCENTER);  
+  DrawText(hdc,L"www.embedFire.com ",-1,&rc,DT_RIGHT|DT_VCENTER);  
 
 }
 
@@ -181,7 +182,7 @@ static 	 LRESULT  	desktop_proc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
     /* 桌面创建时,会产生该消息,可以在这里做一些初始化工作. */
 		case	WM_CREATE:	
 			   //创建1个20ms定时器，处理循环事件.
-				 SetTimer(hwnd,1,20,TMR_START,NULL);
+				 SetTimer(hwnd,1,25,TMR_START,NULL);
 
 				//创建App线程						
 				{
@@ -221,28 +222,28 @@ static 	 LRESULT  	desktop_proc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
       #endif
 		break;
         
-    /* 检测是否触摸到“详细”一栏 */    
-    case WM_LBUTTONDOWN:
-		{
+//    /* 检测是否触摸到“详细”一栏 */    
+//    case WM_LBUTTONDOWN:
+//		{
 
-			POINT pt;
-			RECT rc;
+//			POINT pt;
+//			RECT rc;
 
-			pt.x =GET_LPARAM_X(lParam);
-			pt.y =GET_LPARAM_Y(lParam);
+//			pt.x =GET_LPARAM_X(lParam);
+//			pt.y =GET_LPARAM_Y(lParam);
 
-			GetClientRect(hwnd,&rc);
-      
-      rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
-      rc.h = HEAD_INFO_HEIGHT;          
+//			GetClientRect(hwnd,&rc);
+//      
+//      rc.y = GUI_YSIZE - HEAD_INFO_HEIGHT;
+//      rc.h = HEAD_INFO_HEIGHT;          
 
-      /* 若触摸到，则发送消息到slide window */
-			if(PtInRect(&rc,&pt))
-			{
-        PostMessage(GetDlgItem(hwnd,ID_SLIDE_WINDOW), WM_MSG_FRAME_DOWN,0,0);
-			}
-		}
-		break;
+//      /* 若触摸到，则发送消息到slide window */
+//			if(PtInRect(&rc,&pt))
+//			{
+//        PostMessage(GetDlgItem(hwnd,ID_SLIDE_WINDOW), WM_MSG_FRAME_DOWN,0,0);
+//			}
+//		}
+//		break;
 
     /* 客户区背景需要被擦除 */
 		case	WM_ERASEBKGND:
@@ -251,15 +252,17 @@ static 	 LRESULT  	desktop_proc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
 			HDC hdc =(HDC)wParam; 
       
         /* 字体资源加载完成后才显示正常界面，刚开始时只显示纯色 */
-       if(Load_state == TRUE)
-       {
-          _EraseBackgnd(hdc,NULL,hwnd);
-       }
-       else
-       {
-          SetBrushColor(hdc, MapRGB(hdc, 255, 0, 0));
-          FillRect(hdc, &rc);
-       }
+//       if(Load_state == TRUE)
+//       {
+//          _EraseBackgnd(hdc,NULL,hwnd);
+//       }
+//       else
+//       {
+//          SetBrushColor(hdc, MapRGB(hdc, 255, 0, 0));
+//          FillRect(hdc, &rc);
+//       }
+       SetBrushColor(hdc, MapRGB(hdc, 255, 0, 0));
+       FillRect(hdc, &rc);
 		}
 		return TRUE;  
 
