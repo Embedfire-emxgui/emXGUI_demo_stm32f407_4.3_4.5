@@ -65,7 +65,7 @@ FRESULT f_result;
 extern FIL  file ;
 UINT    f_num;
 //歌词数组--存放歌词数据
-uint8_t ReadBuffer1[1024/2*3] __EXRAM ; //歌词滑动进度条歌词卡死或不同步可增大此值
+uint8_t ReadBuffer1[1024*2] __EXRAM ; //歌词滑动进度条歌词卡死或不同步可增大此值
 //MINI播放键、上一首、下一首控件句柄句柄
 //static HWND mini_start;
 //歌词显示标志位

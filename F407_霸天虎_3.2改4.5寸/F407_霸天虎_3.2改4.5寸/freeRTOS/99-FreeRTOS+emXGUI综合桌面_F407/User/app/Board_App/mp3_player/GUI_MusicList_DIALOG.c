@@ -188,25 +188,26 @@ static LRESULT Win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
          wnd = CreateWindow(&wcex_ListMenu,
                       L"ListMenu1",
                       WS_VISIBLE | LMS_ICONFRAME|LMS_PAGEMOVE,
-                      rc.x + 30, rc.y + 20, rc.w - 60, rc.h-20,
+                      rc.x + 48, rc.y + 48, rc.w - 96, rc.h-48,
                       hwnd,
                       ID_LIST_1,
                       NULL,
                       &cfg);         
          SendMessage(wnd, MSG_SET_SEL, play_index, 0);
          wnd= CreateWindow(BUTTON, L"L", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW |WS_VISIBLE,
-                       2, (rc.h) / 2, 30, 30, hwnd, ICON_VIEWER_ID_PREV, NULL, NULL);
-         SetWindowFont(wnd, controlFont_48); 
+                       2, (rc.h) / 2, 48, 48, hwnd, ICON_VIEWER_ID_PREV, NULL, NULL);
+
 	      wnd = CreateWindow(BUTTON, L"K", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
-        rc.w - 30, (rc.h ) / 2, 30, 30, hwnd, ICON_VIEWER_ID_NEXT, NULL, NULL);
-         SetWindowFont(wnd, controlFont_16);    
+        rc.w - 48, (rc.h ) / 2, 48, 48, hwnd, ICON_VIEWER_ID_NEXT, NULL, NULL);
+  
          
          CreateWindow(BUTTON, L"F", BS_FLAT | BS_NOTIFY|WS_OWNERDRAW |WS_VISIBLE,
-                        0, 0, 35, 30, hwnd, ID_EXIT, NULL, NULL);         
+                        0, 2, 100, 48, hwnd, ID_EXIT, NULL, NULL);         
          
          
          break;
       } 
+    
       case WM_DRAWITEM:
       {
 
@@ -233,9 +234,9 @@ static LRESULT Win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
          FillRect(hdc, &rc);  
          //DrawBitmap(hdc,0,0,&bm_0,NULL);   
          rc.x = 0;
-         rc.y = 0;
-         rc.w = 300;
-         rc.h = 20;
+         rc.y = 5;
+         rc.w = GUI_XSIZE;
+         rc.h = 30;
          SetTextColor(hdc, MapRGB(hdc, 250, 250, 250));
          DrawText(hdc, L"播放列表", -1, &rc, DT_VCENTER|DT_CENTER);
          EndPaint(hwnd, &ps);
@@ -304,7 +305,6 @@ static LRESULT Win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
    return WM_NULL;
 } 
 
-
 void GUI_MusicList_DIALOG(void)
 {
 	HWND	hwnd;
@@ -321,7 +321,7 @@ void GUI_MusicList_DIALOG(void)
 	wcex.hCursor = NULL;//LoadCursor(NULL, IDC_ARROW);
 
 	//创建主窗口
-	hwnd = CreateWindowEx(WS_EX_NOFOCUS,
+	hwnd = CreateWindowEx(WS_EX_NOFOCUS|WS_EX_FRAMEBUFFER,
                          &wcex,
                          L"GUI_MusicList_DIALOG",
                          WS_CLIPSIBLINGS,
@@ -336,3 +336,4 @@ void GUI_MusicList_DIALOG(void)
 		DispatchMessage(&msg);
 	}
 }
+
