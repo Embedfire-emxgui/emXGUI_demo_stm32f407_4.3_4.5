@@ -61,25 +61,22 @@ static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 		SetTextColor(hdc, MapRGB(hdc, 255, 255, 255));
 	}
 
-
-
 	  /* 使用控制图标字体 */
-	SetFont(hdc, controlFont_32);
+  HFONT controlFont_48;
+  controlFont_48 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_48);
+	SetFont(hdc, controlFont_48);
 	//  SetTextColor(hdc,MapRGB(hdc,255,255,255));
 
 	GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字
 
 	DrawText(hdc, wbuf, -1, &rc, DT_VCENTER | DT_CENTER);//绘制文字(居中对齐方式)
 
-
-  /* 恢复默认字体 */
-	SetFont(hdc, defaultFont);
+  DeleteFont(controlFont_48);
 
 }
 
 
-//绘制一个按钮外观
-static void exit_owner_draw(DRAWITEM_HDR *ds) 
+static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 {
 	HWND hwnd;
 	HDC hdc;
@@ -90,9 +87,6 @@ static void exit_owner_draw(DRAWITEM_HDR *ds)
 	hdc = ds->hDC;   //button的绘图上下文句柄.
 	rc = ds->rc;     //button的绘制矩形区.
 
-   
-   
-   
 	SetBrushColor(hdc, MapRGB(hdc, 0,0,0));
    
    FillCircle(hdc, rc.x, rc.y, rc.w);
@@ -112,9 +106,10 @@ static void exit_owner_draw(DRAWITEM_HDR *ds)
 		SetTextColor(hdc, MapRGB(hdc, 255, 255, 255));
 	}
 
+  HFONT controlFont_48;
+  controlFont_48 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_48);
 	  /* 使用控制图标字体 */
-	SetFont(hdc, controlFont_16);
-	//  SetTextColor(hdc,MapRGB(hdc,255,255,255));
+	SetFont(hdc, controlFont_48);
 
 	GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字
 
@@ -124,6 +119,8 @@ static void exit_owner_draw(DRAWITEM_HDR *ds)
   /* 恢复默认字体 */
 	SetFont(hdc, defaultFont);
    DrawText(hdc, L"返回", -1, &rc, DT_VCENTER);
+   
+   DeleteFont(controlFont_48);
 }
 //LIST
 
