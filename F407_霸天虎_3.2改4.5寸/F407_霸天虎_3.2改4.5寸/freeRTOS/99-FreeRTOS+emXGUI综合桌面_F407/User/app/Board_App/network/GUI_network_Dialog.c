@@ -177,33 +177,35 @@ static void Ent_ExitButton_OwnerDraw(DRAWITEM_HDR *ds)
 {
   HDC hdc;
   RECT rc;
-  // HWND hwnd;
+//  HWND hwnd;
 
 	hdc = ds->hDC;   
 	rc = ds->rc; 
-  // hwnd = ds->hwnd;
+//  hwnd = ds->hwnd;
 
-  // GetClientRect(hwnd, &rc_tmp);//得到控件的位置
-  // WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
+//  GetClientRect(hwnd, &rc_tmp);//得到控件的位置
+//  WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
 
-  // BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_clock_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
+//  BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
 
   if (ds->State & BST_PUSHED)
 	{ //按钮是按下状态
-		SetPenColor(hdc, MapRGB(hdc, 120, 120, 120));      //设置文字色
+		SetPenColor(hdc, MapRGB(hdc, 1, 191, 255));
 	}
 	else
 	{ //按钮是弹起状态
-		SetPenColor(hdc, MapRGB(hdc, 250, 250, 250));
+
+		SetPenColor(hdc, MapRGB(hdc, 250, 250, 250));      //设置画笔色
 	}
   
-  rc.w = 25;
-  OffsetRect(&rc, 0, 3);
+  SetPenSize(hdc, 2);
+
+  InflateRect(&rc, 0, -1);
   
   for(int i=0; i<4; i++)
   {
     HLine(hdc, rc.x, rc.y, rc.w);
-    rc.y += 6;
+    rc.y += 9;
   }
 }
 
@@ -311,78 +313,78 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                   (TaskHandle_t*  )&Network_Task_Handle);     /* 任务控制块指针 */
                       
       CreateWindow(BUTTON, L"O", WS_TRANSPARENT|BS_FLAT | BS_NOTIFY |WS_OWNERDRAW|WS_VISIBLE,
-                  286, 2, 23, 23, hwnd, eID_Network_EXIT, NULL, NULL); 
+                  740, 10, 36, 36, hwnd, eID_Network_EXIT, NULL, NULL); 
 
 
 
       CreateWindow(BUTTON,L"TCPServer",BS_RADIOBOX|WS_VISIBLE,
-      230,26,90,18,hwnd,ID_RB1,NULL,NULL);
+      400,82,150,25,hwnd,ID_RB1,NULL,NULL);
       SendMessage(GetDlgItem(hwnd, ID_RB1&0xFFFF), BM_SETSTATE, BST_CHECKED, 0);    // 默认选中
       SendMessage(GetDlgItem(hwnd, ID_RB1&0xFFFF), TBM_SET_TEXTFLAG, 0, DT_BOTTOM | DT_LEFT | DT_BKGND);
       										
       OffsetRect(&rc, rc.w, 0);
       CreateWindow(BUTTON,L"TCPClient",BS_RADIOBOX|WS_VISIBLE,
-      230,43,90,18,hwnd,ID_RB2,NULL,NULL);
+      550,82,150,25,hwnd,ID_RB2,NULL,NULL);
       SendMessage(GetDlgItem(hwnd, ID_RB2&0xFFFF), TBM_SET_TEXTFLAG, 0, DT_BOTTOM | DT_LEFT | DT_BKGND);
 
       OffsetRect(&rc, rc.w, 0);
       CreateWindow(BUTTON,L"UDP",BS_RADIOBOX|WS_VISIBLE,
-      157,43,50,18,hwnd,ID_RB3,NULL,NULL);
+      700,82,100,25,hwnd,ID_RB3,NULL,NULL);
       SendMessage(GetDlgItem(hwnd, ID_RB3&0xFFFF), TBM_SET_TEXTFLAG, 0, DT_BOTTOM | DT_LEFT | DT_BKGND);
       
       CreateWindow(BUTTON, L"连接", WS_TRANSPARENT | BS_NOTIFY|WS_VISIBLE|WS_OWNERDRAW,
-                  265, 93, 46, 14, hwnd, eID_LINK_STATE, NULL, NULL);
+                  690, 167, 100, 30, hwnd, eID_LINK_STATE, NULL, NULL);
       
       /* 数据发送文本窗口 */
-      rc.w = 161;
-      rc.h = 112;
-      rc.x = 157;
-      rc.y = 127;
+      rc.w = 395;
+      rc.h = 232;
+      rc.x = 400;
+      rc.y = 244;
       Send_Handle = CreateWindow(TEXTBOX, L"你好！\r\n这里是野火开发板 ^_^", WS_TRANSPARENT | WS_VISIBLE|WS_OWNERDRAW, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_Send, NULL, NULL);
 
       /* 创建接收窗口 */
-      rc.w = 154;
-      rc.h = 190;
-      rc.x = 1;
-      rc.y = 26;
+      rc.w = 395;
+      rc.h = 382;
+      rc.x = 3;
+      rc.y = 52;
       Receive_Handle = CreateWindow(TEXTBOX, L"", WS_TRANSPARENT|WS_VISIBLE|WS_OWNERDRAW, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_Receive, NULL, NULL);
       
-      rc.x = 281;
-      rc.y = 217;
-      rc.w = 35;
-      rc.h = 20;
+      rc.x = 703;
+      rc.y = 432;
+      rc.w = 88;
+      rc.h = 32;
       CreateWindow(BUTTON, L"发送", WS_TRANSPARENT | BS_NOTIFY|WS_VISIBLE|WS_OWNERDRAW,
                          rc.x,rc.y,rc.w,rc.h, hwnd, eID_Network_Send, NULL, NULL); 
                          
-      rc.x = 98;
-      rc.h = 20;
-      rc.w = 55;
-      rc.y = 217;
+      rc.x = 255;
+      rc.h = 32;
+      rc.w = 138;
+      rc.y = 434;
       CreateWindow(BUTTON, L"清空接收", WS_TRANSPARENT | BS_NOTIFY|WS_VISIBLE|WS_OWNERDRAW,
                          rc.x,rc.y,rc.w,rc.h, hwnd, eID_Receive_Clear,       NULL, NULL); 
 
       /* 数据发送文本窗口 */
-      rc.w = 26;
-      rc.h = 16;
-      rc.x = 157;
-      rc.y = 110;
+      rc.w = 70;
+      rc.h = 35;
+      rc.x = 400;
+      rc.y = 200;
       Temp_Handle = CreateWindow(TEXTBOX, L"192", WS_VISIBLE|WS_BORDER, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemoteIP1, NULL, NULL);//
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_BOTTOM | DT_CENTER | DT_BKGND);
 
-      OffsetRect(&rc, rc.w+3, 0);
+      OffsetRect(&rc, rc.w+8, 0);
       Temp_Handle = CreateWindow(TEXTBOX, L"168", WS_VISIBLE|WS_BORDER, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemoteIP2, NULL, NULL);//
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_BOTTOM | DT_CENTER | DT_BKGND);
 
-      OffsetRect(&rc, rc.w+3, 0);
+      OffsetRect(&rc, rc.w+8, 0);
       Temp_Handle = CreateWindow(TEXTBOX, L"0", WS_VISIBLE|WS_BORDER, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemoteIP3, NULL, NULL);//
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_BOTTOM | DT_CENTER | DT_BKGND);
 
-      OffsetRect(&rc, rc.w+3, 0);
+      OffsetRect(&rc, rc.w+8, 0);
       Temp_Handle = CreateWindow(TEXTBOX, L"138", WS_VISIBLE|WS_BORDER, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemoteIP4, NULL, NULL);//
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_BOTTOM | DT_CENTER | DT_BKGND);
 
-      OffsetRect(&rc, rc.w+3 , 0);
-      rc.w = 42;
+      OffsetRect(&rc, rc.w+8 , 0);
+      rc.w = 80;
       Temp_Handle = CreateWindow(TEXTBOX, L"8080", WS_VISIBLE|WS_BORDER, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemotePort, NULL, NULL);//
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_BOTTOM | DT_CENTER | DT_BKGND);
 
@@ -427,17 +429,17 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       SetBrushColor(hdc, MapRGB(hdc, 250, 250, 250));
       FillRect(hdc, &rc);
 
-      rc.h = 26;
+      rc.h = 50;
       GradientFillRect(hdc, &rc, MapRGB(hdc, 1, 218, 254), MapRGB(hdc, 1, 168, 255), FALSE);
       SetTextColor(hdc, MapRGB(hdc, 250, 250, 250));
       DrawText(hdc, L"以太网", -1, &rc, DT_VCENTER|DT_CENTER);
 
       SetPenColor(hdc, MapRGB(hdc, 121, 121, 121));
 
-      rc.x = 1;
-      rc.y = 27;
-      rc.w = 154;
-      rc.h = 213;
+      rc.x = 3;
+      rc.y = 52;
+      rc.w = 395;
+      rc.h = 424;
       EnableAntiAlias(hdc, ENABLE);
       DrawRoundRect(hdc, &rc, 7);     // 绘制接收区的外框
       EnableAntiAlias(hdc, DISABLE);
@@ -445,10 +447,10 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       SetFont(hdc, defaultFont);
       SetTextColor(hdc, MapRGB(hdc, 0x16, 0x9B, 0xD5));
 
-      rc.x = 157;
-      rc.y = 26;
-      rc.w = 164;
-      rc.h = 52;
+      rc.x = 400;
+      rc.y = 50;
+      rc.w = 395;
+      rc.h = 30;
       DrawText(hdc, L"通讯协议：", -1, &rc, DT_LEFT|DT_TOP);
 
       // rc.x = 550;
@@ -459,11 +461,11 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       
       rc.w = 143;
       rc.h = 20;
-      rc.x = 157;
-      rc.y = 60;
+      rc.x = 400;
+      rc.y = 112;
       DrawText(hdc, L"本地IP地址&端口：", -1, &rc, DT_LEFT|DT_TOP);
       
-      rc.y = 92;
+      rc.y = 170;
       DrawText(hdc, L"远端IP地址&端口：", -1, &rc, DT_LEFT|DT_TOP);
       
       SetTextColor(hdc, MapRGB(hdc, 10, 10, 10));
@@ -472,8 +474,8 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                                        drv_network.net_local_port);
       rc.w = 184;
       rc.h = 20;
-      rc.x = 157;
-      rc.y = 75;
+      rc.x = 400;
+      rc.y = 140;
       DrawText(hdc, tempstr, -1, &rc, DT_LEFT|DT_TOP);
       
       SetTextColor(hdc, MapRGB(hdc, 0x16, 0x9B, 0xD5));
@@ -486,18 +488,18 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
       rc.w = 16;
       rc.h = 20;
-      rc.x = 179;
-      rc.y = 107;
+      rc.x = 465;
+      rc.y = 215;
       DrawText(hdc, L".", -1, &rc, DT_LEFT|DT_BOTTOM);
       
-      rc.x = 208;
+      rc.x = 543;
 			
       DrawText(hdc, L".", -1, &rc, DT_LEFT|DT_BOTTOM);
       
-      rc.x = 237;
+      rc.x = 621;
       DrawText(hdc, L".", -1, &rc, DT_LEFT|DT_BOTTOM);
       
-      rc.x = 266;
+      rc.x = 700;
       DrawText(hdc, L":", -1, &rc, DT_LEFT|DT_BOTTOM);
       
       EndPaint(hwnd, &ps);

@@ -15,7 +15,7 @@
   */ 
 
 
-
+#include "board.h"
 #include "emXGUI.h"
 #include "GUI_AppDef.h"
 

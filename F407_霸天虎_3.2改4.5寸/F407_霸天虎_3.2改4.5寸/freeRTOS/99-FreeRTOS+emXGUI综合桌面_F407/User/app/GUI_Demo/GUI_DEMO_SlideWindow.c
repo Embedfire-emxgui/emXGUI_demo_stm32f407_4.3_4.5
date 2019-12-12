@@ -8,6 +8,7 @@
 #include <emXGUI.h>
 #include "emXGUI_JPEG.h"
 #include "GUI_AppDef.h"
+#include "board.h"
 //#include "cpuusage.h"
 
 /* 为0时显示GUI的广告，为1时显示开发板的广告 */

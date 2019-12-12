@@ -47,6 +47,7 @@
 /* 是否使用缓冲型控件，使用的话会增加一层液晶像素数据的消耗，显示效果减少闪烁*/
 #define  FRAME_BUFFER_EN           1
 
+
 /*==========输入设备配置===gui_input_port.c==================================================*/
 /* 是否使用输入设备 */
 #define  GUI_INPUT_DEV_EN               1
@@ -69,7 +70,7 @@
 //#define	GUI_CORE_MEM_BASE	  0xD0100000  //本例子使用RTT管理，使用内部sram，不指定地址
 
 /* GUI内核使用的存储区大小，推荐最小值为8KB */
-#define  GUI_CORE_MEM_SIZE  (64*1024) //本例子使用系统管理，在rtt系统在board.c实现，freertos在heap_4.c实现
+#define  GUI_CORE_MEM_SIZE  (50*1024) //本例子使用系统管理，在rtt系统在board.c实现，freertos在heap_4.c实现
 /* 最小分配粒度，单位为字节*/  
 #define	GUI_CORE_MEM_ALLOC_UNIT   (64)         
 
@@ -96,7 +97,7 @@
 /* 内存堆的基地址，可以为内部SRAM、外扩的SDRAM等 */  
 #define	VMEM_BASE	        (EXT_SRAM_BASE)
 /* 内存堆的总大小，单位为字节 */ 
-#define	VMEM_SIZE	        ((1024*1024))
+#define	VMEM_SIZE	        ((984*1024))
 /* 最小分配粒度，单位为字节*/  
 #define	VMEM_ALLOC_UNIT   (64)         //64字节   
 
@@ -189,13 +190,13 @@
 
 /*===========图片接口配置===gui_picture_port.c===============================================*/
 /* 是否支持文件系统图片接口,需要移植fatfs文件系统 */
-#define GUI_PIC_FS_EN         1
+#define GUI_PIC_FS_EN         0
 
 /* 是否支持显示JPEG图片,需要添加jpeg解码库 */
-#define GUI_PIC_JPEG_EN       1
+#define GUI_PIC_JPEG_EN       0
 
 /* 是否支持显示JPEG图片,需要添加png解码库 */
-#define GUI_PIC_PNG_EN        1
+#define GUI_PIC_PNG_EN        0
 
 /* 截图 */
 #define GUI_PIC_CAPTURE_SCREEN_EN  ( 1 && GUI_PIC_FS_EN)
@@ -207,7 +208,7 @@
 
 /* 资源烧录器，使能后缺少资源会自动进入资源烧录界面 */
 /* 需要sd文件系统/flash资源设备支持 */
-#define GUI_APP_RES_WRITER_EN          1
+#define GUI_APP_RES_WRITER_EN         1
 /*============================================================================*/
 
 #endif	/*__GUI_DRV_CFG_H__*/

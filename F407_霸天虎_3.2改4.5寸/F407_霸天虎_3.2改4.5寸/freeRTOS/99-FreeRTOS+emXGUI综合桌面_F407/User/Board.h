@@ -38,7 +38,10 @@ extern "C"{
 #include "./beep/bsp_beep.h"   
 
 #include "gui_drv_cfg.h"
-
+#include "gui_os_port.h"
+#include "gui_font_port.h"
+#include "gui_drv.h"
+#include "def.h"
 /*=========================================================================================*/
 
 #define	KB	(1024)

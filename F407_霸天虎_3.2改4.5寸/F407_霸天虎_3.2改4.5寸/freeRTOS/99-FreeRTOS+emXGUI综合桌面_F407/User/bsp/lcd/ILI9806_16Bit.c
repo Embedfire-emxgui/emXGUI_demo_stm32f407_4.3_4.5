@@ -637,16 +637,6 @@ void ILI9806G_OpenWindow ( uint16_t usX, uint16_t usY, uint16_t usWidth, uint16_
 }
 
 
-/**
- * @brief  设定ILI9806G的光标坐标
- * @param  usX ：在特定扫描方向下光标的X坐标
- * @param  usY ：在特定扫描方向下光标的Y坐标
- * @retval 无
- */
-static void ILI9806G_SetCursor ( uint16_t usX, uint16_t usY )	
-{
-	ILI9806G_OpenWindow ( usX, usY, 1, 1 );
-}
 
 
 /**

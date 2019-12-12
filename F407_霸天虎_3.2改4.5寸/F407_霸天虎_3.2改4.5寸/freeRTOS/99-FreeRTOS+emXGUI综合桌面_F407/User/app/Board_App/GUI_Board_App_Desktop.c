@@ -5,8 +5,6 @@
  */
 
 #include "emXGUI.h"
- //#include	"rtthread.h"
-
 #include "emXGUI_JPEG.h"
 #include	"CListMenu.h"
 #include "GUI_AppDef.h"
@@ -86,7 +84,7 @@ static const struct __obj_list menu_list_1[] = {
       L"摄像头",		  NULL,	  L"M", RGB_WHITE, GUI_Camera_DIALOG,//dummy,//
 
       L"WiFi",		    NULL,	  L"P", RGB_WHITE, gui_wifi_dialog,
-//      L"以太网",		  NULL,	  L"Q", RGB_WHITE, gui_network_dialog,
+      L"以太网",		  NULL,	  L"Q", RGB_WHITE, gui_network_dialog,
 	    L"蜂鸣器",     NULL,	  L"i", RGB_WHITE,	GUI_Beeper_Dialog,
       L"模拟U盘",     NULL,	  L"N", RGB_WHITE, GUI_SimulateUDisk_Dialog,
       L"LED&KEY",    NULL,	  L"j", RGB_WHITE, GUI_LED_KEY_Dialog,
