@@ -97,7 +97,7 @@
 /* 内存堆的基地址，可以为内部SRAM、外扩的SDRAM等 */  
 #define	VMEM_BASE	        (EXT_SRAM_BASE)
 /* 内存堆的总大小，单位为字节 */ 
-#define	VMEM_SIZE	        ((984*1024))
+#define	VMEM_SIZE	        ((1024*1024))
 /* 最小分配粒度，单位为字节*/  
 #define	VMEM_ALLOC_UNIT   (64)         //64字节   
 

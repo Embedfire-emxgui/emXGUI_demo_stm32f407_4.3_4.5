@@ -11,24 +11,24 @@
 //图标管理数组
 recorder_icon_t record_icon[] = {
 
-   {L"A",        { 25, 180, 26, 24},   ID_RECORD_bPOWER},    // 0. 音量
-   {L"Q",        { 68, 180, 24, 24},   ID_RECORD_BUGLE},     // 1. 喇叭按钮
-   {L"S",        {164, 205, 24, 24},   ID_RECORD_BACK},      // 2. 上一首
-   {L"T",        {203, 201, 32, 32},   ID_RECORD_PLAY},      // 3. 播放
-   {L"V",        {250, 204, 24, 24},   ID_RECORD_NEXT},      // 4. 下一首
-   {L"U",        { 25, 146, 24, 24},   ID_RECORD_STOP},      // 5. 停止录音
-   {L"U",        { 68, 146, 24, 24},   ID_RECORD_START},     // 6. 开始录音
-   {L"U",        { 68, 146, 24, 24},   ID_RECORD_PADNC},     // 7. 暂停继续
-   {L"O",        {286,   8, 23, 23},   ID_RECORD_EXIT},      // 8. 退出
- 
-   {L"录音机",   {30,   41, 57, 27},   ID_RECORD_STATE},     // 9. 正在录音
-   {L"00:00",    {38,   86, 42, 27},   ID_RECORD_TIME},      // 10. 录音时长
-   {L"00:00",    {119, 177, 31, 18},   ID_PLAY_TIME},        // 11. 播放时长
-   {L"00:00",    {287, 177, 32, 18},   ID_PLAY_TOTAL_TIME},  // 12. 录音总时长
+   {L"A",        {308, 412, 48, 48},   ID_RECORD_bPOWER},    // 0. 音量
+   {L"Q",        {718, 407, 64, 64},   ID_RECORD_BUGLE},     // 1. 喇叭按钮
+   {L"S",        {446, 407, 64, 64},   ID_RECORD_BACK},      // 2. 上一首
+   {L"T",        {538, 405, 72, 72},   ID_RECORD_PLAY},      // 3. 播放
+   {L"V",        {642, 407, 64, 64},   ID_RECORD_NEXT},      // 4. 下一首
+   {L"U",        {79,  308, 64, 64},   ID_RECORD_STOP},      // 5. 停止录音
+   {L"U",        {181, 308, 64, 64},   ID_RECORD_START},     // 6. 开始录音
+   {L"U",        {181, 308, 72, 72},   ID_RECORD_PADNC},     // 7. 暂停继续
+   {L"O",        {740,  12, 36, 36},   ID_RECORD_EXIT},      // 8. 退出
+
+   {L"录音机",   {96,  85, 120, 30},   ID_RECORD_STATE},     // 9. 正在录音
+   {L"00:00",    {106, 187,100, 30},   ID_RECORD_TIME},      // 10. 录音时长
+   {L"00:00",    {302, 379, 66, 30},   ID_PLAY_TIME},        // 11. 播放时长
+   {L"00:00",    {732, 379, 66, 30},   ID_PLAY_TOTAL_TIME},  // 12. 录音总时长
   
-   {L" ",        {135, 26, 158,138},   ID_RECORD_LIST},      // 13. 音乐列表
-   {L" ",        {152, 181,130, 16},   ID_PLAY_PROGRESS},    // 14. 播放进度条
-   {L" ",        { 24, 211, 69, 16},   ID_RECORD_sPOWER},    // 15. 音量进度条
+   {L" ",        {325, 47, 406,301},   ID_RECORD_LIST},      // 13. 音乐列表
+   {L" ",        {370, 378,355, 30},   ID_PLAY_PROGRESS},    // 14. 播放进度条
+   {L" ",        {369, 423, 74, 30},   ID_RECORD_sPOWER},    // 15. 音量进度条
   
 };
 
@@ -154,7 +154,7 @@ static void App_Record(void *p)
 		}
     GUI_Yield();
    }
-//  GUI_Thread_Delete(GUI_GetCurThreadHandle()); 
+  GUI_Thread_Delete(GUI_GetCurThreadHandle()); 
 }
 
 /**
@@ -198,6 +198,8 @@ static void App_PlayRecord(HWND hwnd)
     GUI_msleep(20);
 	   
    }
+	 thread = 1;
+   printf("录音播放线程退出\n");
    GUI_Thread_Delete(GUI_GetCurThreadHandle()); 
 }
 
@@ -225,14 +227,15 @@ static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 
 		SetPenColor(hdc, MapRGB(hdc, 1, 191, 255));      //设置画笔色
 	}
+  
+  SetPenSize(hdc, 2);
 
-  rc.w = 25;
-  OffsetRect(&rc, 0, 11);
+  InflateRect(&rc, 0, -1);
   
   for(int i=0; i<4; i++)
   {
     HLine(hdc, rc.x, rc.y, rc.w);
-    rc.y += 5;
+    rc.y += 9;
   }
 }
 
@@ -270,7 +273,7 @@ static void stop_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
   DrawCircle(hdc, rc.x+rc.w/2, rc.y+rc.h/2, rc.w/2);
 
   /* 绘制圆角矩形 */
-	InflateRect(&rc, -7, -7);
+	InflateRect(&rc, -13, -13);
   FillRoundRect(hdc, &rc, 5);
   
   EnableAntiAlias(hdc, FALSE);
@@ -296,7 +299,7 @@ static void start_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
   {
     if (ds->State & BST_PUSHED)
     { //按钮是按下状态
-      SetBrushColor(hdc, MapRGB(hdc, 180, 20, 20));      //设置文字色
+      SetBrushColor(hdc, MapRGB(hdc, 180, 20, 20));      //设置背景色
       SetPenColor(hdc, MapRGB(hdc, 200, 200, 200));
     }
     else
@@ -311,8 +314,7 @@ static void start_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
   DrawCircle(hdc, rc.x+rc.w/2, rc.y+rc.h/2, rc.w/2);
 
   /* 绘制圆角矩形 */
-//  SetPenSize(hdc, 1);
-  FillCircle(hdc, rc.x+rc.w/2, rc.x+rc.w/2, 10);
+  FillCircle(hdc, rc.x+rc.w/2, rc.x+rc.w/2, 27);
   
   EnableAntiAlias(hdc, FALSE);
 }
@@ -326,113 +328,60 @@ static void start_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 
 static void button_owner_draw(DRAWITEM_HDR *ds)
 {
-   HDC hdc; //控件窗口HDC
-   HDC hdc_mem;//内存HDC，作为缓冲区
-   HWND hwnd; //控件句柄 
-   RECT rc_cli, rc_tmp;//控件的位置大小矩形
-   WCHAR wbuf[128];
-	hwnd = ds->hwnd;
-	hdc = ds->hDC; 
-//   if(ds->ID ==  ID_BUTTON_START && show_lrc == 1)
-//      return;
-   //获取控件的位置大小信息
-   GetClientRect(hwnd, &rc_cli);
-   //创建缓冲层，格式为SURF_ARGB4444
-   hdc_mem = CreateMemoryDC(SURF_SCREEN, rc_cli.w, rc_cli.h);
-   
-	GetWindowText(ds->hwnd,wbuf,128); //获得按钮控件的文字  
-//   if(ds->ID == ID_BUTTON_Power || ds->ID == ID_BUTTON_MINISTOP){
-//      SetBrushColor(hdc, color_bg);
-//      FillRect(hdc, &rc_cli);
-//   }
-//   
-//   SetBrushColor(hdc_mem,MapARGB(hdc_mem, 0, 255, 250, 250));
-//   FillRect(hdc_mem, &rc_cli);
+  HDC hdc; //控件窗口HDC
+  HWND hwnd; //控件句柄 
+  RECT rc_cli;//控件的位置大小矩形
+  WCHAR wbuf[128];
+  hwnd = ds->hwnd;
+  hdc = ds->hDC; 
 
-   GetClientRect(hwnd, &rc_tmp);//得到控件的位置
-   GetClientRect(hwnd, &rc_cli);//得到控件的位置
-   WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
-   
-   BitBlt(hdc_mem, rc_cli.x, rc_cli.y, rc_cli.w, rc_cli.h, hdc_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
+  //获取控件的位置大小信息
+  GetClientRect(hwnd, &rc_cli);
 
-   //播放键使用100*100的字体
-   if(ds->ID == ID_RECORD_PLAY || ds->ID == ID_RECORD_PADNC)
-      SetFont(hdc_mem, controlFont_32);
-  //  else if(ds->ID == ID_RECORD_bPOWER)
-  //     SetFont(hdc_mem, controlFont_48);
-   else
-      SetFont(hdc_mem, controlFont_24);
+  GetWindowText(ds->hwnd,wbuf,128); //获得按钮控件的文字  
+  GetClientRect(hwnd, &rc_cli);//得到控件的位置
 
-	//设置按键的颜色
-	if (ds->Style & WS_DISABLED)    // 窗口是禁止的
+  HFONT controlFont_64, controlFont_48;
+
+  //播放键使用100*100的字体
+  if(ds->ID == ID_RECORD_PLAY || ds->ID == ID_RECORD_PADNC)
   {
-    SetTextColor(hdc_mem, MapARGB(hdc_mem, 250, 220, 220, 220));      //设置文字色
+    controlFont_64 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_64);
+    SetFont(hdc, controlFont_64);
+  }
+  else
+  {
+    controlFont_48 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_48);
+    SetFont(hdc, controlFont_48);
+  }
+
+  //设置按键的颜色
+  if (ds->Style & WS_DISABLED)    // 窗口是禁止的
+  {
+    SetTextColor(hdc, MapARGB(hdc, 250, 220, 220, 220));      //设置文字色
   }
   else
   {
     if (ds->State & BST_PUSHED)
     { //按钮是按下状态
-      SetTextColor(hdc_mem, MapARGB(hdc_mem, 250,105,105,105));      //设置文字色
+      SetTextColor(hdc, MapARGB(hdc, 250,105,105,105));      //设置文字色
     }
     else
     { //按钮是弹起状态
-      SetTextColor(hdc_mem, MapARGB(hdc_mem, 250,250,250,250));
+      SetTextColor(hdc, MapARGB(hdc, 250,250,250,250));
     }
   }
- 
-   DrawText(hdc_mem, wbuf,-1,&rc_cli,DT_VCENTER);//绘制文字(居中对齐方式)
-   
-   BitBlt(hdc, rc_cli.x, rc_cli.y, rc_cli.w, rc_cli.h, hdc_mem, 0, 0, SRCCOPY);
-   
-   DeleteDC(hdc_mem);  
-}
 
+  DrawText(hdc, wbuf,-1,&rc_cli,DT_VCENTER);//绘制文字(居中对齐方式)
 
-/*
- * @brief  绘制滚动条
- * @param  hwnd:   滚动条的句柄值
- * @param  hdc:    绘图上下文
- * @param  back_c：背景颜色
- * @param  Page_c: 滚动条Page处的颜色
- * @param  fore_c：滚动条滑块的颜色
- * @retval NONE
-*/
-static void draw_scrollbar(HWND hwnd, HDC hdc, COLOR_RGB32 back_c, COLOR_RGB32 Page_c, COLOR_RGB32 fore_c)
-{
-	RECT rc,rc_tmp;
-   RECT rc_scrollbar;
-	GetClientRect(hwnd, &rc);
-	/* 背景 */
-   GetClientRect(hwnd, &rc_tmp);//得到控件的位置
-   GetClientRect(hwnd, &rc);//得到控件的位置
-   WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
-   
-   BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
-
-   rc_scrollbar.x = rc.x;
-   rc_scrollbar.y = rc.h/2-1;
-   rc_scrollbar.w = rc.w;
-   rc_scrollbar.h = 2;
-   
-	SetBrushColor(hdc, MapRGB888(hdc, Page_c));
-	FillRect(hdc, &rc_scrollbar);
-
-	/* 滑块 */
-	SendMessage(hwnd, SBM_GETTRACKRECT, 0, (LPARAM)&rc);
-
-	SetBrushColor(hdc, MapRGB(hdc, 169, 169, 169));
-	//rc.y += (rc.h >> 2) >> 1;
-	//rc.h -= (rc.h >> 2);
-	/* 边框 */
-	//FillRoundRect(hdc, &rc, MIN(rc.w, rc.h) >> 2);
-  EnableAntiAlias(hdc, ENABLE);
-	FillCircle(hdc, rc.x + rc.w / 2, rc.y + rc.h / 2, rc.h / 2 - 1);
-   InflateRect(&rc, -2, -2);
-
-	SetBrushColor(hdc, MapRGB888(hdc, fore_c));
-	FillCircle(hdc, rc.x + rc.w / 2, rc.y + rc.h / 2, rc.h / 2 - 1);
-  EnableAntiAlias(hdc, DISABLE);
-   //FillRoundRect(hdc, &rc, MIN(rc.w, rc.h) >> 2);
+  if(ds->ID == ID_RECORD_PLAY || ds->ID == ID_RECORD_PADNC)
+  {
+    DeleteFont(controlFont_64);
+  }
+  else
+  {
+    DeleteFont(controlFont_48);
+  }
 }
 
 /*
@@ -455,11 +404,57 @@ static void Brigh_Textbox_OwnerDraw(DRAWITEM_HDR *ds) //绘制一个按钮外观
    GetClientRect(hwnd, &rc);//得到控件的位置
    WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
    
-   BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
-
+//   BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
+  SetBrushColor(hdc, MapRGB(hdc, 250, 250, 250));
+	FillRect(hdc, &rc);
+	
+	
 	SetTextColor(hdc, MapRGB(hdc, 50, 50, 50));
 	GetWindowText(hwnd, wbuf, 128); //获得按钮控件的文字
 	DrawText(hdc, wbuf, -1, &rc, DT_VCENTER|DT_CENTER);//绘制文字(居中对齐方式)
+}
+
+/*
+ * @brief  绘制滚动条
+ * @param  hwnd:   滚动条的句柄值
+ * @param  hdc:    绘图上下文
+ * @param  back_c：背景颜色
+ * @param  Page_c: 滚动条Page处的颜色
+ * @param  fore_c：滚动条滑块的颜色
+ * @retval NONE
+*/
+static void draw_scrollbar(HWND hwnd, HDC hdc, COLOR_RGB32 back_c, COLOR_RGB32 Page_c, COLOR_RGB32 fore_c)
+{
+  RECT rc;
+  RECT rc_scrollbar;
+
+  /* 背景 */
+  GetClientRect(hwnd, &rc);//得到控件的位置
+
+  SetBrushColor(hdc,MapARGB(hdc, 0, 243, 142, 234));
+  FillRect(hdc, &rc);
+
+  rc_scrollbar.x = rc.x;
+  rc_scrollbar.y = rc.h/2-1;
+  rc_scrollbar.w = rc.w;
+  rc_scrollbar.h = 2;
+
+  SetBrushColor(hdc, MapRGB888(hdc, Page_c));
+  FillRect(hdc, &rc_scrollbar);
+
+  /* 滑块 */
+  SendMessage(hwnd, SBM_GETTRACKRECT, 0, (LPARAM)&rc);
+
+  SetBrushColor(hdc, MapRGB(hdc, 169, 169, 169));
+  //rc.y += (rc.h >> 2) >> 1;
+  //rc.h -= (rc.h >> 2);
+  /* 边框 */
+  //FillRoundRect(hdc, &rc, MIN(rc.w, rc.h) >> 2);
+  FillCircle(hdc, rc.x + rc.w / 2, rc.y + rc.h / 2, rc.h / 2 - 1);
+  InflateRect(&rc, -2, -2);
+
+  SetBrushColor(hdc, MapRGB888(hdc, fore_c));
+  FillCircle(hdc, rc.x + rc.w / 2, rc.y + rc.h / 2, rc.h / 2 - 1);
 }
 
 /*
@@ -520,7 +515,7 @@ static void listbox_owner_draw(DRAWITEM_HDR *ds)
 {
 	HWND hwnd;
 	HDC hdc;
-	RECT rc,rc_tmp;
+	RECT rc;
 	int i,count,cursel;
 	WCHAR wbuf[128];
 	hwnd =ds->hwnd;
@@ -530,12 +525,11 @@ static void listbox_owner_draw(DRAWITEM_HDR *ds)
 
 	rc =ds->rc;
 
-   /* 背景 */
-   GetClientRect(hwnd, &rc_tmp);//得到控件的位置
-   GetClientRect(hwnd, &rc);//得到控件的位置
-   WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
+  /* 背景 */
+  GetClientRect(hwnd, &rc);//得到控件的位置
    
-   BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
+  SetBrushColor(hdc, MapRGB(hdc, 243, 142, 234));
+  FillRect(hdc, &rc);
   
   if (!SendMessage(hwnd,LB_GETCOUNT,0,0))
   {
@@ -584,6 +578,8 @@ static void listbox_owner_draw(DRAWITEM_HDR *ds)
   }
 }
 
+
+
 extern int SelectDialogBox(HWND hwndParent, RECT *rc, const WCHAR *pText, const WCHAR *pCaption, const MSGBOX_OPTIONS *ops);
 static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -599,19 +595,18 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
          BOOL res = NULL;
 
          res = RES_Load_Content(GUI_RECORDER_BACKGROUNG_PIC, (char**)&jpeg_buf, &jpeg_size);
-         //res = FS_Load_Content(GUI_RECORDER_BACKGROUNG_PIC, (char**)&jpeg_buf, &jpeg_size);
-         hdc_bk = CreateMemoryDC(SURF_SCREEN, GUI_XSIZE, GUI_YSIZE);
-         if(res)
-         {
-            /* 根据图片数据创建JPG_DEC句柄 */
-            dec = JPG_Open(jpeg_buf, jpeg_size);
+//         hdc_bk = CreateMemoryDC(SURF_SCREEN, GUI_XSIZE, GUI_YSIZE);
+//         if(res)
+//         {
+//            /* 根据图片数据创建JPG_DEC句柄 */
+//            dec = JPG_Open(jpeg_buf, jpeg_size);
 
-            /* 绘制至内存对象 */
-            JPG_Draw(hdc_bk, 0, 0, dec);
+//            /* 绘制至内存对象 */
+//            JPG_Draw(hdc_bk, 0, 0, dec);
 
-            /* 关闭JPG_DEC句柄 */
-            JPG_Close(dec);
-         }
+//            /* 关闭JPG_DEC句柄 */
+//            JPG_Close(dec);
+//         }
          /* 释放图片内容空间 */
          RES_Release_Content((char **)&jpeg_buf); 
 
@@ -659,7 +654,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
          sif_power.nMin = 0;
          sif_power.nMax = 63;//音量最大值为63
          sif_power.nValue = 20;//初始音量值
-         sif_power.TrackSize = 22;//滑块值
+         sif_power.TrackSize = 29;//滑块值
          sif_power.ArrowSize = 0;//两端宽度为0（水平滑动条）
          
          HWND wnd;
@@ -897,6 +892,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
               KillTimer(hwnd, ID_Record_Timer);       // 删除录音计时定时器
               Record_Timer = 0;
               SetWindowText(GetDlgItem(hwnd, ID_RECORD_TIME), L"00:00");
+              SetWindowText(GetDlgItem(hwnd, ID_RECORD_PADNC), L"U");      
               /* 对于录音，需要把WAV文件内容填充完整 */
               if(Recorder.ucStatus == STA_RECORDING)
               {
@@ -937,8 +933,8 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 							SendMessage(GetDlgItem(hwnd, ID_RECORD_LIST), LB_LOCKCURSEL, FALSE, 0);     // 解锁列表可以重新修改选中的项
 							ShowWindow(GetDlgItem(hwnd, ID_RECORD_START), SW_SHOW);                     // 显示开始录音的按钮
 							ShowWindow(GetDlgItem(hwnd, ID_RECORD_PADNC), SW_HIDE);                     // 隐藏继续和暂停的按钮
-              EnableWindow(GetDlgItem(hwnd, ID_RECORD_BACK), ENABLE);                     // 禁用上一首按钮
-              EnableWindow(GetDlgItem(hwnd, ID_RECORD_NEXT), ENABLE);                     // 禁用下一首按钮
+              EnableWindow(GetDlgItem(hwnd, ID_RECORD_BACK), ENABLE);                     // 使能上一首按钮
+              EnableWindow(GetDlgItem(hwnd, ID_RECORD_NEXT), ENABLE);                     // 使能下一首按钮
               EnableWindow(GetDlgItem(hwnd, ID_RECORD_PLAY), ENABLE);                     // 使能播放按钮
 							EnableWindow(GetDlgItem(hwnd, ID_RECORD_STOP), DISABLE);                    // 禁用停止录音按钮
             }
@@ -1059,6 +1055,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                       }
                        wm8978_OutMute(0);
                        wm8978_SetOUT1Volume(power);//设置WM8978的音量值
+											 wm8978_SetOUT2Volume(power);
                    } 
                    SendMessage(nr->hwndFrom, SBM_SETVALUE, TRUE, power); //发送SBM_SETVALUE，设置音量值
                 }
@@ -1066,7 +1063,6 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
              }
           }
 
-          //进度条处理case
           if (ctr_id == ID_PLAY_PROGRESS)
           {
              NM_SCROLLBAR *sb_nr;
@@ -1078,57 +1074,63 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 {
                    i = sb_nr->nTrackValue; //获得滑块当前位置值                
                    SendMessage(nr->hwndFrom, SBM_SETVALUE, TRUE, i); //设置进度值
-                   //置位进度条变更位置
-                   chgsch = 1;
+                   chgsch = 2;
                 }
                 break;
+                
+               case SBN_CLICKED:
+               {
+                 //置位进度条变更位置
+                   chgsch = 1;
+               }
+               break;
              }
-          }         
+          }                  
       
       break;
     }
 
-      //重绘制函数消息
-      case WM_DRAWITEM:
-      {
-         DRAWITEM_HDR *ds;
-         ds = (DRAWITEM_HDR*)lParam;        
-         if(ds->ID == ID_RECORD_EXIT)
-         {
-            exit_owner_draw(ds);
-            return TRUE;
-         }
-         else if (ds->ID == ID_RECORD_STOP)
-         {
-            stop_owner_draw(ds);    // 重绘停止录音按钮
-            return TRUE;
-         }
-         else if (ds->ID == ID_RECORD_START)
-         {
-            start_owner_draw(ds);    // 重绘开始录音按钮
-            return TRUE;
-         }
-         else if (ds->ID == ID_RECORD_sPOWER || ds->ID == ID_PLAY_PROGRESS)   
-         {
-            scrollbar_owner_draw(ds);    // 进度条重绘
-            return TRUE;
-         }
-         else if (ds->ID >= ID_RECORD_bPOWER && ds->ID<= ID_RECORD_PADNC)
-         {
-            button_owner_draw(ds);    // 按钮重绘
-            return TRUE;
-         }
-         else if (ds->ID >= ID_RECORD_STATE && ds->ID<= ID_PLAY_TIME)
-         {
-            Brigh_Textbox_OwnerDraw(ds);    // 重绘透明文本
-            return TRUE;
-         }
-         else if (ds->ID == ID_RECORD_LIST)
-         {
-            listbox_owner_draw(ds);    // 重绘列表
-            return TRUE;
-         }
-         return FALSE;
+		//重绘制函数消息
+		case WM_DRAWITEM:
+		{
+			 DRAWITEM_HDR *ds;
+			 ds = (DRAWITEM_HDR*)lParam;        
+			 if(ds->ID == ID_RECORD_EXIT)
+			 {
+					exit_owner_draw(ds);
+					return TRUE;
+			 }
+			 else if (ds->ID == ID_RECORD_STOP)
+			 {
+					stop_owner_draw(ds);    // 重绘停止录音按钮
+					return TRUE;
+			 }
+			 else if (ds->ID == ID_RECORD_START)
+			 {
+					start_owner_draw(ds);    // 重绘开始录音按钮
+					return TRUE;
+			 }
+			 else if (ds->ID == ID_RECORD_sPOWER || ds->ID == ID_PLAY_PROGRESS)   
+			 {
+					scrollbar_owner_draw(ds);    // 进度条重绘
+					return TRUE;
+			 }
+			 else if (ds->ID >= ID_RECORD_bPOWER && ds->ID<= ID_RECORD_PADNC)
+			 {
+					button_owner_draw(ds);    // 按钮重绘
+					return TRUE;
+			 }
+			 else if (ds->ID >= ID_RECORD_STATE && ds->ID<= ID_PLAY_TIME)
+			 {
+					Brigh_Textbox_OwnerDraw(ds);    // 重绘透明文本
+					return TRUE;
+			 }
+			 else if (ds->ID == ID_RECORD_LIST)
+			 {
+					listbox_owner_draw(ds);    // 重绘列表
+					return TRUE;
+			 }
+			 return FALSE;
       }     
       
       //绘制窗口界面消息
@@ -1136,7 +1138,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       {
         PAINTSTRUCT ps;
         HDC hdc;//屏幕hdc
-        RECT rc = {181, 3, 75, 20};
+        RECT rc = {471, 13, 115, 34};
 
         //开始绘制
         hdc = BeginPaint(hwnd, &ps); 
@@ -1149,22 +1151,26 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       
       case WM_ERASEBKGND:
       {
-         HDC hdc =(HDC)wParam;
-         RECT rc =*(RECT*)lParam;
-         //GetClientRect(hwnd, &rc_cli);//获取客户区位置信息
-         SetBrushColor(hdc, MapRGB(hdc, 250,0,0));
-         FillRect(hdc, &rc); 
-         
-         BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_bk, rc.x, rc.y, SRCCOPY);         
- 
-         return TRUE;
+        HDC hdc =(HDC)wParam;
+        RECT rc = {0, 0, 293, GUI_YSIZE};
+        RECT rc1 = {293, 0, 507, GUI_YSIZE};
+        RECT rc_grad = {293, 0, 5, GUI_YSIZE};
+
+        SetBrushColor(hdc, MapRGB(hdc, 100, 238, 251));
+        FillRect(hdc, &rc);
+        SetBrushColor(hdc, MapRGB(hdc, 243, 142, 234)); 
+        FillRect(hdc, &rc1);
+        
+        GradientFillRect(hdc, &rc_grad, MapRGB(hdc, 150, 150, 150), MapRGB(hdc, 243, 142, 234), FALSE);
+
+        return TRUE;
       }
 
       //关闭窗口消息处理case
       case WM_CLOSE:
       {        
         Record_Timer = 0;     // 复位录音计时
-        mp3player.ucStatus = STA_IDLE;
+//**        mp3player.ucStatus = STA_IDLE;
         DestroyWindow(hwnd);
         return TRUE;	
       }
@@ -1173,7 +1179,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       case WM_DESTROY:
       {        
         BUGLE_STATE = 0;
-        DeleteDC(hdc_bk);
+//        DeleteDC(hdc_bk);
         vTaskDelete(h_record);
         vTaskDelete(h_play_record);
         music_file_num = 0;   // 复位文件记录
@@ -1190,6 +1196,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
      
    return WM_NULL;
 }
+
 
 
 void GUI_RECORDER_DIALOG(void)

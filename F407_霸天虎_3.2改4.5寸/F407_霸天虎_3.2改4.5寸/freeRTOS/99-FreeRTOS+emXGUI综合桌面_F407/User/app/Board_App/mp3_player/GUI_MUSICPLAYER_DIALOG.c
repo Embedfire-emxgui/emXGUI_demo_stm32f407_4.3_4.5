@@ -785,7 +785,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
         
          res = RES_Load_Content(GUI_RGB_BACKGROUNG_PIC, (char**)&jpeg_buf, &jpeg_size);
 
-         hdc_bk = CreateMemoryDC(SURF_SCREEN, GUI_XSIZE, GUI_YSIZE);
+//         hdc_bk = CreateMemoryDC(SURF_SCREEN, GUI_XSIZE, GUI_YSIZE);
 //         if(res)
 //         {
 //            /* 根据图片数据创建JPG_DEC句柄 */
@@ -853,20 +853,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
                          270, 424, 277, 30, hwnd, ID_SCROLLBAR_TIMER, NULL, NULL);
          SendMessage(music_wnd_time, SBM_SETSCROLLINFO, TRUE, (LPARAM)&sif);         
 
-         /*********************音量值滑动条******************/
-         sif_power.cbSize = sizeof(sif_power);
-         sif_power.fMask = SIF_ALL;
-         sif_power.nMin = 0;
-         sif_power.nMax = 63;        //音量最大值为63
-         sif_power.nValue = 20;      //初始音量值
-         sif_power.TrackSize = 28;    //滑块值
-         sif_power.ArrowSize = 0;     //两端宽度为0（水平滑动条）
-         
-         wnd = CreateWindow(SCROLLBAR, L"SCROLLBAR_R", WS_OWNERDRAW|WS_TRANSPARENT, 
-                            688, 294, 30, 100, hwnd, ID_SCROLLBAR_POWER, NULL, NULL);
-         SendMessage(wnd, SBM_SETSCROLLINFO, TRUE, (LPARAM)&sif_power);
 
-				 
          
          //以下控件为TEXTBOX的创建
           wnd_lrc1 = CreateWindow(TEXTBOX, L" ", WS_OWNERDRAW| WS_VISIBLE, 
@@ -908,6 +895,19 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
 
 
          GetClientRect(hwnd,&rc); //获得窗口的客户区矩形
+				 
+				          /*********************音量值滑动条******************/
+         sif_power.cbSize = sizeof(sif_power);
+         sif_power.fMask = SIF_ALL;
+         sif_power.nMin = 0;
+         sif_power.nMax = 63;//音量最大值为63
+         sif_power.nValue = 20;//初始音量值
+         sif_power.TrackSize = 22;//滑块值
+         sif_power.ArrowSize = 0;//两端宽度为0（水平滑动条）
+         
+         wnd = CreateWindow(SCROLLBAR, L"SCROLLBAR_R", WS_TRANSPARENT|SBS_VERT|WS_OWNERDRAW|SBS_BOTTOM_ALIGN|SBS_NOARROWS, 
+                            688, 294, 30, 100, hwnd, ID_SCROLLBAR_POWER, NULL, NULL);
+         SendMessage(wnd, SBM_SETSCROLLINFO, TRUE, (LPARAM)&sif_power);
          break;
       }
 
@@ -1050,7 +1050,6 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
          
       	nr = (NMHDR*)lParam; //lParam参数，是以NMHDR结构体开头.
          //音量条处理case
-
          if (ctr_id == ID_SCROLLBAR_POWER)
          {
             NM_SCROLLBAR *sb_nr;
@@ -1063,9 +1062,8 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
                   power= sb_nr->nTrackValue; //得到当前的音量值
                   if(power == 0) 
                   {
-                     wm8978_OutMute(1);//静音
- //                    SendMessage(wnd_horn, SBM_SETVALUE, TRUE, power_horn); // 发送SBM_SETVALUE，将喇叭音量也设置为0
                      SetWindowText(wnd_power, L"J");
+										 wm8978_OutMute(1);//静音
                      ttt = 1;
                   }
                   else
@@ -1075,11 +1073,17 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
                         ttt = 0;
                         SetWindowText(wnd_power, L"A");
                      }
+                  } 
+                  
+                  SendMessage(nr->hwndFrom, SBM_SETVALUE, TRUE, power); //发送SBM_SETVALUE，设置音量值
+               } 
+               break;
+               
+               case SBN_CLICKED:
+               {
                      wm8978_OutMute(0);
                      wm8978_SetOUT1Volume(power);//设置WM8978的耳机音量值
 										 wm8978_SetOUT2Volume(power);//设置WM8978的喇叭音量值
-                  } 
-                  SendMessage(nr->hwndFrom, SBM_SETVALUE, TRUE, power); //发送SBM_SETVALUE，设置音量值
                }
                break;
             }
@@ -1259,7 +1263,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
         GUI_SemWait(exit_sem, 0xFFFFFFFF);
         vTaskDelete(h_music);    // 删除播放线程
         GUI_SemDelete(exit_sem);
-        DeleteDC(hdc_bk);
+//        DeleteDC(hdc_bk);
         thread = 0;
         time2exit = 0;
         play_index = 0;
