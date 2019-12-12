@@ -994,6 +994,7 @@ LRESULT CListMenu::OnDestroy(HWND hwnd)
     return TRUE;
 }
 
+#if 1
 LRESULT	CListMenu::OnPaint(HWND hwnd)
 {
     HDC hdc, hdc_mem;
@@ -1003,8 +1004,6 @@ LRESULT	CListMenu::OnPaint(HWND hwnd)
     GetClientRect(hwnd, &rc);
 //    hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
 
-
-
     hdc = BeginPaint(hwnd, &ps);
 	  DrawFrame(hdc, hwnd);
 //    BitBlt(hdc, 0, 0, rc_main.w, rc_main.h, hdc_mem, 0, 0, SRCCOPY);
@@ -1013,6 +1012,28 @@ LRESULT	CListMenu::OnPaint(HWND hwnd)
 //    DeleteDC(hdc_mem);
     return TRUE;
 }
+#else
+LRESULT	CListMenu::OnPaint(HWND hwnd)
+{
+    HDC hdc, hdc_mem;
+    PAINTSTRUCT ps;
+    RECT rc;
+
+    GetClientRect(hwnd, &rc);
+    hdc_mem = CreateMemoryDC(SURF_SCREEN, rc.w, rc.h);
+    DrawFrame(hdc_mem, hwnd);
+
+
+    hdc = BeginPaint(hwnd, &ps);
+    BitBlt(hdc, 0, 0, rc_main.w, rc_main.h, hdc_mem, 0, 0, SRCCOPY);
+    EndPaint(hwnd, &ps);
+
+    DeleteDC(hdc_mem);
+    return TRUE;
+}
+#endif
+
+
 
 LRESULT CListMenu::OnNotify(HWND hwnd, u16 code, u16 id)
 {

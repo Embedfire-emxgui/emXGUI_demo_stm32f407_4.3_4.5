@@ -11,10 +11,11 @@
 #include	"CListMenu.h"
 #include "GUI_AppDef.h"
 
-
  /*============================================================================*/
 
 #define	ID_EXIT		0x3000
+//#define ICON_VIEWER_ID_PREV   0x1003
+//#define	ICON_VIEWER_ID_NEXT		0x1004
 #define	ID_RB1		0x1101
 #define	ID_RB2		0x1102
 #define	ID_RB3		0x1103
@@ -22,16 +23,34 @@
 #define	ID_RB5		0x1105
 #define	ID_RB6		0x1106
 
+
+//static int win_pos=0;
+//static u8 hour,min,sec;
+//static const WCHAR *pOEMText=NULL;
+//static u8 List1_Col,List1_Row;
+
 #define	ID_LIST_1 0x1000
 #define ID_LIST_2 0x1001
 
-static void dummy(void )
+//extern const char app_1[];
+
+//static const void *pIcon_app1 =app_1;
+//static const void *pIcon_app2 =app_2;
+
+
+static void dummy(HWND hwnd)
 {
 
 }
+HWND	app_hwnd_desktop;
+extern uint8_t Theme_Flag;   // 主题标志
 
 extern void	GUI_DEMO_Graphics_Accelerator(void);
 extern void	GUI_DEMO_ShowWave(void);
+extern void GUI_Auto_Meter_DIALOG(void);
+extern int	Calculator_WinMain(void);
+void GUI_Settings_DIALOG(void);
+
 
 #if 0
 static void App_GUI_DEMO_Hello(HWND hwnd)
@@ -70,17 +89,23 @@ static void App_GUI_DEMO_Hello(HWND hwnd)
 }
 #endif
 
+
+
+
 static struct __obj_list menu_list_1[] = {
 
-//  L"图形加速器",	NULL, 	L"d", RGB_WHITE,  dummy,//GUI_DEMO_Graphics_Accelerator,
-  L"波形显示",		NULL,	  L"B", RGB_WHITE,	GUI_DEMO_ShowWave,//dummy,//
-//  L"仪表盘",		  NULL,	  L"H", RGB_WHITE, 	dummy,
-  L"计算器",	    NULL, 	L"Z", RGB_WHITE,	dummy,
-//  L"Radiobox",	  NULL,   L"E", RGB_WHITE,	dummy,
-//  L"Textbox",   	NULL,	  L"F", RGB_WHITE,	dummy,
+//  L"图形加速器",		NULL, 	L"e", RGB_WHITE,		    (void (*)(HWND))GUI_DEMO_Graphics_Accelerator,
+  L"波形显示",		  NULL,	  L"B", RGB_WHITE,				(void (*)(HWND))GUI_DEMO_ShowWave,
+  L"设置",	        NULL,	  L"h", RGB_WHITE,		  	(void(*)(void *))GUI_Settings_DIALOG,
+
+//  L"仪表盘",		    NULL,	  L"H", RGB_WHITE, 				(void (*)(HWND))dummy,
+
+  L"计算器",	      NULL, 	L"Z", RGB_WHITE,				(void (*)(HWND))Calculator_WinMain,
 
   NULL,	NULL,NULL,	NULL, NULL,//结束标志!
+
 };
+
 
 static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 {
@@ -88,13 +113,14 @@ static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 	HDC hdc;
 	RECT rc;
 	WCHAR wbuf[128];
+  
 
 	hwnd = ds->hwnd; //button的窗口句柄.
 	hdc = ds->hDC;   //button的绘图上下文句柄.
 	rc = ds->rc;     //button的绘制矩形区.
 
-	SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
-	FillRect(hdc, &rc); //用矩形填充背景
+	// SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
+	// FillRect(hdc, &rc); //用矩形填充背景
 
 	if (IsWindowEnabled(hwnd) == FALSE)
 	{
@@ -109,17 +135,18 @@ static void button_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 		SetTextColor(hdc, MapRGB(hdc, 255, 255, 255));
 	}
 
+  HFONT controlFont_64 = NULL;
+  controlFont_64 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_64);
 	  /* 使用控制图标字体 */
 	SetFont(hdc, controlFont_64);
-
+	//  SetTextColor(hdc,MapRGB(hdc,255,255,255));
+  DeleteFont(controlFont_64);
 	GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字
 
 	DrawText(hdc, wbuf, -1, &rc, DT_VCENTER | DT_CENTER);//绘制文字(居中对齐方式)
 
-
   /* 恢复默认字体 */
 	SetFont(hdc, defaultFont);
-
 }
 
 static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
@@ -133,13 +160,6 @@ static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 	hdc = ds->hDC;   //button的绘图上下文句柄.
 	rc = ds->rc;     //button的绘制矩形区.
 
-   
-   
-   
-
-   SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
-	FillRect(hdc, &rc); //用矩形填充背景
-
 	if (IsWindowEnabled(hwnd) == FALSE)
 	{
 		SetTextColor(hdc, MapRGB(hdc, COLOR_INVALID));
@@ -154,13 +174,15 @@ static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 	}
 
 	  /* 使用控制图标字体 */
-	SetFont(hdc, controlFont_48);
-	//  SetTextColor(hdc,MapRGB(hdc,255,255,255));
+	HFONT controlFont_64 = NULL;
+  controlFont_64 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_64);
+	SetFont(hdc, controlFont_64);
+  DeleteFont(controlFont_64);
 
 	GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字
 
 	DrawText(hdc, wbuf, -1, &rc, DT_VCENTER);//绘制文字(居中对齐方式)
-   rc.x = 35; 
+   rc.x = 40; 
 //   rc.y = 20;
   /* 恢复默认字体 */
 	SetFont(hdc, defaultFont);
@@ -170,28 +192,49 @@ static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 
 static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	HWND wnd;
 	switch (msg)
 	{
 	case WM_CREATE:
 	{
 		list_menu_cfg_t cfg;
 		RECT rc;
-    HWND chwnd;
+    HWND wnd;
 
+		//			win_pos =0;
+		//			GetTime(&hour,&min,&sec);
 
 		GetClientRect(hwnd, &rc);
+
+		//			rc.x =0;
+		//			rc.y =0;
+		//			rc.w =rc0.w;
+		//			rc.h =200;
+
+
+    ///* 设置字符 */
+    //wnd = CreateWindow(TEXTBOX, L"A", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
+    //  0, rc.h * 1 / 3, 70, 70, hwnd, ICON_VIEWER_ID_PREV, NULL, NULL);
+    //SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
+
 
 					//ListMenu控件，需要在创建时传入一个 list_menu_cfg_t 的结构体参数.
 		cfg.list_objs = menu_list_1; //指定list列表.
 		cfg.x_num = 3; //水平项数.
 		cfg.y_num = 1; //垂直项数.
-    cfg.bg_color = COLOR_DESKTOP_BACK_GROUND_HEX;
+    
+    if (Theme_Flag == 0)
+    {
+      cfg.bg_color = 1;    // 为 1 时不使用这个颜色作为背景色
+    }
+    else 
+    {
+      cfg.bg_color = COLOR_DESKTOP_BACK_GROUND_HEX;    // 为 1 时不使用这个颜色作为背景色
+    }
 
-		chwnd = CreateWindow(&wcex_ListMenu,
+		app_hwnd_desktop = CreateWindow(&wcex_ListMenu,
                             L"ListMenu1",
                             WS_VISIBLE | LMS_ICONFRAME| LMS_ICONINNERFRAME,
-                            rc.x + 100, rc.y + 70, rc.w - 200, rc.h - 80,
+                            rc.x + 100, rc.y + 90, rc.w - 200, rc.h - 80-40,
                             hwnd,
                             ID_LIST_1,
                             NULL,
@@ -202,16 +245,14 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //    SetWindowLong(chwnd, GWL_USERDATA , (LONG)&bg_color );
 
 		/* 上一步按钮 */
-		wnd = CreateWindow(BUTTON, L"L", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
+		wnd = CreateWindow(BUTTON, L"L", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE | WS_TRANSPARENT,
 			0, (rc.h-80)/ 2, 70, 70, hwnd, ICON_VIEWER_ID_PREV, NULL, NULL);
-		SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.
 
 		 /* 下一步按钮 */
-		wnd = CreateWindow(BUTTON, L"K", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE,
+		wnd = CreateWindow(BUTTON, L"K", BS_FLAT | BS_NOTIFY | WS_OWNERDRAW | WS_VISIBLE | WS_TRANSPARENT,
 			rc.w - 65, (rc.h - 80) / 2, 70, 70, hwnd, ICON_VIEWER_ID_NEXT, NULL, NULL);
-		SetWindowFont(wnd, controlFont_64); //设置控件窗口字体.ID_EXIT
       
-         CreateWindow(BUTTON, L"F", BS_FLAT | BS_NOTIFY|WS_OWNERDRAW |WS_VISIBLE,
+         CreateWindow(BUTTON, L"F", BS_FLAT | BS_NOTIFY|WS_OWNERDRAW |WS_VISIBLE | WS_TRANSPARENT,
                         0, 0, 200, 70, hwnd, ID_EXIT, NULL, NULL);
          
 		//SetTimer(hwnd, 1, 50, TMR_START, NULL);
@@ -266,13 +307,27 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_ERASEBKGND:
 	{
 		HDC hdc = (HDC)wParam;
-		RECT rc;
+		RECT rc =*(RECT*)lParam;
 
-		GetClientRect(hwnd, &rc);
-		SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
-		FillRect(hdc, &rc);
+		if (Theme_Flag == 0) 
+		{
+//				BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_home_bk, rc.x, rc.y, SRCCOPY);
+		}
+		else if (Theme_Flag == 1)
+		{
+				GetClientRect(hwnd, &rc);
+				SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
+				FillRect(hdc, &rc);
+		}
+		else
+		{
+				GetClientRect(hwnd, &rc);
+				SetBrushColor(hdc, MapRGB(hdc, 100, 100, 100));
+				FillRect(hdc, &rc);
+		}
+
+		return TRUE;
 	}
-	break;
 
 	case WM_PAINT:
 	{
@@ -285,10 +340,10 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     hdc = BeginPaint(hwnd, &ps);
 
-    SetFont(hdc, defaultFont);
+//    SetFont(hdc, GB2312_32_Font);
       
-    SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
-    FillRect(hdc, &rc);
+//    SetBrushColor(hdc, MapRGB(hdc, COLOR_DESKTOP_BACK_GROUND));
+//    FillRect(hdc, &rc);
     SetTextColor(hdc, MapRGB(hdc, 255, 255, 255));
     rc.y += 20;
    
@@ -397,13 +452,12 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 /*============================================================================*/
 
-void	GUI_App_Desktop(void)
+void	GUI_App_Desktop(void *p)
 //static void	AppMain(void)
 {
-	HWND	hwnd;
 	WNDCLASS	wcex;
 	MSG msg;
-
+  HWND hwnd;
 	/////
 	wcex.Tag = WNDCLASS_TAG;
 
@@ -416,14 +470,14 @@ void	GUI_App_Desktop(void)
 	wcex.hCursor = NULL;//LoadCursor(NULL, IDC_ARROW);
 
 	//创建主窗口
-	hwnd = CreateWindowEx(NULL,
+	hwnd = CreateWindowEx(WS_EX_FRAMEBUFFER,
 		&wcex,
       L"IconViewer",
 		//								/*WS_MEMSURFACE|*/WS_CAPTION|WS_DLGFRAME|WS_BORDER|WS_CLIPCHILDREN,
 		/*WS_MEMSURFACE|*/WS_CLIPCHILDREN,
 
-		0, 0, GUI_XSIZE, 400,
-		GetDesktopWindow(), NULL, NULL, NULL);
+		0, 0, GUI_XSIZE, GUI_YSIZE,
+		NULL, NULL, NULL, NULL);
 
 	//显示主窗口
 	ShowWindow(hwnd, SW_SHOW);

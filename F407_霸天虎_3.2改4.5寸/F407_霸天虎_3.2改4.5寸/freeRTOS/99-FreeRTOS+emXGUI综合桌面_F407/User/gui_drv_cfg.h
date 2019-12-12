@@ -61,7 +61,7 @@
 #define	GUI_TOUCHSCREEN_CALIBRATE       0
 
 /* 是否显示光标 */
-#define  GUI_SHOW_CURSOR_EN             1
+#define  GUI_SHOW_CURSOR_EN             0
 
 /*===========存储器配置===gui_mem_port.c===============================================*/
 /* 通常GUI内核使用MEM内存堆，VMEM内存堆给用户使用 */
@@ -97,7 +97,7 @@
 /* 内存堆的基地址，可以为内部SRAM、外扩的SDRAM等 */  
 #define	VMEM_BASE	        (EXT_SRAM_BASE)
 /* 内存堆的总大小，单位为字节 */ 
-#define	VMEM_SIZE	        ((1024*1024))
+#define	VMEM_SIZE	        ((984*1024))
 /* 最小分配粒度，单位为字节*/  
 #define	VMEM_ALLOC_UNIT   (64)         //64字节   
 
@@ -148,12 +148,12 @@
   #define   GUI_CONTROL_FONT_64      CONTROL_60_8BPP
 #else
   /* LOGO使用的字体 */
-  #define  GUI_LOGO_FONT               "LOGO_50_4BPP.xft"//"LOGO_50_4BPP.xft"
+  #define  GUI_LOGO_FONT              "LOGO_50_4BPP.xft"//"LOGO_50_4BPP.xft"
   #define  GUI_ICON_FONT_200          "logo_icon_200_200_4BPP.xft"
   /* ICON使用的字体 */
   #define   GUI_ICON_FONT_50         "APP_ICON_50_4BPP.xft"
-  #define   GUI_ICON_FONT_252         "app_icon_252_252_4BPP.xft"
-  #define   GUI_ICON_FONT_100     "APP_ICON_100_100_4BPP.xft"
+  #define   GUI_ICON_FONT_252        "app_icon_252_252_4BPP.xft"
+  #define   GUI_ICON_FONT_100        "APP_ICON_100_100_4BPP.xft"
   /* 控制ICON使用的字体 */
   #define   GUI_CONTROL_FONT_48      "CONTROL_ICON_48_48_4BPP.xft"
   #define   GUI_CONTROL_FONT_32      "CONTROL_ICON_32_32_4BPP.xft"
@@ -166,9 +166,9 @@
 /*===========日志输出设备配置===gui_log_port.c===============================================*/
 
 /* 是否开启调试输出、数组输出、进入函数的输出功能 */
-#define GUI_DEBUG_EN         	      1
-#define GUI_DEBUG_ARRAY_EN          1
-#define GUI_DEBUG_FUNC_EN   	      1
+#define GUI_DEBUG_EN         	 1
+#define GUI_DEBUG_ARRAY_EN     1
+#define GUI_DEBUG_FUNC_EN   	 1
 
 
 
@@ -183,20 +183,20 @@
 #define GUI_RES_FS_EN          1
 
 /* 资源所在的基地址 */
-#define GUI_RES_BASE             4096
+#define GUI_RES_BASE           4096
 
 /* 存储在FLASH中的资源目录大小 */
-#define GUI_CATALOG_SIZE         (8*1024)
+#define GUI_CATALOG_SIZE      (8*1024)
 
 /*===========图片接口配置===gui_picture_port.c===============================================*/
 /* 是否支持文件系统图片接口,需要移植fatfs文件系统 */
-#define GUI_PIC_FS_EN         0
+#define GUI_PIC_FS_EN          0
 
 /* 是否支持显示JPEG图片,需要添加jpeg解码库 */
-#define GUI_PIC_JPEG_EN       0
+#define GUI_PIC_JPEG_EN        0
 
 /* 是否支持显示JPEG图片,需要添加png解码库 */
-#define GUI_PIC_PNG_EN        0
+#define GUI_PIC_PNG_EN         0
 
 /* 截图 */
 #define GUI_PIC_CAPTURE_SCREEN_EN  ( 1 && GUI_PIC_FS_EN)

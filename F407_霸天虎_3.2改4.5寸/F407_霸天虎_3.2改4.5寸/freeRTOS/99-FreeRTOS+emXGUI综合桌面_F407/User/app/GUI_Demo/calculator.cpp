@@ -127,6 +127,8 @@ static const U8  fd[4]={0,1,2,3};
 static const U16 ff=0x3246;
 
 
+//static char output[MAXLEN] __EXRAM;
+//static char input[MAXLEN] __EXRAM;
 static char *output;
 static char *input;
 
@@ -155,10 +157,14 @@ static void exit_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
 		SetPenColor(hdc, MapRGB(hdc, 1, 191, 255));
 	}
   
+  SetPenSize(hdc, 2);
+
+  InflateRect(&rc, 0, -5);
+  
   for(int i=0; i<4; i++)
   {
     HLine(hdc, rc.x, rc.y, rc.w);
-    rc.y += 5;
+    rc.y += 9;
   }
 }
 
@@ -281,19 +287,21 @@ static double ave(int n,double *m);
 static double variance(int n,double *m);
 	
 static int identnum;
-
+//static iden ident[MAXIDENT] __EXRAM;
 static iden *ident;
-
+//static char hisexp[MAXLEN][MAXLEN] __EXRAM;
 static char (*hisexp)[MAXLEN];
 static BOOL jiao;
 static int funnum;
-static char *hisfun;
+static char hisfun[20];
+//static char *hisfun;
 static BOOL funflag;
 static BOOL opflag;
 static int opnum;
 static double hisdata;
 static char hisop;
 static BOOL errorflag;
+//static char stack[MAXLEN][MAXLEN] __EXRAM;
 static char (*stack)[MAXLEN];
 static int low;
 static int now;
@@ -1089,6 +1097,8 @@ static void OnEql(char *result,char *input)
 
 /*============================================================================*/
 
+//static	WCHAR wstr_buf[1024] __EXRAM;
+//static	char	str_buf[1024] __EXRAM;
 static	WCHAR *wstr_buf;
 static	char	*str_buf;
 
@@ -1116,9 +1126,9 @@ static	LRESULT	WinProc(HWND hwnd,U32 msg,WPARAM wParam,LPARAM lParam)
 				GetClientRect(hwnd,&rc);
 				
 				x=4;
-				y=40;
+				y=64;
 				
-				CreateWindow(GROUPBOX,L"",WS_VISIBLE,x,y,rc.w>>1,45,hwnd,IDC_MODE_GROUP,NULL,NULL);
+				CreateWindow(GROUPBOX,L"",WS_VISIBLE,x,y,rc.w>>1,60,hwnd,IDC_MODE_GROUP,NULL,NULL);
 				//SetWindowColor(GetDlgItem(hwnd,IDC_MODE_GROUP),RGB(0,0,0),RGB_TRANS,GetWindowBkColor(hwnd));
 				
 				GetClientRect(GetDlgItem(hwnd,IDC_MODE_GROUP),&rc);
@@ -1126,9 +1136,9 @@ static	LRESULT	WinProc(HWND hwnd,U32 msg,WPARAM wParam,LPARAM lParam)
 				//GetMatrixRectangle(m_rc,2,16,rc.w,rc.h-16,3,3,2,2);
 				
 				rc0.x =2;
-				rc0.y =10;
+				rc0.y =16;
 				rc0.w =rc.w;
-				rc0.h =rc.h-10;
+				rc0.h =rc.h-16;
 				MakeMatrixRect(m_rc,&rc0,2,2,2,2);		
 				for(i=0;i<4;i++)
 				{					
@@ -1146,21 +1156,21 @@ static	LRESULT	WinProc(HWND hwnd,U32 msg,WPARAM wParam,LPARAM lParam)
 				}
 				////
 
-				CreateWindow(BUTTON,L"-",WS_VISIBLE|WS_OWNERDRAW|WS_TRANSPARENT,286,15,23,23,hwnd,IDC_EIXT,NULL,NULL);
+				CreateWindow(BUTTON,L"-",WS_VISIBLE|WS_OWNERDRAW|WS_TRANSPARENT,747,15,36,36,hwnd,IDC_EIXT,NULL,NULL);
 				
 				GetClientRect(hwnd,&rc);
 				x=(rc.w>>1)+8;
 				
-				CreateWindow(GROUPBOX,L"",WS_VISIBLE,x,y,(rc.w>>1)-8*2,45,hwnd,IDC_TRIFUN_GROUP,NULL,NULL);
+				CreateWindow(GROUPBOX,L"",WS_VISIBLE,x,y,(rc.w>>1)-8*2,60,hwnd,IDC_TRIFUN_GROUP,NULL,NULL);
 								
 				//SetWindowColor(GetDlgItem(hwnd,IDC_TRIFUN_GROUP),RGB(0,0,0),RGB_TRANS,GetWindowBkColor(hwnd));
 				
 				GetClientRect(GetDlgItem(hwnd,IDC_TRIFUN_GROUP),&rc);
 				//GetMatrixRectangle(m_rc,2,16,rc.w,rc.h-16,3,3,2,1);
 				rc0.x =2;
-				rc0.y =10;
+				rc0.y =16;
 				rc0.w =rc.w;
-				rc0.h =rc.h-10;
+				rc0.h =rc.h-16;
 				MakeMatrixRect(m_rc,&rc0,3,3,2,1);		
 				for(i=0;i<2;i++)
 				{
@@ -1192,7 +1202,7 @@ static	LRESULT	WinProc(HWND hwnd,U32 msg,WPARAM wParam,LPARAM lParam)
 				  */
 
 				x=0;
-				y+=50;
+				y+=64;
 				GetClientRect(hwnd,&rc);
 				//GetMatrixRectangle(m_rc,x,y,rc.w,rc.h-y,4,4,8,5);
 				rc0.x =x;
@@ -1580,10 +1590,10 @@ static	LRESULT	WinProc(HWND hwnd,U32 msg,WPARAM wParam,LPARAM lParam)
 					if(hdc)
 					{
 						GetClientRect(hwnd,&rc);
-						rc.x	=4;
-						rc.y	=4;
-						rc.w	-=6*2+35;
-						rc.h	=36;
+						rc.x	=6;
+						rc.y	=10;
+						rc.w	-=6*2+66;
+						rc.h	=48;
 						
 						SetBrushColor(hdc, MapRGB(hdc, 250, 250, 250));
 						EnableAntiAlias(hdc, TRUE);                             // 使能抗锯齿
@@ -1603,9 +1613,9 @@ static	LRESULT	WinProc(HWND hwnd,U32 msg,WPARAM wParam,LPARAM lParam)
 							//??SetFontSize(hdc,16,0);
 							SetTextColor(hdc,MapRGB(hdc,0,0,0));
 							rc0.x	=10;
-							rc0.y	=4;
+							rc0.y	=10;
 							rc0.w	=rc.w-4*2;
-							rc0.h	=18;
+							rc0.h	=24;
 							x_mbstowcs(wstr_buf,input,1024);
 							DrawText(hdc,wstr_buf,-1,&rc0,DT_LEFT|DT_VCENTER|DT_SINGLELINE);
 						}
@@ -1615,9 +1625,9 @@ static	LRESULT	WinProc(HWND hwnd,U32 msg,WPARAM wParam,LPARAM lParam)
 							//??SetFontSize(hdc,24,0);
 							SetTextColor(hdc,MapRGB(hdc,200,0,0));
 							rc0.x	=10;
-							rc0.y	=18;
+							rc0.y	=4+20+10;
 							rc0.w	=rc.w-4*2;
-							rc0.h	=18;
+							rc0.h	=24;
 							x_mbstowcs(wstr_buf,output,1024);
 							DrawText(hdc,wstr_buf,-1,&rc0,DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 						}
