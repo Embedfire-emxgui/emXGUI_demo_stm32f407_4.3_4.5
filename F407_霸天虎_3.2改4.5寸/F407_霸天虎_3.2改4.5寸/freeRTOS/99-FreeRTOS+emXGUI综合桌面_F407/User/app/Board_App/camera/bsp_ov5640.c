@@ -53,36 +53,36 @@ OV5640_MODE_PARAM cam_mode =
 	
 /*以下包含几组摄像头配置，可自行测试，保留一组，把其余配置注释掉即可*/
 /************配置1***854*480******横屏显示*****************************/
-	.frame_rate = FRAME_RATE_15FPS,	
-	
-	//ISP窗口
-	.cam_isp_sx = 0,
-	.cam_isp_sy = 0,	
-	
-	.cam_isp_width = 1920,
-	.cam_isp_height = 1080,
-	
-	//输出窗口
-	.scaling = 1,      //使能自动缩放
-	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
-	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
-	.cam_out_width = 800,
-	.cam_out_height = 480,
-	
-	//LCD位置
-	.lcd_sx = 0,
-	.lcd_sy = 0,
-	.lcd_scan = 5, //LCD扫描模式，本横屏配置可用1、3、5、7模式
-	
-	//以下可根据自己的需要调整，参数范围见结构体类型定义	
-	.light_mode = 0x04,//自动光照模式
-	.saturation = 0,	
-	.brightness = 0,
-	.contrast = 0,
-	.effect = 0x00,		//正常模式
-	.exposure = 0,		
+//	.frame_rate = FRAME_RATE_15FPS,	
+//	
+//	//ISP窗口
+//	.cam_isp_sx = 0,
+//	.cam_isp_sy = 0,	
+//	
+//	.cam_isp_width = 1920,
+//	.cam_isp_height = 1080,
+//	
+//	//输出窗口
+//	.scaling = 1,      //使能自动缩放
+//	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
+//	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
+//	.cam_out_width = 800,
+//	.cam_out_height = 480,
+//	
+//	//LCD位置
+//	.lcd_sx = 0,
+//	.lcd_sy = 0,
+//	.lcd_scan = 5, //LCD扫描模式，本横屏配置可用1、3、5、7模式
+//	
+//	//以下可根据自己的需要调整，参数范围见结构体类型定义	
+//	.light_mode = 0x04,//自动光照模式
+//	.saturation = 0,	
+//	.brightness = 0,
+//	.contrast = 0,
+//	.effect = 0x00,		//正常模式
+//	.exposure = 0,		
 
-	.auto_focus = 1,
+//	.auto_focus = 1,
 	
 /**********配置2*****240*320****竖屏显示****************************/	
 //	.frame_rate = FRAME_RATE_30FPS,	
@@ -181,36 +181,36 @@ OV5640_MODE_PARAM cam_mode =
 //	.auto_focus = 1,
 
 //	/******3.2寸屏幕特殊配置****************************/	
-//	.frame_rate = FRAME_RATE_15FPS,	
-//	
-//	//ISP窗口
-//	.cam_isp_sx = 0,
-//	.cam_isp_sy = 0,	
-//	
-//	.cam_isp_width = 1920,
-//	.cam_isp_height = 1080,
-//	
-//	//输出窗口
-//	.scaling = 1,      //使能自动缩放
-//	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
-//	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
-//	.cam_out_width = 320+16,//图像显示窗口左移16像素
-//	.cam_out_height = 306,//由于未知原因。将分辨率高度设置为240无法正常刷新，经测试，设定为306即可
-//	
-//	//LCD位置
-//	.lcd_sx = 0,
-//	.lcd_sy = 0,
-//	.lcd_scan = 5, //LCD扫描模式，本横屏配置可用1、3、5、7模式
-//	
-//	//以下可根据自己的需要调整，参数范围见结构体类型定义	
-//	.light_mode = 0x04,//自动光照模式
-//	.saturation = 0,	
-//	.brightness = 0,
-//	.contrast = 0,
-//	.effect = 0x00,		//正常模式
-//	.exposure = 0,		
+	.frame_rate = FRAME_RATE_15FPS,	
+	
+	//ISP窗口
+	.cam_isp_sx = 0,
+	.cam_isp_sy = 0,	
+	
+	.cam_isp_width = 1920,
+	.cam_isp_height = 1080,
+	
+	//输出窗口
+	.scaling = 1,      //使能自动缩放
+	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
+	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
+	.cam_out_width = 320+1,//图像显示窗口左移16像素
+	.cam_out_height = 240,//由于未知原因。将分辨率高度设置为240无法正常刷新，经测试，设定为306即可
+	
+	//LCD位置
+	.lcd_sx = 0,
+	.lcd_sy = 0,
+	.lcd_scan = 5, //LCD扫描模式，本横屏配置可用1、3、5、7模式
+	
+	//以下可根据自己的需要调整，参数范围见结构体类型定义	
+	.light_mode = 0x04,//自动光照模式
+	.saturation = 0,	
+	.brightness = 0,
+	.contrast = 0,
+	.effect = 0x00,		//正常模式
+	.exposure = 0,		
 
-//	.auto_focus = 1,
+	.auto_focus = 1,
 
 
 };
@@ -222,7 +222,7 @@ OV5640_MODE_PARAM cam_mode =
 ImageFormat_TypeDef ImageFormat;
 
 /*液晶屏的分辨率，用来计算地址偏移*/
-uint16_t lcd_width=800, lcd_height=480;
+uint16_t lcd_width=320, lcd_height=240;
 
 /*摄像头采集图像的大小*/
 uint16_t img_width=800, img_height=480;
@@ -746,7 +746,7 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
   
   /* 配置中断源 */
   NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream1_IRQn ;//DMA数据流中断
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 7;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 6;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
@@ -754,7 +754,7 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 	
  	/* 配置帧中断，接收到帧同步信号就进入中断 */
 	NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn ;	//帧中断
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =6;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =5;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
