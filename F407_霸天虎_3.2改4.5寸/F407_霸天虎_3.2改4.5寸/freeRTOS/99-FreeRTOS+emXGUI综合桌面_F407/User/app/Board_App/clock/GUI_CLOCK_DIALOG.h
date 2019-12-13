@@ -15,6 +15,7 @@ typedef enum
 	ID_CLOCK_SET,                // 设置
   /***************** 文本控件 ID 值 *********************/
   ID_CLOCK_TITLE,              // 窗口标题栏
+  ID_CLOCK_YEAR,               // 年	
   ID_CLOCK_MONTH,              // 月
   ID_CLOCK_WEEK,               // 周
   ID_CLOCK_DATE,                // 日

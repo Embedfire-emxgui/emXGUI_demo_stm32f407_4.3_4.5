@@ -14,6 +14,8 @@
 
 #define CLOCK_BACK_COLOR     230, 230, 230
 
+RTC_DateTypeDef RTC_Date;
+
 struct
 {
 	uint8_t page;    // 当前设置页面
@@ -333,14 +335,12 @@ static void date_OwnerDraw(DRAWITEM_HDR *ds)
   HDC hdc;
 	RECT rc;
   WCHAR wbuf[20];
-  
+
+	
   RECT rc1 = {50, 27, 130, 72};
   RECT rc3 = {79, 161, 72, 36};
 
-	uint8_t Year    = 1;
-  uint8_t Month   = 1;
-  uint8_t WeekDay = 1;
-	uint8_t Date    = 1;
+
 	
 	hdc = ds->hDC;   //button的绘图上下文句柄.
 	rc = ds->rc;     //button的绘制矩形区.
@@ -362,17 +362,9 @@ static void date_OwnerDraw(DRAWITEM_HDR *ds)
   /* 创建字体 */
   HFONT controlFont_48;
   controlFont_48 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_48);
-
-	
-  RTC_TIME rtc_time;
-  RTC_GetTime(RTC_Format_BIN, &rtc_time.RTC_Time);
-  Year    = rtc_time.RTC_Date.RTC_Year;
-  Month   = rtc_time.RTC_Date.RTC_Month;
-  WeekDay = rtc_time.RTC_Date.RTC_WeekDay;
-  Date    = rtc_time.RTC_Date.RTC_Date;	
 	
   /* 显示年 */
-  x_wsprintf(wbuf, L"%d", Year);
+  x_wsprintf(wbuf, L"%d", 2000+RTC_Date.RTC_Year);
   
   SetTextColor(hdc, MapRGB(hdc, 10, 10, 10));
   
@@ -390,7 +382,7 @@ static void date_OwnerDraw(DRAWITEM_HDR *ds)
   RECT rc_mday    = {117,  89 + 5, 56, 55};
   RECT rc_mday_zh = {173, 115, 27, 30};
   
-  x_wsprintf(wbuf, L"%d", Month);
+  x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Month);
   
   SetFont(hdc, controlFont_48);
   DrawText(hdc, wbuf, -1, &rc_mont, DT_RIGHT | DT_BOTTOM);    // 显示月份
@@ -398,7 +390,7 @@ static void date_OwnerDraw(DRAWITEM_HDR *ds)
   SetFont(hdc, defaultFont);
   DrawText(hdc, L"月", -1, &rc_mont_zh, DT_RIGHT | DT_BOTTOM);    // 显示“月”
   
-  x_wsprintf(wbuf, L"%d", Date);
+  x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Date);
   
   SetFont(hdc, controlFont_48);
   DrawText(hdc, wbuf, -1, &rc_mday, DT_RIGHT | DT_BOTTOM);     // 显示日期
@@ -408,7 +400,7 @@ static void date_OwnerDraw(DRAWITEM_HDR *ds)
   
   /* 显示周 */
   SetFont(hdc, defaultFont);
-  DrawText(hdc, Week_List[WeekDay], -1, &rc3, DT_VCENTER|DT_CENTER);
+  DrawText(hdc, Week_List[RTC_Date.RTC_WeekDay - 1], -1, &rc3, DT_VCENTER|DT_CENTER);
 
   DeleteFont(controlFont_48);
 }
@@ -697,7 +689,6 @@ static LRESULT setting_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
               }
               else if (Set_Start.page == 1)    // 修改日历
               {
-                RTC_DateTypeDef RTC_Date;
 
                 RTC_Date.RTC_Year = GetListCurselVal(hwnd, ID_CLOCK_SetYear) - 2000;    // 读取列表的年
                 RTC_Date.RTC_Month = GetListCurselVal(hwnd, ID_CLOCK_SetMonth);         // 读取列表的月
@@ -708,6 +699,19 @@ static LRESULT setting_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
                                         + RTC_Date.RTC_Year / 4 - RTC_Date.RTC_Year / 100  \
                                         + RTC_Date.RTC_Year / 400) % 7 + 1;
                 RTC_SetDate(RTC_Format_BIN, &RTC_Date);                                 // 设置日期
+                /* 设置当前显示日期 */
+                WCHAR wbuf[5];
+                x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Year);
+                SetWindowText(GetDlgItem(hwnd, ID_CLOCK_YEAR), wbuf);   
+								
+                x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Date);
+                SetWindowText(GetDlgItem(hwnd, ID_CLOCK_DATE), wbuf);    // 设置日期
+          
+                x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Month);
+                SetWindowText(GetDlgItem(hwnd, ID_CLOCK_MONTH), wbuf);    // 设置月
+          
+                SetWindowText(GetDlgItem(hwnd, ID_CLOCK_WEEK), Week_List[RTC_Date.RTC_WeekDay - 1]);    // 设置星期
+
               }
 
               PostCloseMessage(hwnd);    // 发送关闭窗口的消息
@@ -1011,18 +1015,21 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                         hwnd, clock_icon[xC].id, NULL, NULL); 
         }
 
-//        /* 初始化日期 */
-//        WCHAR wbuf[5];
-//        struct rtc_time systmtime;
-//        RTC_TimeCovr(&systmtime);
-//        
-//        x_wsprintf(wbuf, L"%d", systmtime.tm_mday);
-//        SetWindowText(GetDlgItem(hwnd, ID_CLOCK_DAY), wbuf);    // 设置日期
-//        
-//        x_wsprintf(wbuf, L"%d月", systmtime.tm_mon);
-//        SetWindowText(GetDlgItem(hwnd, ID_CLOCK_MONTH), wbuf);    // 设置月
-//        
-//        SetWindowText(GetDlgItem(hwnd, ID_CLOCK_WEEK), Week_List[systmtime.tm_wday]);    // 设置星期
+        /* 初始化日期 */
+        /* 初始化日期 */
+        WCHAR wbuf[5];
+				x_wsprintf(wbuf, L"%d", 2000+RTC_Date.RTC_Year);
+				SetWindowText(GetDlgItem(hwnd, ID_CLOCK_YEAR), wbuf);   
+								
+        RTC_GetDate(RTC_Format_BIN, &RTC_Date);
+        
+        x_wsprintf(wbuf, L"%d",RTC_Date.RTC_Date);
+        SetWindowText(GetDlgItem(hwnd, ID_CLOCK_DATE), wbuf);    // 设置日期
+        
+        x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Month);
+        SetWindowText(GetDlgItem(hwnd, ID_CLOCK_MONTH), wbuf);    // 设置月
+        
+        SetWindowText(GetDlgItem(hwnd, ID_CLOCK_WEEK), Week_List[RTC_Date.RTC_WeekDay - 1]);    // 设置星期
 
         SetTimer(hwnd, 1, 400, TMR_START, NULL);
 
@@ -1037,20 +1044,22 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 				if (tmr_id == 1)
         {
-          WCHAR wbuf[5];
-          
-          RTC_TIME rtc_time;
-          RTC_GetDate(RTC_Format_BIN, &rtc_time.RTC_Date);
-          
-          x_wsprintf(wbuf, L"%d", rtc_time.RTC_Date.RTC_Date);
-          SetWindowText(GetDlgItem(hwnd, ID_CLOCK_DATE), wbuf);    // 设置日期
-          
-          x_wsprintf(wbuf, L"%d月", rtc_time.RTC_Date.RTC_Month);
-          SetWindowText(GetDlgItem(hwnd, ID_CLOCK_MONTH), wbuf);    // 设置月
-          
-          SetWindowText(GetDlgItem(hwnd, ID_CLOCK_WEEK), Week_List[rtc_time.RTC_Date.RTC_WeekDay - 1]);    // 设置星期
-          /* Unfreeze the RTC DR Register */
-          (void)RTC->DR;
+					WCHAR wbuf[5];
+
+//					RTC_GetDate(RTC_Format_BIN, &RTC_Date);								
+//					x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Year);
+//					SetWindowText(GetDlgItem(hwnd, ID_CLOCK_YEAR), wbuf);   
+
+//          
+//          x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Date);
+//          SetWindowText(GetDlgItem(hwnd, ID_CLOCK_DATE), wbuf);    // 设置日期
+//          
+//          x_wsprintf(wbuf, L"%d", RTC_Date.RTC_Month);
+//          SetWindowText(GetDlgItem(hwnd, ID_CLOCK_MONTH), wbuf);    // 设置月
+//          
+//          SetWindowText(GetDlgItem(hwnd, ID_CLOCK_WEEK), Week_List[RTC_Date.RTC_WeekDay - 1]);    // 设置星期
+//          /* Unfreeze the RTC DR Register */
+//          (void)RTC->DR;
           
           InvalidateRect(GetDlgItem(hwnd, ID_CLOCK_TIME), NULL, TRUE);
         }
