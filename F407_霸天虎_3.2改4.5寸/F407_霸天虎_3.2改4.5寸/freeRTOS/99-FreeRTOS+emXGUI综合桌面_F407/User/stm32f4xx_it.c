@@ -36,6 +36,7 @@
 #include "usbd_core.h"
 #include "usb_conf.h"
 #include "usb_bsp.h"
+#include "bsp_adc.h"
 
 extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
@@ -196,6 +197,21 @@ void OTG_HS_EP1_OUT_IRQHandler(void)
 }
 #endif
 
+
+extern __IO uint16_t ADC_ConvertedValue;
+
+// ADC 转换完成中断服务程序
+void ADC_IRQHandler(void)
+{
+	if(ADC_GetITStatus(RHEOSTAT_ADC,ADC_IT_EOC)==SET)
+	{
+  // 读取ADC的转换值
+		ADC_ConvertedValue = ADC_GetConversionValue(RHEOSTAT_ADC);
+
+	}
+	ADC_ClearITPendingBit(RHEOSTAT_ADC,ADC_IT_EOC);
+
+}	
 /**
   * @}
   */ 
