@@ -577,6 +577,29 @@ static void _music_textbox_OwnerDraw(DRAWITEM_HDR *ds) //绘制一个按钮外观
   DrawText(hdc, wbuf, -1, &rc, DT_VCENTER|DT_CENTER);//绘制文字(居中对齐方式)
 }
 
+//时间条
+static void Brigh_textbox_OwnerDraw(DRAWITEM_HDR *ds) //绘制一个按钮外观
+{
+	HWND hwnd;
+	HDC hdc;
+	RECT rc;
+	WCHAR wbuf[128];
+
+	hwnd = ds->hwnd; //button的窗口句柄.
+	hdc = ds->hDC;   //button的绘图上下文句柄.
+
+  GetClientRect(hwnd, &rc);//得到控件的位置
+
+  SetBrushColor(hdc,MapRGB(hdc,  1, 218, 254));
+  FillRect(hdc, &rc);
+  
+  SetTextColor(hdc, MapRGB(hdc, 10, 10, 10));
+
+  GetWindowText(hwnd, wbuf, 128); //获得按钮控件的文字
+  if(ds->ID == ID_TEXTBOX_LRC3)
+    SetTextColor(hdc, MapRGB(hdc, 255, 0, 0));
+  DrawText(hdc, wbuf, -1, &rc, DT_VCENTER|DT_CENTER);//绘制文字(居中对齐方式)
+}
 /*
  * @brief  绘制滚动条
  * @param  hwnd:   滚动条的句柄值
@@ -876,11 +899,11 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
                       50,67,700,25,hwnd,ID_TB5,NULL,NULL);
 
 
-         CreateWindow(BUTTON,L"00:00",WS_TRANSPARENT|WS_OWNERDRAW|WS_VISIBLE,
+         CreateWindow(TEXTBOX,L"00:00",WS_OWNERDRAW| WS_VISIBLE,
                       554,424,65,30,hwnd,ID_TB1,NULL,NULL);
      
 
-         CreateWindow(BUTTON,L"00:00",WS_TRANSPARENT|WS_OWNERDRAW|WS_VISIBLE,
+         CreateWindow(TEXTBOX,L"00:00",WS_OWNERDRAW| WS_VISIBLE,
                        199,424,65,30,hwnd,ID_TB2,NULL,NULL);
     
          //获取音乐列表
@@ -1147,9 +1170,14 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
             exit_owner_draw(ds);
             return TRUE;
          }
-         if(ds->ID == ID_TB1 || ds->ID == ID_TB2 || ds->ID == ID_TB5)
+         if(ds->ID == ID_TB5)
          {
             Music_Button_OwnerDraw(ds);
+            return TRUE;
+         }				 
+         if(ds->ID == ID_TB1 || ds->ID == ID_TB2 )
+         {
+            Brigh_textbox_OwnerDraw(ds);
            return TRUE;
          }
          if(ds->ID >= ID_TEXTBOX_LRC1 && ds->ID <= ID_TEXTBOX_LRC5)

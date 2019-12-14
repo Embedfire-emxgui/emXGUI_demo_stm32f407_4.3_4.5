@@ -98,19 +98,20 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       if(OV5640_State == 1)
       
       {
+        /* 初始化失败 */
         RECT RC;
         MSGBOX_OPTIONS ops;
-        const WCHAR *btn[] ={L"确认",L"取消"};      //对话框内按钮的文字
+        const WCHAR *btn[] = { L"确认",L"取消" };      //对话框内按钮的文字
 
-        ops.Flag =MB_ICONERROR;
-        ops.pButtonText =btn;
-        ops.ButtonCount =2;
-        RC.w = 140;
-        RC.h = 100;
+        ops.Flag = MB_ICONERROR;
+        ops.pButtonText = btn;
+        ops.ButtonCount = 2;
+        RC.w = 300;
+        RC.h = 200;
         RC.x = (GUI_XSIZE - RC.w) >> 1;
         RC.y = (GUI_YSIZE - RC.h) >> 1;
-        SelectDialogBox(hwnd, RC, L"没有检测到OV5640模块\n请重新检查连接。", L"错误", &ops);    // 显示错误提示框
-        PostCloseMessage(hwnd);                                                              // 发送关闭窗口的消息
+        SelectDialogBox(hwnd, RC, L"没有检测到ov5640摄像头\n请重新检查连接。", L"错误", &ops);    // 显示错误提示框
+        PostCloseMessage(hwnd);
       }
       
 			else if(OV5640_State == 0)

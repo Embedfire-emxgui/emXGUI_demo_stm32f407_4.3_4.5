@@ -335,44 +335,33 @@ static void scrollbar_owner_draw(DRAWITEM_HDR *ds)
 {
 	HWND hwnd;
 	HDC hdc;
-	HDC hdc_mem;
-	HDC hdc_mem1;
+//	HDC hdc_mem;
 	RECT rc;
-	RECT rc_cli;
-	//	int i;
+	RECT rc_cli;;
 
 	hwnd = ds->hwnd;
 	hdc = ds->hDC;
 	GetClientRect(hwnd, &rc_cli);
 
-	hdc_mem = CreateMemoryDC(SURF_SCREEN, rc_cli.w, rc_cli.h);
-	hdc_mem1 = CreateMemoryDC(SURF_SCREEN, rc_cli.w, rc_cli.h);   
+  SetBrushColor(hdc, MapRGB(hdc, 240, 240, 240));
+  FillRect(hdc, &rc_cli);
          
-   	
+  EnableAntiAlias(hdc, TRUE);
+
+  /* 背景 */
+  GetClientRect(hwnd, &rc);//得到控件的位置
+
 	//绘制白色类型的滚动条
-	draw_scrollbar(hwnd, hdc_mem1, RGB888(0, 0, 0), RGB888( 250, 250, 250), RGB888( 255, 255, 255));
-	//绘制绿色类型的滚动条
-	draw_scrollbar(hwnd, hdc_mem, RGB888(0, 0, 0), RGB888(	50, 205, 50), RGB888(50, 205, 50));
-   SendMessage(hwnd, SBM_GETTRACKRECT, 0, (LPARAM)&rc);   
-
-	//左
-	BitBlt(hdc, rc_cli.x, rc_cli.y, rc.x, rc_cli.h, hdc_mem, 0, 0, SRCCOPY);
-	//右
-	BitBlt(hdc, rc.x + rc.w, 0, rc_cli.w - (rc.x + rc.w) , rc_cli.h, hdc_mem1, rc.x + rc.w, 0, SRCCOPY);
-
+	draw_scrollbar(hwnd, hdc, RGB888(0, 0, 0), RGB888(50, 50, 50), RGB888(255, 255, 255));
+	//绘制渐变类型的滚动条
+//	draw_gradient_scrollbar(hwnd, hdc, color_bg, RGB888(50, 50, 50), RGB888(1, 218, 254));
+  
+  SendMessage(hwnd, SBM_GETTRACKRECT, 0, (LPARAM)&rc);   
+  
 	//绘制滑块
-	if (ds->State & SST_THUMBTRACK)//按下
-	{
-      BitBlt(hdc, rc.x, 0, rc.w, rc_cli.h, hdc_mem1, rc.x, 0, SRCCOPY);
-		
-	}
-	else//未选中
-	{
-		BitBlt(hdc, rc.x, 0, rc.w, rc_cli.h, hdc_mem, rc.x, 0, SRCCOPY);
-	}
-	//释放内存MemoryDC
-	DeleteDC(hdc_mem1);
-	DeleteDC(hdc_mem);
+  SetBrushColor(hdc, MapRGB(hdc, 56, 123, 245));
+  FillCircle(hdc, rc.x + rc.w/2, rc.h/2, MIN(rc.w, rc.h)/2);
+  EnableAntiAlias(hdc, FALSE);
 }
 
 static	void btn_draw(HDC hdc,struct __x_obj_item * obj)
@@ -1178,7 +1167,7 @@ static	LRESULT	WinProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
             sif.TrackSize		=30;
             sif.ArrowSize		=0;//20;
 
-            wnd = CreateWindow(SCROLLBAR,L"HScroll1",WS_OWNERDRAW|WS_VISIBLE,rc.x,rc.y,rc.w,rc.h,hwnd,ID_SCROLL1,NULL,NULL);
+            wnd = CreateWindow(SCROLLBAR,L"HScroll1", WS_OWNERDRAW |WS_TRANSPARENT| WS_VISIBLE, rc.x,rc.y,rc.w,rc.h,hwnd,ID_SCROLL1,NULL,NULL);
             SendMessage(wnd,SBM_SETSCROLLINFO,TRUE,(LPARAM)&sif);
 			
             sif.nMin		=10;

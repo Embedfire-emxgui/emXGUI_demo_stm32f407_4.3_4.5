@@ -280,9 +280,9 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_DESTROY:
     { 
-			DeleteDC(hdc_bk);
+//			DeleteDC(hdc_bk);
       DeleteDC(hdc_btn);
-      DeleteDC(hdc_btn_press);
+//      DeleteDC(hdc_btn_press);
       DCD_DevDisconnect(&USB_OTG_dev);
       USB_OTG_STOP();
       return PostQuitMessage(hwnd);	

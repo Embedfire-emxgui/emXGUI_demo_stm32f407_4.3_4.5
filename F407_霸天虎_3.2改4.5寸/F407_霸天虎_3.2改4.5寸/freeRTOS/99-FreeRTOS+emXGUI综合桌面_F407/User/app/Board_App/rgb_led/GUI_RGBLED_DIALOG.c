@@ -81,10 +81,10 @@ static void Delete_DlALOG()
   leddlg_S.col_R = 0;
   leddlg_S.col_G = 0;
   leddlg_S.col_B = 0;
-  DeleteDC(RGBLED_DIALOG.hdc_mem);
-  DeleteDC(hdc_rgbled_checked);
-  DeleteDC(hdc_rgbled_slider_btn);
-  DeleteDC(hdc_rgbled_slider);
+//  DeleteDC(RGBLED_DIALOG.hdc_mem);
+//  DeleteDC(hdc_rgbled_checked);
+//  DeleteDC(hdc_rgbled_slider_btn);
+//  DeleteDC(hdc_rgbled_slider);
   TIM_RGBLED_Close();
 }
 

@@ -404,8 +404,11 @@ static void Brigh_Textbox_OwnerDraw(DRAWITEM_HDR *ds) //绘制一个按钮外观
    GetClientRect(hwnd, &rc);//得到控件的位置
    WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
    
-//   BitBlt(hdc, rc.x, rc.y, rc.w, rc.h, hdc_bk, rc_tmp.x, rc_tmp.y, SRCCOPY);
-  SetBrushColor(hdc, MapRGB(hdc, 250, 250, 250));
+  if  (ds->ID == ID_PLAY_TOTAL_TIME || ds->ID == ID_PLAY_TIME)
+    SetBrushColor(hdc, MapRGB(hdc, 243, 142, 234));
+  else
+    SetBrushColor(hdc, MapRGB(hdc, 100, 238, 251));
+
 	FillRect(hdc, &rc);
 	
 	
