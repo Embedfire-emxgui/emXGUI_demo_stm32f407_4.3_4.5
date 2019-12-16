@@ -629,7 +629,7 @@ SD_Error SD_Init(void)
 	// Configure the NVIC Preemption Priority Bits 
 //	NVIC_PriorityGroupConfig (NVIC_PriorityGroup_1);
 	NVIC_InitStructure.NVIC_IRQChannel = SDIO_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init (&NVIC_InitStructure);

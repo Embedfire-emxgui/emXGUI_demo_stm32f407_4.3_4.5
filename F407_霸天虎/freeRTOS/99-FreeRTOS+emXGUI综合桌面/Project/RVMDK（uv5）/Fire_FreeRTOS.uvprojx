@@ -830,6 +830,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\bsp\lcd\DMA_LCD.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_beep.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\bsp\beep\bsp_beep.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1184,6 +1189,16 @@
               <FileName>GUI_DEMO_SlideWindow.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\app\GUI_Demo\GUI_DEMO_SlideWindow.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>beep</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_Beeper_Dialog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\app\Board_App\beeper_control\GUI_Beeper_Dialog.c</FilePath>
             </File>
           </Files>
         </Group>

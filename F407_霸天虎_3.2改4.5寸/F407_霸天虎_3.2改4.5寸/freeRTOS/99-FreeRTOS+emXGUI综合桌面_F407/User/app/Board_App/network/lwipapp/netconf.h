@@ -73,9 +73,9 @@ extern DRV_NETWORK drv_network;
 #define DEST_IP_ADDR2                 0
 #define DEST_IP_ADDR3               222
 
-#define DEST_PORT                  6000
+#define DEST_PORT                  8080
 
-#define LOCAL_PORT                 5000   /* define the local connection port */
+#define LOCAL_PORT                 8080   /* define the local connection port */
 
 
 /* MAC ADDRESS: MAC_ADDR0:MAC_ADDR1:MAC_ADDR2:MAC_ADDR3:MAC_ADDR4:MAC_ADDR5 */

@@ -58,6 +58,7 @@ extern void	GUI_App_Desktop(void);
 //extern void	GUI_RES_Writer_Dialog(void);
 //extern void GUI_Boot_Interface_DIALOG(void);
 //extern void	GUI_PicViewer_Dialog(void);
+extern void GUI_Beeper_Dialog(void);
 extern BOOL player_state;
 int thread_ctrl = 1;
 
@@ -141,7 +142,7 @@ static const struct __obj_list menu_list_1[] = {
       L"电压表",		 NULL,	  L"W", RGB_WHITE,				dummy,  
       L"模拟U盘",	   NULL,	  L"N", RGB_WHITE,				dummy, 
       L"陀螺仪",	   NULL,	  L"R", RGB_WHITE,			  dummy,
-
+	    L"蜂鸣器",     NULL,	  L"i", RGB_WHITE,	GUI_Beeper_Dialog,
       L"以太网",		 NULL,	  L"Q", RGB_WHITE,				dummy,
       L"WiFi",		   NULL,	  L"P", RGB_WHITE,				dummy,
       L"游戏",	     NULL,	  L"S", RGB_WHITE,				dummy,
