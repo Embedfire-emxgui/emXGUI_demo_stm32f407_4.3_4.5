@@ -48,6 +48,46 @@ static void ExitButton_OwnerDraw(DRAWITEM_HDR *ds)
     rc.y += 9;
   }
 }
+static void btn_owner_draw(DRAWITEM_HDR *ds) //绘制一个按钮外观
+{
+	HDC hdc;
+	RECT rc, rc_tmp;
+  WCHAR wbuf[128];
+  HWND hwnd;
+  
+  hwnd = ds->hwnd;
+	hdc = ds->hDC;   //button的绘图上下文句柄.
+	rc = ds->rc;     //button的绘制矩形区.
+
+  GetClientRect(hwnd, &rc_tmp);//得到控件的位置
+  WindowToScreen(hwnd, (POINT *)&rc_tmp, 1);//坐标转换
+
+  EnableAntiAlias(hdc, TRUE);
+  
+  SetBrushColor(hdc, MapRGB(hdc, 66, 254, 255));
+  FillRoundRect(hdc, &rc, MIN(rc.h, rc.w));
+
+  if (ds->State & BST_PUSHED)
+  { //按钮是按下状态
+    OffsetRect(&rc, 1, 1);
+    SetTextColor(hdc, MapRGB(hdc, 200, 200, 200));
+  }
+  else
+  { //按钮是弹起状态
+    SetTextColor(hdc, MapRGB(hdc, 255, 255, 255));
+  }
+  
+  InflateRect(&rc, -5, -5);
+  SetBrushColor(hdc, MapRGB(hdc, 13, 148, 214));
+  FillRoundRect(hdc, &rc, MIN(rc.h, rc.w));
+  
+  EnableAntiAlias(hdc, FALSE);
+  
+  GetWindowText(ds->hwnd, wbuf, 128); //获得按钮控件的文字
+  
+  /* 显示文本 */
+	DrawText(hdc, wbuf, -1, &rc, DT_VCENTER|DT_CENTER);//绘制文字(居中对齐方式)
+}
 
 /*
  * @brief  选择按钮
@@ -211,7 +251,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       timer_id = wParam;
       if(timer_id == 5)
       {
-        BEEP_ON;
+//*        BEEP_ON;
       }
       else if(timer_id == 6)
       {
@@ -223,7 +263,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
         if (beep_flag)
         {
-          BEEP_ON;
+//*          BEEP_ON;
         }
         else
         {
@@ -278,7 +318,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
           case ID_BEEPER_SW:
           case ID_BEEPER_TICK:
           {
-            sw_button_OwnerDraw(ds);
+            btn_owner_draw(ds);
             return TRUE;   
           }
 
@@ -327,7 +367,7 @@ static LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
           if (sw_flag)
           {
-            BEEP_ON;    // 开蜂鸣器
+//*            BEEP_ON;    // 开蜂鸣器
           }
           else
           { 

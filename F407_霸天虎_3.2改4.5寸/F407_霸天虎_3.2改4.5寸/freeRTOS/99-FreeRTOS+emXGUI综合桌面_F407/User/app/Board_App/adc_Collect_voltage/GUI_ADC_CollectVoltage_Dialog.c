@@ -309,7 +309,6 @@ static LRESULT	CollectVoltage_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
       HDC hdc , hdc_mem;
       PAINTSTRUCT ps;
       RECT rc = {0, 0, CircleSize, CircleSize};
-      //  hdc_mem = CreateMemoryDC(SURF_ARGB4444, 800,70);
 
       hdc_mem = CreateMemoryDC(SURF_SCREEN, CircleSize, CircleSize);
 

@@ -30,7 +30,7 @@ uint8_t ucTcpClosedFlag;
 static uint8_t IsChange=1;
 static char ssid[21]={"embedfire2"};
 static char pwd[21]={"wildfire"};
-static char host_ip[16]={"192.168.0.194"};
+static char host_ip[16]={"192.168.0.10"};
 static char host_port[6]={"8080"};
 static uint8_t wifistat=0;
 
@@ -432,10 +432,10 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       CreateWindow(TEXTBOX, L"你好！这里是野火开发板 ^_^", WS_TRANSPARENT | WS_VISIBLE|WS_OWNERDRAW, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_Send, NULL, NULL);
 
       /* 创建接收窗口 */
-      rc.w = 395;
-      rc.h = 382  ;
-      rc.x = 3;
-      rc.y = 52;
+      rc.w = 385;
+      rc.h = 372  ;
+      rc.x = 5;
+      rc.y = 57;
       Receive_Handle = CreateWindow(TEXTBOX, L"", WS_TRANSPARENT|WS_VISIBLE|WS_OWNERDRAW, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_Receive, NULL, NULL);
       
       rc.x = 703;
@@ -480,7 +480,7 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_VCENTER | DT_CENTER | DT_BKGND);
 
       OffsetRect(&rc, rc.w+8, 0);
-      Temp_Handle = CreateWindow(TEXTBOX, L"194", WS_VISIBLE|WS_OWNERDRAW, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemoteIP4, NULL, NULL);//
+      Temp_Handle = CreateWindow(TEXTBOX, L"10", WS_VISIBLE|WS_OWNERDRAW, rc.x, rc.y, rc.w, rc.h, hwnd, ID_TEXTBOX_RemoteIP4, NULL, NULL);//
       SendMessage(Temp_Handle, TBM_SET_TEXTFLAG, 0, DT_VCENTER | DT_CENTER | DT_BKGND);
 
       rc.w = 138;
@@ -501,7 +501,7 @@ static LRESULT	win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       tmr_id = wParam;    // 定时器 ID
 
       if (tmr_id == 10)    // 以连接错误
-      {
+      { 
         RECT RC;
         MSGBOX_OPTIONS ops;
         const WCHAR *btn[] ={L"确认",L"取消"};      //对话框内按钮的文字

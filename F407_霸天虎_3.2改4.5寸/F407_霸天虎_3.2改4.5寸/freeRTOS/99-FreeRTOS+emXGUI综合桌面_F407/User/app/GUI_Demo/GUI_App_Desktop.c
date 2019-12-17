@@ -50,7 +50,7 @@ extern void	GUI_DEMO_ShowWave(void);
 extern void GUI_Auto_Meter_DIALOG(void);
 extern int	Calculator_WinMain(void);
 void GUI_Settings_DIALOG(void);
-
+void GUI_DEMO_RectSpeed(void);
 
 #if 0
 static void App_GUI_DEMO_Hello(HWND hwnd)

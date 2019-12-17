@@ -1057,14 +1057,14 @@
               <FilePath>..\..\User\gui_drv_cfg.h</FilePath>
             </File>
             <File>
-              <FileName>gui_log_port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\emXGUI_Lib\drv\gui_log_port.c</FilePath>
-            </File>
-            <File>
               <FileName>gui_lcd_port.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\emXGUI_Lib\drv\gui_lcd_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui_log_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\emXGUI_Lib\drv\gui_log_port.c</FilePath>
             </File>
             <File>
               <FileName>gui_font_port.c</FileName>
