@@ -78,13 +78,13 @@ Readme.txt
 220
 3841220
 
-0:/srcdata/UNIGBK.BIN
-UNIGBK.BIN
-174344
-3841440
-
 0:/srcdata/__F429_srcdata.txt
 __F429_srcdata.txt
 137
-4015784
+3841440
+
+0:/srcdata/UNIGBK.BIN
+UNIGBK.BIN
+174344
+3841577
 

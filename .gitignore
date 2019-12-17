@@ -1,4 +1,4 @@
-# Private settings
+﻿# Private settings
 private_settings.py
 
 # Compiled Object files
@@ -43,7 +43,7 @@ tmp/
 
 *.axf
 *.S19
-*.bin
+#*.bin
 *.hex
 *.dep
 *.FLM
