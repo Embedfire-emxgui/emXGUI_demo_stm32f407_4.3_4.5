@@ -180,7 +180,7 @@ OV5640_MODE_PARAM cam_mode =
 
 //	.auto_focus = 1,
 
-//	/******3.2寸屏幕特殊配置****************************/	
+	/******3.2寸屏幕特殊配置****************************/	
 	.frame_rate = FRAME_RATE_15FPS,	
 	
 	//ISP窗口
@@ -194,7 +194,7 @@ OV5640_MODE_PARAM cam_mode =
 	.scaling = 1,      //使能自动缩放
 	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
 	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
-	.cam_out_width = 320+1,//图像显示窗口左移16像素
+	.cam_out_width = 320,//图像显示窗口左移16像素
 	.cam_out_height = 240,//由于未知原因。将分辨率高度设置为240无法正常刷新，经测试，设定为306即可
 	
 	//LCD位置
@@ -746,7 +746,7 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
   
   /* 配置中断源 */
   NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream1_IRQn ;//DMA数据流中断
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 6;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 7;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
@@ -754,7 +754,7 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 	
  	/* 配置帧中断，接收到帧同步信号就进入中断 */
 	NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn ;	//帧中断
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =5;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =6;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);

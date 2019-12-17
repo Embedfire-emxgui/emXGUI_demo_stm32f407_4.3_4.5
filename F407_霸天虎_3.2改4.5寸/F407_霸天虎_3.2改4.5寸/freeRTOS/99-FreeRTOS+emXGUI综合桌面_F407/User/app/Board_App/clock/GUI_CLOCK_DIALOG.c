@@ -276,7 +276,7 @@ static void listbox_owner_draw(DRAWITEM_HDR *ds)
 
 static void Dial_OwnerDraw(DRAWITEM_HDR *ds)  // 绘制表盘
 {
-  HDC hdc,hdc_mem;
+  HDC hdc;
 	RECT rc;
   WCHAR wbuf[128];
   uint8_t Sec = 0;
@@ -287,9 +287,8 @@ static void Dial_OwnerDraw(DRAWITEM_HDR *ds)  // 绘制表盘
 	rc = ds->rc;     //button的绘制矩形区.
 
 	
-	hdc_mem = CreateMemoryDC(SURF_SCREEN, 230, 230);
-  SetBrushColor(hdc_mem, MapRGB(hdc, CLOCK_BACK_COLOR));
-  FillRect(hdc_mem, &rc);
+  SetBrushColor(hdc, MapRGB(hdc, CLOCK_BACK_COLOR));
+  FillRect(hdc, &rc);
 
   RTC_TIME rtc_time;
   RTC_GetTime(RTC_Format_BIN, &rtc_time.RTC_Time);
@@ -299,38 +298,34 @@ static void Dial_OwnerDraw(DRAWITEM_HDR *ds)  // 绘制表盘
 
 	
 	
-  EnableAntiAlias(hdc_mem, TRUE);
+  EnableAntiAlias(hdc, TRUE);
   
-  SetBrushColor(hdc_mem, MapRGB(hdc, 255, 255, 255));
-  FillCircle(hdc_mem, rc.w/2, rc.h/2, MIN(rc.w, rc.h)/2);
+  SetBrushColor(hdc, MapRGB(hdc, 255, 255, 255));
+  FillCircle(hdc, rc.w/2, rc.h/2, MIN(rc.w, rc.h)/2);
 
-  SetPenSize(hdc_mem, 2);
-  SetPenColor(hdc_mem, MapRGB(hdc, 10, 10, 10));
-  DrawCircle(hdc_mem, rc.w/2, rc.h/2, MIN(rc.w, rc.h)/2);
+  SetPenSize(hdc, 2);
+  SetPenColor(hdc, MapRGB(hdc, 10, 10, 10));
+  DrawCircle(hdc, rc.w/2, rc.h/2, MIN(rc.w, rc.h)/2);
   
-  SetBrushColor(hdc_mem, MapRGB(hdc, 128, 128, 255));
-  FillArc(hdc_mem, rc.w/2, rc.h/2, 0, MIN(rc.w, rc.h)/2 - 1, 90, Sec / 60.0 * 360 + 90);
+  SetBrushColor(hdc, MapRGB(hdc, 128, 128, 255));
+  FillArc(hdc, rc.w/2, rc.h/2, 0, MIN(rc.w, rc.h)/2 - 1, 90, Sec / 60.0 * 360 + 90);
   
   x_wsprintf(wbuf, L"%02d %02d", Hour, Min);
   
   HFONT controlFont_64;
   controlFont_64 = GUI_Init_Extern_Font_Stream(GUI_CONTROL_FONT_64);
   
-  SetFont(hdc_mem, controlFont_64);
-  SetTextColor(hdc_mem, MapRGB(hdc, 10, 10, 10));
-  DrawText(hdc_mem, wbuf, -1, &rc, DT_VCENTER|DT_CENTER);
+  SetFont(hdc, controlFont_64);
+  SetTextColor(hdc, MapRGB(hdc, 10, 10, 10));
+  DrawText(hdc, wbuf, -1, &rc, DT_VCENTER|DT_CENTER);
   
   /* 画两个圆点 */
-  SetBrushColor(hdc_mem, MapRGB(hdc, 10, 10, 10));
-  FillCircle(hdc_mem, rc.w/2, rc.h/2 - 10, 5);
-  FillCircle(hdc_mem, rc.w/2, rc.h/2 + 10, 5);
+  SetBrushColor(hdc, MapRGB(hdc, 10, 10, 10));
+  FillCircle(hdc, rc.w/2, rc.h/2 - 10, 5);
+  FillCircle(hdc, rc.w/2, rc.h/2 + 10, 5);
 
   DeleteFont(controlFont_64);
-  EnableAntiAlias(hdc_mem, FALSE);
-	
-	BitBlt(hdc, 0, 0, 230, 230, hdc_mem, 0, 0, SRCCOPY);
-  DeleteDC(hdc_mem);
-
+  EnableAntiAlias(hdc, FALSE);
 	
 	
 }

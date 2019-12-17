@@ -141,7 +141,7 @@
 
 #if 0
   /* LOGO使用的字体 */
-  #define  GUI_LOGO_FONT          LOGO_50_4BPP
+  #define  GUI_LOGO_FONT              LOGO_50_4BPP
   /* ICON使用的字体 */
   #define   GUI_ICON_FONT_100         ICON_100_4BPP
   /* 控制ICON使用的字体 */
