@@ -204,7 +204,7 @@ static	LRESULT	WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         CreateWindow(&wcex_ListMenu,
                                 L"ListMenu1",
                                 WS_VISIBLE | LMS_PAGEMOVE,
-                                rc.x + 60, rc.y + 20, rc.w - 120, rc.h - 20,
+                                rc.x + 10, rc.y + 30, rc.w - 20, rc.h - 10,
                                 hwnd,
                                 ID_LIST_1,
                                 NULL,

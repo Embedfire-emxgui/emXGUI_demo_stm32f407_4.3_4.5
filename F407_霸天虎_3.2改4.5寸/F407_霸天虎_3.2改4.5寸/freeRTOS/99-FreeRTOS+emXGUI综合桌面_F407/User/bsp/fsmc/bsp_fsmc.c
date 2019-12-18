@@ -168,18 +168,18 @@ void FSMC_InitLCD(void)
 	GPIO_PinAFConfig(GPIOG,GPIO_PinSource12,GPIO_AF_FSMC); 	//PG12,NE4
 
 	//FSMC读时序控制寄存器
-	rd_timing.FSMC_AddressSetupTime = 1; //地址建立时间 16个HCLK =16X(1/168M)=96ns
+	rd_timing.FSMC_AddressSetupTime = 0x00; //地址建立时间 16个HCLK =16X(1/168M)=96ns
 	rd_timing.FSMC_AddressHoldTime = 0;  //地址保持时间模式A未用到
-	rd_timing.FSMC_DataSetupTime = 6;    //数据保存时间为25个HCLK 25x(1/168M)=150ns
+	rd_timing.FSMC_DataSetupTime = 0x08;    //数据保存时间为25个HCLK 25x(1/168M)=150ns
 	rd_timing.FSMC_BusTurnAroundDuration = 0x00;
 	rd_timing.FSMC_CLKDivision = 0;
 	rd_timing.FSMC_DataLatency = 0;
 	rd_timing.FSMC_AccessMode = FSMC_AccessMode_A; //模式A
 
 	//FSMC写时序控制寄存器
-	wt_timing.FSMC_AddressSetupTime = 2;  //地址建立时间为8个HCLK 8x(1/168M)=48ns
+	wt_timing.FSMC_AddressSetupTime = 0;  //地址建立时间为8个HCLK 8x(1/168M)=48ns
 	wt_timing.FSMC_AddressHoldTime = 0;   //地址保持时间在模式A未用到
-	wt_timing.FSMC_DataSetupTime = 2;	  //应为某些液晶驱动芯片的原因,所以数据保持时间至少为9个HCLK 为9x6=54ns
+	wt_timing.FSMC_DataSetupTime = 8;	  //应为某些液晶驱动芯片的原因,所以数据保持时间至少为9个HCLK 为9x6=54ns
 	wt_timing.FSMC_BusTurnAroundDuration = 0x00;
 	wt_timing.FSMC_CLKDivision = 0;
 	wt_timing.FSMC_DataLatency = 0;

@@ -69,7 +69,7 @@ static void sw_button_OwnerDraw(DRAWITEM_HDR *ds)
   SetBrushColor(hdc, MapRGB(hdc, 240, 240, 240));
   FillRect(hdc, &rc);
   
-  EnableAntiAlias(hdc, TRUE);
+//  EnableAntiAlias(hdc, TRUE);
   
   SetBrushColor(hdc, MapRGB(hdc, 50, 240, 240));
   FillRoundRect(hdc, &rc, MIN(rc.w, rc.h)/2);
@@ -133,7 +133,7 @@ static void sw_button_OwnerDraw(DRAWITEM_HDR *ds)
     }
   }
   
-  EnableAntiAlias(hdc, FALSE);
+//  EnableAntiAlias(hdc, FALSE);
 }
 
 /*

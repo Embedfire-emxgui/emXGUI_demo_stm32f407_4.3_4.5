@@ -229,7 +229,7 @@ void CListMenu::draw_icon_obj(HDC hdc, struct __x_obj_item *obj, u32 flag, u32 s
         SetFont(hdc, iconFont_100);
 
         rc0.w = rc.w;
-        rc0.h = rc.h * 2 / 3;
+        rc0.h = rc.h * 2 / 3 -10;
         rc0.x = rc.x;
         rc0.y = rc.y;
 
