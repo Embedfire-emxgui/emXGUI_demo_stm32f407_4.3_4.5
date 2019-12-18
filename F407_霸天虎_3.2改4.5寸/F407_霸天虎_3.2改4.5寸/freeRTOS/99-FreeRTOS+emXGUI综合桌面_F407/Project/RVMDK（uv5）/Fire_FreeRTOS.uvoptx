@@ -153,52 +153,7 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>heap_vmem;</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>msg</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>WeekDay,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>RTC_Date.RTC_WeekDay</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>Date,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>Month,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>Year,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>RTC_Date.RTC_Date,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>RTC_Date.RTC_Month,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>9</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>RTC_Date.RTC_Year,0x0A</ItemText>
+          <ItemText>heap_vmem;,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
@@ -783,7 +738,7 @@
 
   <Group>
     <GroupName>USER</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -827,7 +782,7 @@
 
   <Group>
     <GroupName>BSP</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -979,7 +934,7 @@
 
   <Group>
     <GroupName>cm_backtrace</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1966,8 +1921,8 @@
   </Group>
 
   <Group>
-    <GroupName>tutorial/rgbled</GroupName>
-    <tvExp>0</tvExp>
+    <GroupName>tutorial/music_record</GroupName>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1978,14 +1933,94 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\User\app\Board_App\rgb_led\Backend_RGBLED.c</PathWithFileName>
-      <FilenameWithoutPath>Backend_RGBLED.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\User\app\Board_App\mp3_player\wm8978\bsp_wm8978.c</PathWithFileName>
+      <FilenameWithoutPath>bsp_wm8978.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>20</GroupNumber>
       <FileNumber>132</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\User\app\Board_App\mp3_player\Backend_mp3Player.c</PathWithFileName>
+      <FilenameWithoutPath>Backend_mp3Player.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>20</GroupNumber>
+      <FileNumber>133</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\User\app\Board_App\mp3_player\GUI_MusicList_DIALOG.c</PathWithFileName>
+      <FilenameWithoutPath>GUI_MusicList_DIALOG.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>20</GroupNumber>
+      <FileNumber>134</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\User\app\Board_App\mp3_player\GUI_MUSICPLAYER_DIALOG.c</PathWithFileName>
+      <FilenameWithoutPath>GUI_MUSICPLAYER_DIALOG.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>20</GroupNumber>
+      <FileNumber>135</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\User\app\Board_App\recorder\GUI_RECORDER_DIALOG.c</PathWithFileName>
+      <FilenameWithoutPath>GUI_RECORDER_DIALOG.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>20</GroupNumber>
+      <FileNumber>136</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\User\app\Board_App\recorder\Backend_Recorder.c</PathWithFileName>
+      <FilenameWithoutPath>Backend_Recorder.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>tutorial/rgbled</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>21</GroupNumber>
+      <FileNumber>137</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\User\app\Board_App\rgb_led\Backend_RGBLED.c</PathWithFileName>
+      <FilenameWithoutPath>Backend_RGBLED.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>21</GroupNumber>
+      <FileNumber>138</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -2004,8 +2039,8 @@
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>21</GroupNumber>
-      <FileNumber>133</FileNumber>
+      <GroupNumber>22</GroupNumber>
+      <FileNumber>139</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -2024,8 +2059,8 @@
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>22</GroupNumber>
-      <FileNumber>134</FileNumber>
+      <GroupNumber>23</GroupNumber>
+      <FileNumber>140</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -2036,8 +2071,8 @@
       <bShared>0</bShared>
     </File>
     <File>
-      <GroupNumber>22</GroupNumber>
-      <FileNumber>135</FileNumber>
+      <GroupNumber>23</GroupNumber>
+      <FileNumber>141</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -2048,8 +2083,8 @@
       <bShared>0</bShared>
     </File>
     <File>
-      <GroupNumber>22</GroupNumber>
-      <FileNumber>136</FileNumber>
+      <GroupNumber>23</GroupNumber>
+      <FileNumber>142</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -2068,8 +2103,8 @@
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>23</GroupNumber>
-      <FileNumber>137</FileNumber>
+      <GroupNumber>24</GroupNumber>
+      <FileNumber>143</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -2088,8 +2123,8 @@
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>24</GroupNumber>
-      <FileNumber>138</FileNumber>
+      <GroupNumber>25</GroupNumber>
+      <FileNumber>144</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -2100,94 +2135,14 @@
       <bShared>0</bShared>
     </File>
     <File>
-      <GroupNumber>24</GroupNumber>
-      <FileNumber>139</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\..\User\app\Board_App\adc_Collect_voltage\bsp_adc.c</PathWithFileName>
-      <FilenameWithoutPath>bsp_adc.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-  </Group>
-
-  <Group>
-    <GroupName>tutorial/music_record</GroupName>
-    <tvExp>0</tvExp>
-    <tvExpOptDlg>0</tvExpOptDlg>
-    <cbSel>0</cbSel>
-    <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>25</GroupNumber>
-      <FileNumber>140</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\..\User\app\Board_App\mp3_player\wm8978\bsp_wm8978.c</PathWithFileName>
-      <FilenameWithoutPath>bsp_wm8978.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>25</GroupNumber>
-      <FileNumber>141</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\..\User\app\Board_App\mp3_player\Backend_mp3Player.c</PathWithFileName>
-      <FilenameWithoutPath>Backend_mp3Player.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>25</GroupNumber>
-      <FileNumber>142</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\..\User\app\Board_App\mp3_player\GUI_MusicList_DIALOG.c</PathWithFileName>
-      <FilenameWithoutPath>GUI_MusicList_DIALOG.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>25</GroupNumber>
-      <FileNumber>143</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\..\User\app\Board_App\mp3_player\GUI_MUSICPLAYER_DIALOG.c</PathWithFileName>
-      <FilenameWithoutPath>GUI_MUSICPLAYER_DIALOG.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>25</GroupNumber>
-      <FileNumber>144</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\..\User\app\Board_App\recorder\GUI_RECORDER_DIALOG.c</PathWithFileName>
-      <FilenameWithoutPath>GUI_RECORDER_DIALOG.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
       <GroupNumber>25</GroupNumber>
       <FileNumber>145</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\User\app\Board_App\recorder\Backend_Recorder.c</PathWithFileName>
-      <FilenameWithoutPath>Backend_Recorder.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\User\app\Board_App\adc_Collect_voltage\bsp_adc.c</PathWithFileName>
+      <FilenameWithoutPath>bsp_adc.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

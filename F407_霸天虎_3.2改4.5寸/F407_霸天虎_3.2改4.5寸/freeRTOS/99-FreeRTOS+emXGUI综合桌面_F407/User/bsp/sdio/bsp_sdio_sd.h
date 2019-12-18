@@ -353,6 +353,7 @@ typedef struct
 /** @defgroup STM324x9I_EVAL_SDIO_SD_Exported_Functions
   * @{
   */ 
+void SD_LowLevel_Init(void);
 void SD_DeInit(void);
 SD_Error SD_Init(void);
 SDTransferState SD_GetStatus(void);

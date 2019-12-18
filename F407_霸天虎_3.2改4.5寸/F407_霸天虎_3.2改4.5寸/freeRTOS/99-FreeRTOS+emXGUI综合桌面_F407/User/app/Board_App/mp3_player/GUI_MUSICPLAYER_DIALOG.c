@@ -6,6 +6,7 @@
 #include "ff.h"
 #include "./mp3_player/Backend_mp3Player.h"
 #include "./wm8978/bsp_wm8978.h"  
+#include "sdio/bsp_sdio_sd.h"
 #include "GUI_AppDef.h"
 #include "emXGUI_JPEG.h"
 #define ID_BUTTON_Power      0x1000   //音量 
@@ -1319,7 +1320,7 @@ void	GUI_MUSICPLAYER_DIALOG(void)
 	MSG msg;
 
 	wcex.Tag = WNDCLASS_TAG;
-
+//  FileSystem_Init();
 	wcex.Style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = win_proc; //设置主窗口消息处理的回调函数.
 	wcex.cbClsExtra = 0;

@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -1329,6 +1329,41 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>tutorial/music_record</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_wm8978.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\app\Board_App\mp3_player\wm8978\bsp_wm8978.c</FilePath>
+            </File>
+            <File>
+              <FileName>Backend_mp3Player.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\app\Board_App\mp3_player\Backend_mp3Player.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUI_MusicList_DIALOG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\app\Board_App\mp3_player\GUI_MusicList_DIALOG.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUI_MUSICPLAYER_DIALOG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\app\Board_App\mp3_player\GUI_MUSICPLAYER_DIALOG.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUI_RECORDER_DIALOG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\app\Board_App\recorder\GUI_RECORDER_DIALOG.c</FilePath>
+            </File>
+            <File>
+              <FileName>Backend_Recorder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\app\Board_App\recorder\Backend_Recorder.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>tutorial/rgbled</GroupName>
           <Files>
             <File>
@@ -1395,41 +1430,6 @@
               <FileName>bsp_adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\app\Board_App\adc_Collect_voltage\bsp_adc.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>tutorial/music_record</GroupName>
-          <Files>
-            <File>
-              <FileName>bsp_wm8978.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\app\Board_App\mp3_player\wm8978\bsp_wm8978.c</FilePath>
-            </File>
-            <File>
-              <FileName>Backend_mp3Player.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\app\Board_App\mp3_player\Backend_mp3Player.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUI_MusicList_DIALOG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\app\Board_App\mp3_player\GUI_MusicList_DIALOG.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUI_MUSICPLAYER_DIALOG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\app\Board_App\mp3_player\GUI_MUSICPLAYER_DIALOG.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUI_RECORDER_DIALOG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\app\Board_App\recorder\GUI_RECORDER_DIALOG.c</FilePath>
-            </File>
-            <File>
-              <FileName>Backend_Recorder.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\app\Board_App\recorder\Backend_Recorder.c</FilePath>
             </File>
           </Files>
         </Group>

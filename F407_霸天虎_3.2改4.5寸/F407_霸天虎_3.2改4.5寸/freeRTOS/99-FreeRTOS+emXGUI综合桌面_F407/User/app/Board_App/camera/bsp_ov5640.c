@@ -490,7 +490,7 @@ void OV5640_HW_Init(void)
 	  GPIO_InitStructure.GPIO_Pin = DCMI_D1_GPIO_PIN ;
 	  GPIO_Init(DCMI_D1_GPIO_PORT, &GPIO_InitStructure);
 	  GPIO_PinAFConfig(DCMI_D1_GPIO_PORT, DCMI_D1_PINSOURCE, DCMI_D1_AF);
-
+/*********************************/
 	  GPIO_InitStructure.GPIO_Pin = DCMI_D2_GPIO_PIN ;
 	  GPIO_Init(DCMI_D2_GPIO_PORT, &GPIO_InitStructure);
 	  GPIO_PinAFConfig(DCMI_D2_GPIO_PORT, DCMI_D2_PINSOURCE, DCMI_D2_AF);
@@ -498,7 +498,7 @@ void OV5640_HW_Init(void)
 	  GPIO_InitStructure.GPIO_Pin = DCMI_D3_GPIO_PIN ;
 	  GPIO_Init(DCMI_D3_GPIO_PORT, &GPIO_InitStructure);
 	  GPIO_PinAFConfig(DCMI_D3_GPIO_PORT, DCMI_D3_PINSOURCE, DCMI_D3_AF);
-
+/**********************************/
 	  GPIO_InitStructure.GPIO_Pin = DCMI_D4_GPIO_PIN ;
 	  GPIO_Init(DCMI_D4_GPIO_PORT, &GPIO_InitStructure);
 	  GPIO_PinAFConfig(DCMI_D4_GPIO_PORT, DCMI_D4_PINSOURCE, DCMI_D4_AF);
@@ -650,6 +650,8 @@ void OV5640_Capture_Control(FunctionalState state)
 		DMA_Cmd(DMA2_Stream1, state);//DMA2,Stream1
   	DCMI_Cmd(state); 						//DCMI采集数据
 		DCMI_CaptureCmd(state);//DCMI捕获
+		I2C_Cmd(CAMERA_I2C, state);
+	
 }
 
 /**
@@ -1370,9 +1372,20 @@ uint8_t OV5640_WriteFW(const uint8_t *pBuffer ,uint16_t BufferSize)
 /**
   * @}
   */ 
+extern uint8_t fps;
 
-/**
-  * @}
-  */ 
+//使用帧中断重置line_num,可防止有时掉数据的时候DMA传送行数出现偏移
+void DCMI_IRQHandler(void)
+{
+	if(  DCMI_GetITStatus (DCMI_IT_FRAME) == SET )    
+	{
+		
+
+		/*传输完一帧，计数复位*/
+		fps++; //帧率计数
+		
+		DCMI_ClearITPendingBit(DCMI_IT_FRAME); 
+	}
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

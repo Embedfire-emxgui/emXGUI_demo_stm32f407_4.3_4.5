@@ -155,6 +155,8 @@ typedef enum
 #define DCMI_D1_PINSOURCE        	GPIO_PinSource7
 #define DCMI_D1_AF			          GPIO_AF_DCMI
 
+
+/************************”ÎSDø®∏¥”√*****************/
 #define DCMI_D2_GPIO_PORT        	GPIOC
 #define DCMI_D2_GPIO_CLK         	RCC_AHB1Periph_GPIOC
 #define DCMI_D2_GPIO_PIN         	GPIO_Pin_8
@@ -166,7 +168,7 @@ typedef enum
 #define DCMI_D3_GPIO_PIN         	GPIO_Pin_9
 #define DCMI_D3_PINSOURCE        	GPIO_PinSource9
 #define DCMI_D3_AF			          GPIO_AF_DCMI
-
+/****************************************************/
 #define DCMI_D4_GPIO_PORT        	GPIOE
 #define DCMI_D4_GPIO_CLK         	RCC_AHB1Periph_GPIOE
 #define DCMI_D4_GPIO_PIN         	GPIO_Pin_4
@@ -416,9 +418,6 @@ void OV5640_Capture_Control(FunctionalState state);
 void DCMI_Stop(void);
 void DCMI_Start(void);
 
-//extern uint16_t *cam_buff00;
-//extern uint16_t *cam_buff01;
-//extern uint16_t cam_buff02[];
 extern int cur_index;
 void ImagDisp(void);
 #endif /* __DCMI_OV5640_H */

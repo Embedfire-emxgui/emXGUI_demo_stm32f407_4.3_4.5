@@ -5,7 +5,7 @@
 #include "./camera/bsp_ov5640.h"
 #include "x_libc.h"
 #include "./camera/ov5640_AF.h"
-
+#include "sdio/bsp_sdio_sd.h"
 
 OV5640_IDTypeDef OV5640_Camera_ID;
 TaskHandle_t h_autofocus;
@@ -14,7 +14,6 @@ uint8_t fps=0;//帧率
 HWND Cam_hwnd;//主窗口句柄
 static SURFACE *pSurf;
 GUI_SEM *cam_sem = NULL;//更新图像同步信号量（二值型）
-uint16_t *cam_buff;
 static uint8_t OV5640_State = 0;
 
 /*
@@ -28,9 +27,7 @@ static void Update_Dialog()
 	while(1) //线程已创建了
 	{
     GUI_SemWait(cam_sem, 0xFFFFFFFF);
-  
 
-//    OV7725_Read_Frame(cam_buff);    // 读一帧图像
     fps ++;                         // 帧率自加
 
     InvalidateRect(Cam_hwnd,NULL,FALSE);
@@ -61,7 +58,6 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         GUI_DEBUG("OV5640 ID:%x %x",OV5640_Camera_ID.PIDH ,OV5640_Camera_ID.PIDL);
         OV5640_State = 0;
         
-//        pSurf =CreateSurface(SURF_RGB565, cam_mode.cam_out_width, cam_mode.cam_out_height, 0, (U16 *)cam_buff);   
         cam_sem = GUI_SemCreate(0,1);//同步摄像头图像
       
       //创建自动对焦线程
@@ -135,9 +131,7 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
     {
       PAINTSTRUCT ps;
-      HDC hdc_mem;
       HDC hdc;
-      WCHAR wbuf[20];
       RECT rc;
       
       hdc = BeginPaint(hwnd,&ps);
@@ -151,25 +145,6 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       }              
       if(OV5640_State == 2)
       {   
-//        pSurf =CreateSurface(SURF_RGB565, cam_mode.cam_out_width, cam_mode.cam_out_height, 0, (U16 *)cam_buff);   
-//        hdc_mem =CreateDC(pSurf,NULL);
-//        BitBlt(hdc, 0, 0, 800,480,  hdc, 0 , 0, SRCCOPY);
-
-//        DeleteDC(hdc_mem);
-//				DCMI_Start();	
-//				HAL_DCMI_Start_DMA((uint32_t)cam_buff,cam_mode.cam_out_height*cam_mode.cam_out_width);
-
-				//扫描模式，横屏
-//				ILI9806G_GramScan(cam_mode.lcd_scan);
-				
-//				ILI9806G_Clear(0,0,LCD_X_LENGTH,LCD_Y_LENGTH);	/* 清屏，显示全黑 */
-
-//			/*DMA会把数据传输到液晶屏，开窗后数据按窗口排列 */
-//				ILI9806G_OpenWindow(0,
-//														0,
-//														640,
-//														480);	
-		
 				OV5640_Capture_Control(ENABLE);
       }
 
@@ -188,10 +163,12 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         DeleteSurface(pSurf);
         GUI_Thread_Delete(h_autofocus);
       }
-      OV5640_Capture_Control(DISABLE);
-      GUI_VMEM_Free(cam_buff);
-
-      
+			OV5640_Reset();
+      OV5640_Capture_Control(DISABLE);//关闭摄像头采集图像
+      DMA_ITConfig(DMA2_Stream1,DMA_IT_TC,DISABLE); //关闭DMA中断
+      DCMI_Cmd(DISABLE); //DCMI失能
+      DCMI_CaptureCmd(DISABLE); 
+ 
       return PostQuitMessage(hwnd);	
     }
     default:
@@ -207,9 +184,7 @@ void	GUI_Camera_DIALOG(void)
 	MSG msg;
 
 	wcex.Tag = WNDCLASS_TAG;  
-  
-  cam_buff = (uint16_t *)GUI_VMEM_Alloc(320*240*2);
-  
+
 	wcex.Style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WinProc; //设置主窗口消息处理的回调函数.
 	wcex.cbClsExtra = 0;
@@ -234,5 +209,10 @@ void	GUI_Camera_DIALOG(void)
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+  }
+	//由于摄像头和SD卡引脚复用，退出时重新初始化文件系统
+  if(FileSystem_Init() != TRUE)
+  {
+    GUI_ERROR("File_System Failed.");
   }
 }
