@@ -26,7 +26,6 @@
 
 #define Delay(ms)  GUI_msleep(ms)
 extern uint16_t *cam_buff;
-//extern uint16_t *cam_buff1;
 /** @addtogroup STM32F4xx_StdPeriph_Examples
   * @{
   */
@@ -181,7 +180,7 @@ OV5640_MODE_PARAM cam_mode =
 //	.auto_focus = 1,
 
 	/******3.2寸屏幕特殊配置****************************/	
-	.frame_rate = FRAME_RATE_15FPS,	
+	.frame_rate = FRAME_RATE_30FPS,	
 	
 	//ISP窗口
 	.cam_isp_sx = 0,
@@ -225,9 +224,9 @@ ImageFormat_TypeDef ImageFormat;
 uint16_t lcd_width=320, lcd_height=240;
 
 /*摄像头采集图像的大小*/
-uint16_t img_width=800, img_height=480;
+//uint16_t img_width=800, img_height=480;
 // uint16_t img_width=640, img_height=480;
-//uint16_t img_width=320, img_height=240;
+uint16_t img_width=320, img_height=240;
 
 
 /* Private macro -------------------------------------------------------------*/
@@ -296,7 +295,7 @@ unsigned short RGB565_Init[][2] =
     0x300e, 0x58, // MIPI power down, DVP enable
     0x302e, 0x00,
 
-    0x4300, 0x6f, // RGB565
+    0x4300, 0x6F, // RGB565
     0x501f, 0x01, // RGB565
 
     0x440e, 0x00,
@@ -552,8 +551,8 @@ unsigned short RGB565_WVGA[][2]=
 //    0x3016, 0x01,
 //    0x301C, 0x01,
 //    0x3019, 0x01,
-//    0x503d, 0x80,//测试彩条
-//    0x4741, 0x00,
+    0x503d, 0x80,//测试彩条
+    0x4741, 0x00,
 };
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -740,7 +739,7 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 	//开始传输，从后面开始一行行扫描上来，实现数据翻转
 	//dma_memory 以16位数据为单位， dma_bufsize以32位数据为单位(即像素个数/2)
   //OV5640_DMA_Config(); 	
-  HAL_DCMI_Start_DMA((uint32_t )cam_buff,cam_mode.cam_out_width*cam_mode.cam_out_height/2);
+  HAL_DCMI_Start_DMA((uint32_t )cam_buff,cam_mode.cam_out_width*cam_mode.cam_out_height * 1);
 	/* 配置中断 */
 //  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
   
