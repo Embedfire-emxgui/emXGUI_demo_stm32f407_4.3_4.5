@@ -1,0 +1,6 @@
+-c --cpu Cortex-M4.fp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I ..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I ..\..\Libraries\CMSIS\Include -I ..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc -I ..\..\User -I ..\..\User\FATFS
+-I.\RTE\_SD_CARD
+-Id:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+-Id:\Keil_v5\ARM\CMSIS\Include
+-D__UVISION_VERSION="528" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99
+-o ..\..\output\res_writer.o --omf_browse ..\..\output\res_writer.crf --depend ..\..\output\res_writer.d "..\..\User\res_mgr\res_writer.c"
