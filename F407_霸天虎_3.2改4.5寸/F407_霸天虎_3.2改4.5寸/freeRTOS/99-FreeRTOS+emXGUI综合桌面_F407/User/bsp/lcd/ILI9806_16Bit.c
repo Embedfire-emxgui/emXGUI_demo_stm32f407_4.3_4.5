@@ -1,6 +1,6 @@
 
 #include	"emXGUI.h"
-
+#include	"board.h"
 #include	"GUI_Drv.h"
 #include  "./lcd/DMA_LCD.h"
 #include 	"stm32f4xx_rcc.h"

@@ -25,26 +25,6 @@
 
 
 #define Delay(ms)  GUI_msleep(ms)
-extern uint16_t *cam_buff;
-/** @addtogroup STM32F4xx_StdPeriph_Examples
-  * @{
-  */
-//当前使用的内存块
-int cur_index = 0;
-
-/** @addtogroup STM32F4xx_StdPeriph_Examples
-  * @{
-  */
-uint32_t  XferTransferNumber=0;
-uint32_t 	XferCount = 0;
-uint32_t 	XferSize = 0;
-uint32_t 	pBuffPtr = 0;
-uint8_t 	DCMI_State;
-uint32_t	DMA2_Stream1_State;
-/** @addtogroup STM32F4xx_StdPeriph_Examples
-  * @{
-  */
-
 //摄像头初始化配置
 //注意：使用这种方式初始化结构体，要在c/c++选项中选择 C99 mode
 OV5640_MODE_PARAM cam_mode =
@@ -52,7 +32,40 @@ OV5640_MODE_PARAM cam_mode =
 	
 /*以下包含几组摄像头配置，可自行测试，保留一组，把其余配置注释掉即可*/
 /************配置1***854*480******横屏显示*****************************/
-//	.frame_rate = FRAME_RATE_15FPS,	
+	
+	.frame_rate = FRAME_RATE_15FPS,	
+	
+	//ISP窗口
+	.cam_isp_sx = 0,
+	.cam_isp_sy = 0,	
+	
+	.cam_isp_width = 1920,
+	.cam_isp_height = 1080,
+	
+	//输出窗口
+	.scaling = 1,      //使能自动缩放
+	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
+	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
+	.cam_out_width = 800,
+	.cam_out_height = 480,
+	
+	//LCD位置
+	.lcd_sx = 0,
+	.lcd_sy = 0,
+	.lcd_scan = 5, //LCD扫描模式，本横屏配置可用1、3、5、7模式
+	
+	//以下可根据自己的需要调整，参数范围见结构体类型定义	
+	.light_mode = 0,//自动光照模式
+	.saturation = 0,	
+	.brightness = 0,
+	.contrast = 0,
+	.effect = 0,		//正常模式
+	.exposure = 0,		
+
+	.auto_focus = 1,
+	
+/**********配置2*****240*320****竖屏显示****************************/	
+//	.frame_rate = FRAME_RATE_30FPS,	
 //	
 //	//ISP窗口
 //	.cam_isp_sx = 0,
@@ -65,44 +78,12 @@ OV5640_MODE_PARAM cam_mode =
 //	.scaling = 1,      //使能自动缩放
 //	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
 //	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
-//	.cam_out_width = 800,
-//	.cam_out_height = 480,
+//	.cam_out_width = 240,
+//	.cam_out_height = 320,
 //	
 //	//LCD位置
-//	.lcd_sx = 0,
-//	.lcd_sy = 0,
-//	.lcd_scan = 5, //LCD扫描模式，本横屏配置可用1、3、5、7模式
-//	
-//	//以下可根据自己的需要调整，参数范围见结构体类型定义	
-//	.light_mode = 0x04,//自动光照模式
-//	.saturation = 0,	
-//	.brightness = 0,
-//	.contrast = 0,
-//	.effect = 0x00,		//正常模式
-//	.exposure = 0,		
-
-//	.auto_focus = 1,
-	
-/**********配置2*****240*320****竖屏显示****************************/	
-//	.frame_rate = FRAME_RATE_30FPS,	
-//	
-//	//ISP窗口
-//	.cam_isp_sx = 0,
-//	.cam_isp_sy = 0,	
-//	
-//	.cam_isp_width = 400,
-//	.cam_isp_height = 300,
-//	
-//	//输出窗口
-//	.scaling = 1,      //使能自动缩放
-//	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
-//	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
-//	.cam_out_width = 320,
-//	.cam_out_height = 240,
-//	
-//	//LCD位置
-//	.lcd_sx = 0,
-//	.lcd_sy = 0,
+//	.lcd_sx = 120,
+//	.lcd_sy = 267,
 //	.lcd_scan = 6, //LCD扫描模式，
 //	
 //	//以下可根据自己的需要调整，参数范围见结构体类型定义	
@@ -114,7 +95,7 @@ OV5640_MODE_PARAM cam_mode =
 //	.exposure = 0,		
 
 //	.auto_focus = 1,//自动对焦
-//	
+	
 	/*******配置3********640*480****小分辨率****************************/	
 //  .frame_rate = FRAME_RATE_30FPS,	
 //	
@@ -147,91 +128,22 @@ OV5640_MODE_PARAM cam_mode =
 
 //	.auto_focus = 1,//自动对焦
 
-//	/*******配置4********480*272****小分辨率-配套4.3寸****************************/	
-//	.frame_rate = FRAME_RATE_15FPS,	
-//	
-//	//ISP窗口
-//	.cam_isp_sx = 0,
-//	.cam_isp_sy = 0,	
-//	
-//	.cam_isp_width = 1920,
-//	.cam_isp_height = 1080,
-//	
-//	//输出窗口
-//	.scaling = 1,      //使能自动缩放
-//	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
-//	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
-//	.cam_out_width = 480,
-//	.cam_out_height = 272,
-//	
-//	//LCD位置
-//	.lcd_sx = 0,
-//	.lcd_sy = 0,
-//	.lcd_scan = 5, //LCD扫描模式，本横屏配置可用1、3、5、7模式
-//	
-//	//以下可根据自己的需要调整，参数范围见结构体类型定义	
-//	.light_mode = 0x04,//自动光照模式
-//	.saturation = 0,	
-//	.brightness = 0,
-//	.contrast = 0,
-//	.effect = 0x00,		//正常模式
-//	.exposure = 0,		
-
-//	.auto_focus = 1,
-
-	/******3.2寸屏幕特殊配置****************************/	
-	.frame_rate = FRAME_RATE_30FPS,	
-	
-	//ISP窗口
-	.cam_isp_sx = 0,
-	.cam_isp_sy = 0,	
-	
-	.cam_isp_width = 1920,
-	.cam_isp_height = 1080,
-	
-	//输出窗口
-	.scaling = 1,      //使能自动缩放
-	.cam_out_sx = 16,	//使能自动缩放后，一般配置成16即可
-	.cam_out_sy = 4,	  //使能自动缩放后，一般配置成4即可
-	.cam_out_width = 320,//图像显示窗口左移16像素
-	.cam_out_height = 240,//由于未知原因。将分辨率高度设置为240无法正常刷新，经测试，设定为306即可
-	
-	//LCD位置
-	.lcd_sx = 0,
-	.lcd_sy = 0,
-	.lcd_scan = 5, //LCD扫描模式，本横屏配置可用1、3、5、7模式
-	
-	//以下可根据自己的需要调整，参数范围见结构体类型定义	
-	.light_mode = 0x04,//自动光照模式
-	.saturation = 0,	
-	.brightness = 0,
-	.contrast = 0,
-	.effect = 0x00,		//正常模式
-	.exposure = 0,		
-
-	.auto_focus = 1,
-
-
 };
+
+/** @addtogroup DCMI_Camera
+  * @{
+  */ 
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define  TIMEOUT  2
 
-ImageFormat_TypeDef ImageFormat;
-
-/*液晶屏的分辨率，用来计算地址偏移*/
-uint16_t lcd_width=320, lcd_height=240;
-
-/*摄像头采集图像的大小*/
-//uint16_t img_width=800, img_height=480;
-// uint16_t img_width=640, img_height=480;
-uint16_t img_width=320, img_height=240;
 
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-unsigned short RGB565_Init[][2] =
+
+unsigned short RGB565_Init[][2]=
 {
     //15fps VGA RGB565 output
     // 24MHz input clock, 24MHz PCLK
@@ -295,7 +207,7 @@ unsigned short RGB565_Init[][2] =
     0x300e, 0x58, // MIPI power down, DVP enable
     0x302e, 0x00,
 
-    0x4300, 0x6F, // RGB565
+    0x4300, 0x6f, // RGB565
     0x501f, 0x01, // RGB565
 
     0x440e, 0x00,
@@ -460,45 +372,22 @@ unsigned short RGB565_Init[][2] =
 //    0x4741, 0x00,
 };
 
-unsigned short RGB565_QVGA[][2]=
-{    
-    0x3212, 0x03, // start group 3
-    0x3808, 0x01, // DVPHO = 320
-    0x3809, 0x40, // DVP HO
-    0x380a, 0x00, // DVPVO = 240
-    0x380b, 0xf0, // DVPVO
-    0x3810, 0x00, // H offset = 16
-    0x3811, 0x10, // H offset
-    0x3812, 0x00, // V offset = 4
-    0x3813, 0x04, // V offset
-    0x3212, 0x13, // end group 3
-    0x3212, 0xa3, // launch group 3   
-};
-unsigned short RGB565_VGA[][2]=
-{
-    0x3212, 0x03, // start group 3
-    0x3808, 0x02, // DVPHO = 2048
-    0x3809, 0x80, // DVP HO
-    0x380a, 0x01, // DVPVO = 1536
-    0x380b, 0xe0, // DVPVO
-    0x3810, 0x00, // H offset = 16
-    0x3811, 0x10, // H offset
-    0x3812, 0x00, // V offset = 4
-    0x3813, 0x04, // V offset
-    0x3212, 0x13, // end group 3
-    0x3212, 0xa3, // launch group 3
-
-};
 
 unsigned short RGB565_WVGA[][2]=
 {
-    // 800x480 15fps, night mode 5fps
+    // 30fps, night mode 5fps
     // input clock 24Mhz, PCLK 45.6Mhz
-    0x3035, 0x41, // PLL
+		//30fps
+    0x3035, 0x21, // PLL
     0x3036, 0x72, // PLL
+	
+		//15fps
+//	  0x3035, 0x41, // PLL
+//    0x3036, 0x72, // PLL
+	
     0x3c07, 0x08, // light meter 1 threshold[7:0]
     0x3820, 0x42, // flip
-    0x3821, 0x00, // mirror
+//    0x3821, 0x07, // mirror
     0x3814, 0x31, // timing X inc
     0x3815, 0x31, // timing Y inc
     0x3800, 0x00, // HS
@@ -510,7 +399,7 @@ unsigned short RGB565_WVGA[][2]=
     0x3806, 0x06, // VH (VE)
     0x3807, 0xe4, // VH (VE)
     0x3808, 0x03, // DVPHO
-    0x3809, 0x20, // DVPHO
+    0x3809, 0x56, // DVPHO
     0x380a, 0x01, // DVPVO
     0x380b, 0xe0, // DVPVO
     0x380c, 0x07, // HTS
@@ -551,11 +440,14 @@ unsigned short RGB565_WVGA[][2]=
 //    0x3016, 0x01,
 //    0x301C, 0x01,
 //    0x3019, 0x01,
-    0x503d, 0x80,//测试彩条
-    0x4741, 0x00,
+
+//    0x503d, 0x80,//测试彩条
+//    0x4741, 0x00,
 };
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+
+
 
 /**
   * @brief  初始化控制摄像头使用的GPIO(I2C/DCMI)
@@ -725,7 +617,7 @@ void OV5640_Init(void)
   /*** 配置DCMI接口 ***/
   /* 使能DCMI时钟 */
   RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_DCMI, ENABLE);
-RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE); 
+
   /* DCMI 配置*/ 
   DCMI_InitStructure.DCMI_CaptureMode = DCMI_CaptureMode_Continuous;
   DCMI_InitStructure.DCMI_SynchroMode = DCMI_SynchroMode_Hardware;
@@ -736,31 +628,29 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
   DCMI_InitStructure.DCMI_ExtendedDataMode = DCMI_ExtendedDataMode_8b;
   DCMI_Init(&DCMI_InitStructure); 	
 	
-	//开始传输，从后面开始一行行扫描上来，实现数据翻转
-	//dma_memory 以16位数据为单位， dma_bufsize以32位数据为单位(即像素个数/2)
-  //OV5640_DMA_Config(); 	
-  HAL_DCMI_Start_DMA((uint32_t )cam_buff,cam_mode.cam_out_width*cam_mode.cam_out_height * 1);
-	/* 配置中断 */
-//  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-  
-  /* 配置中断源 */
-  NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream1_IRQn ;//DMA数据流中断
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 7;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-  DMA_ITConfig(DMA2_Stream1,DMA_IT_TC,ENABLE); 	
-	
+	//配置DMA传输，直接配置循环传输即可
+  OV5640_DMA_Config((uint32_t)FSMC_LCD_ADDRESS,1); 	
+
  	/* 配置帧中断，接收到帧同步信号就进入中断 */
 	NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn ;	//帧中断
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =6;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	DCMI_ITConfig (DCMI_IT_FRAME,ENABLE);	
 
 }
 
+/**
+  * @brief  开启或关闭摄像头采集
+	* @param  ENABLE或DISABLE
+  */
+void OV5640_Capture_Control(FunctionalState state)
+{
+		DMA_Cmd(DMA2_Stream1, state);//DMA2,Stream1
+  	DCMI_Cmd(state); 						//DCMI采集数据
+		DCMI_CaptureCmd(state);//DCMI捕获
+}
 
 /**
   * @brief  配置 DCMI/DMA 以捕获摄像头数据
@@ -784,7 +674,7 @@ void OV5640_DMA_Config(uint32_t DMA_Memory0BaseAddr,uint16_t DMA_BufferSize)
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
   DMA_InitStructure.DMA_BufferSize =DMA_BufferSize; 						//传输的数据大小(传入的参数)
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;			//寄存器地址自增
+  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;			//寄存器地址自增
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
   DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
   DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;								//循环模式
@@ -800,200 +690,6 @@ void OV5640_DMA_Config(uint32_t DMA_Memory0BaseAddr,uint16_t DMA_BufferSize)
   DMA_Cmd(DMA2_Stream1,ENABLE);
 	while(DMA_GetCmdStatus(DMA2_Stream1) != ENABLE){}
 }
-
-
-/**
-  * @brief  设置图像输出大小，OV5640输出图像的大小(分辨率),完全由该函数确定
-  * @param  width,height:宽度(对应:horizontal)和高度(对应:vertical),width和height必须是4的倍数
-  * @retval 0,设置成功，其他,设置失败
-  */
-//u8 OV5640_OutSize_Set(u16 width,u16 height)
-//{
-//	u16 outh;
-//	u16 outw;
-//	u8 temp; 
-//	if(width%4)return 1;
-//	if(height%4)return 2;
-//	outw=width/4;
-//	outh=height/4; 
-//	OV5640_WriteReg(0XFF,0X00);	
-//	OV5640_WriteReg(0XE0,0X04);	
-//  OV5640_WriteReg(0X50,outw&0X00);		//配置v_divider hdivider
-//	OV5640_WriteReg(0X5A,outw&0XFF);		//设置OUTW的低八位
-//	OV5640_WriteReg(0X5B,outh&0XFF);		//设置OUTH的低八位
-//	temp=(outw>>8)&0X03;
-//	temp|=(outh>>6)&0X04;
-//	OV5640_WriteReg(0X5C,temp);				//设置OUTH/OUTW的高位 
-//	OV5640_WriteReg(0XE0,0X00);	
-//	return 0;
-//}
-
-/**未测试*/
-/**
-  * @brief  设置图像尺寸大小,也就是所选格式的输出分辨率
-  * @param  width,height:图像宽度和图像高度
-  * @retval 0,设置成功，其他,设置失败
-  */
-u8 OV5640_ImageSize_Set(u16 width,u16 height)
-{
-	u8 temp;
-	OV5640_WriteReg(0XFF,0X00);
-	OV5640_WriteReg(0XE0,0X04);
-	OV5640_WriteReg(0XC0,(width)>>3&0XFF);		//设置HSIZE的10:3位
-	OV5640_WriteReg(0XC1,(height)>>3&0XFF);		//设置VSIZE的10:3位
-	temp=(width&0X07)<<3;
-	temp|=height&0X07;
-	temp|=(width>>4)&0X80;
-	OV5640_WriteReg(0X8C,temp);
-	OV5640_WriteReg(0XE0,0X00);
-	return 0;
-}
-
-
-/**未测试*/
-/**
-  * @brief  设置图像输出窗口
-  * @param  sx,sy,起始地址
-						width,height:宽度(对应:horizontal)和高度(对应:vertical)
-  * @retval 0,设置成功， 其他,设置失败
-  */
-void OV5640_Window_Set(u16 sx,u16 sy,u16 width,u16 height)
-{
-	u16 endx;
-	u16 endy;
-	u8 temp;
-	endx=sx+width/2;	//V*2
- 	endy=sy+height/2;
-
- 	OV5640_WriteReg(0XFF,0X01);
-	temp = OV5640_ReadReg(0X03);				//读取Vref之前的值
-	temp&=0XF0;
-	temp|=((endy&0X03)<<2)|(sy&0X03);
-	OV5640_WriteReg(0X03,temp);				//设置Vref的start和end的最低2位
-	OV5640_WriteReg(0X19,sy>>2);			//设置Vref的start高8位
-	OV5640_WriteReg(0X1A,endy>>2);			//设置Vref的end的高8位
-
-	temp = OV5640_ReadReg(0X32);				//读取Href之前的值
-	temp&=0XC0;
-	temp|=((endx&0X07)<<3)|(sx&0X07);
-	OV5640_WriteReg(0X32,temp);				//设置Href的start和end的最低3位
-	OV5640_WriteReg(0X17,sx>>3);			//设置Href的start高8位
-	OV5640_WriteReg(0X18,endx>>3);			//设置Href的end的高8位
-}
-
-
-
-//未测试
-/**
-  * @brief  设置图像开窗大小
-						由:OV5640_ImageSize_Set确定传感器输出分辨率从大小.
-						该函数则在这个范围上面进行开窗,用于OV5640_OutSize_Set的输出
-						注意:本函数的宽度和高度,必须大于等于OV5640_OutSize_Set函数的宽度和高度
-						     OV5640_OutSize_Set设置的宽度和高度,根据本函数设置的宽度和高度,由DSP
-						     自动计算缩放比例,输出给外部设备.
-  * @param  width,height:宽度(对应:horizontal)和高度(对应:vertical),width和height必须是4的倍数
-  * @retval 0,设置成功， 其他,设置失败
-  */
-u8 OV5640_ImageWin_Set(u16 offx,u16 offy,u16 width,u16 height)
-{
-	u16 hsize;
-	u16 vsize;
-	u8 temp;
-	if(width%4)return 1;
-	if(height%4)return 2;
-	hsize=width/4;
-	vsize=height/4;
-	OV5640_WriteReg(0XFF,0X00);
-	OV5640_WriteReg(0XE0,0X04);
-	OV5640_WriteReg(0X51,hsize&0XFF);		//设置H_SIZE的低八位
-	OV5640_WriteReg(0X52,vsize&0XFF);		//设置V_SIZE的低八位
-	OV5640_WriteReg(0X53,offx&0XFF);		//设置offx的低八位
-	OV5640_WriteReg(0X54,offy&0XFF);		//设置offy的低八位
-	temp=(vsize>>1)&0X80;
-	temp|=(offy>>4)&0X70;
-	temp|=(hsize>>5)&0X08;
-	temp|=(offx>>8)&0X07;
-	OV5640_WriteReg(0X55,temp);				//设置H_SIZE/V_SIZE/OFFX,OFFY的高位
-	OV5640_WriteReg(0X57,(hsize>>2)&0X80);	//设置H_SIZE/V_SIZE/OFFX,OFFY的高位
-	OV5640_WriteReg(0XE0,0X00);
-	return 0;
-}
-
-unsigned short sensor_reg[(sizeof(RGB565_Init)/4)];
-/**
-  * @brief  Configures the OV5640 camera in BMP mode.
-  * @param  BMP ImageSize: BMP image size
-  * @retval None
-  */
-void OV5640_RGB565Config(void)
-{
-  uint32_t i;
-  
-	/*摄像头复位*/
-  OV5640_Reset();
-  /* 写入寄存器配置 */
-  /* Initialize OV5640   Set to output RGB565 */
-		for(i=0; i<(sizeof(RGB565_Init)/4); i++)
-  {
-    OV5640_WriteReg(RGB565_Init[i][0], RGB565_Init[i][1]);
-    sensor_reg[i] = OV5640_ReadReg(RGB565_Init[i][0]);
-
-		CAMERA_DEBUG("sensor_reg[0x%x]:%x-%x\n",RGB565_Init[i][0],RGB565_Init[i][1],sensor_reg[i]);
-
-  }
-
-  Delay(500);
-    
-  if(img_width == 320)
-       
-    ImageFormat=BMP_320x240;
-   
-  else if(img_width == 640)
-      
-    ImageFormat=BMP_640x480;
-  
-  else if(img_width == 800)
-      
-    ImageFormat=BMP_800x480;
-  
-  switch(ImageFormat)
-  {
-    case BMP_320x240:
-    {
-      for(i=0; i<(sizeof(RGB565_QVGA)/2); i++)
-      {
-        OV5640_WriteReg(RGB565_QVGA[i][0], RGB565_QVGA[i][1]);
-      }
-      break;
-    }
-    case BMP_640x480:
-    {
-       for(i=0; i<(sizeof(RGB565_VGA)/2); i++)
-      {
-        OV5640_WriteReg(RGB565_VGA[i][0], RGB565_VGA[i][1]);
-      }
-      break;
-    }
-    case BMP_800x480:
-    {
-      for(i=0; i<(sizeof(RGB565_WVGA)/2); i++)
-      {
-        OV5640_WriteReg(RGB565_WVGA[i][0], RGB565_WVGA[i][1]);
-      }
-      break;
-    }
-    default:
-    {
-      for(i=0; i<(sizeof(RGB565_WVGA)/2); i++)
-      {
-        OV5640_WriteReg(RGB565_WVGA[i][0], RGB565_WVGA[i][1]);
-      }
-      break;
-    }
-  }
-}
-
-
 
 /**
   * @brief  设置帧率
@@ -1042,6 +738,11 @@ void OV5640_ISPSize_Set(uint16_t x_st,uint16_t y_st,uint16_t width,uint16_t heig
 //    OV5640_WriteReg(0X3212,0X13);		
 //    OV5640_WriteReg(0X3212,0Xa3);		
 }
+
+
+
+
+
 /**
   * @brief  设置图像输出像大小，位置，以及是否使用自动缩放功能
   * @param  scaling:0,关闭自动缩放功能，1，开启自动缩放功能
@@ -1090,6 +791,177 @@ void OV5640_OutSize_Set(uint8_t scaling,uint16_t x_off,uint16_t y_off,uint16_t w
     OV5640_WriteReg(0X3212,0Xa3);		
 }
 
+
+
+
+
+unsigned short sensor_reg[(sizeof(RGB565_Init)/4)];
+/**
+  * @brief  配置 OV5640为 BMP 模式.
+  * @retval None
+  */
+void OV5640_RGB565Config(void)
+{
+  uint32_t i;
+  
+	/*摄像头复位*/
+  OV5640_Reset();
+	
+	Delay(50);
+
+  /* 写入寄存器配置RGB565模式 */
+	for(i=0; i<(sizeof(RGB565_Init)/4); i++)
+  {
+    OV5640_WriteReg(RGB565_Init[i][0], RGB565_Init[i][1]);
+		
+		Delay(5);
+
+    sensor_reg[i] = OV5640_ReadReg(RGB565_Init[i][0]);
+		
+		CAMERA_DEBUG("sensor_reg[0x%x]:%x-%x\n",RGB565_Init[i][0],RGB565_Init[i][1],sensor_reg[i]);
+
+  }
+
+  Delay(100);
+       
+	//以默认模式初始化
+	for(i=0; i<(sizeof(RGB565_WVGA)/2); i++)
+	{
+		OV5640_WriteReg(RGB565_WVGA[i][0], RGB565_WVGA[i][1]);
+	}
+   
+}
+
+
+//环境光模式参数表
+const static uint8_t OV5640_LightMode_reg[][7]=
+{ 
+	0x04,0X00,0X04,0X00,0X04,0X00,0X00,//Auto,自动 
+	0x06,0X1C,0X04,0X00,0X04,0XF3,0X01,//Sunny,日光
+	0x05,0X48,0X04,0X00,0X07,0XCF,0X01,//Office,办公室
+	0x06,0X48,0X04,0X00,0X04,0XD3,0X01,//Cloudy,阴天 
+	0x04,0X10,0X04,0X00,0X08,0X40,0X01,//Home,室内
+}; 
+/**
+  * @brief  配置光线模式
+  * @param  参数用于选择光线模式
+  *         0x00 Auto     自动
+  *         0x01 Sunny    日光
+  *         0x02 Office 	办公室
+  *         0x03 Cloudy		阴天 
+  *         0x04 Home			室内
+
+  * @retval None
+  */
+void OV5640_LightMode(uint8_t mode)
+{
+  OV5640_WriteReg(0x3212, 0x03); // start group 3
+	
+	OV5640_WriteReg(0x3406, OV5640_LightMode_reg[mode][0]);
+	OV5640_WriteReg(0x3400, OV5640_LightMode_reg[mode][1]);
+	OV5640_WriteReg(0x3401, OV5640_LightMode_reg[mode][2]);
+	OV5640_WriteReg(0x3402, OV5640_LightMode_reg[mode][3]);
+	OV5640_WriteReg(0x3403, OV5640_LightMode_reg[mode][4]);
+	OV5640_WriteReg(0x3404, OV5640_LightMode_reg[mode][5]);
+	OV5640_WriteReg(0x3405, OV5640_LightMode_reg[mode][6]);
+	
+	OV5640_WriteReg(0x3212, 0x13); // end group 3
+	OV5640_WriteReg(0x3212, 0xa3); // lanuch group 3
+}
+
+
+//特效设置参数表
+const static uint8_t OV5640_Effect_reg[][4]=
+{ 
+	0X06,0x40,0X10,0X08,//正常 
+	0X1E,0xA0,0X40,0X08,//冷色
+	0X1E,0x80,0XC0,0X08,//暖色
+	0X1E,0x80,0X80,0X08,//黑白
+	0X1E,0x40,0XA0,0X08,//泛黄 
+	0X40,0x40,0X10,0X08,//反色
+	0X1E,0x60,0X60,0X08,//偏绿
+	0X1E,0xF0,0XF0,0X08,//过曝
+	0X06,0x40,0X10,0X09,//正负片叠加
+}; 
+/**
+  * @brief  特殊效果
+  * @param  参数用于选择光线模式
+	*   0x01  正常 
+	*   0x02  冷色
+	*   0x03  暖色
+	*   0x04  黑白
+	*   0x05  泛黄 
+	*   0x06  反色
+	*   0x07  偏绿
+	*   0x08  过曝
+	*   0x09  正负片叠加
+
+  * @retval None
+  */
+void OV5640_SpecialEffects(uint8_t mode)
+{
+	OV5640_WriteReg(0x3212, 0x03); // start group 3
+	
+	OV5640_WriteReg(0x5580, OV5640_Effect_reg[mode][0]);
+	OV5640_WriteReg(0x5583, OV5640_Effect_reg[mode][1]); // sat U
+	OV5640_WriteReg(0x5584, OV5640_Effect_reg[mode][2]); // sat V
+	OV5640_WriteReg(0x5003, OV5640_Effect_reg[mode][3]);
+	
+	OV5640_WriteReg(0x3212, 0x13); // end group 3
+	OV5640_WriteReg(0x3212, 0xa3); // launch group 3
+}
+
+
+/**
+  * @brief  设置光照度
+	* @param  bri:光照度，参数范围[-4~+4]
+  * @retval 无
+  */
+void OV5640_BrightnessConfig(int8_t Brightness)
+{	
+	OV5640_WriteReg(0x3212, 0x03); // start group 3
+	
+	OV5640_WriteReg(0x5587, (Brightness<<4)&0xF0);
+
+	if(Brightness >= 0)	
+	{
+		OV5640_WriteReg(0x5588, 0x01);
+	}
+	else
+	{
+		OV5640_WriteReg(0x5588, 0x09);
+	}
+		
+	OV5640_WriteReg(0x3212, 0x13); // end group 3
+	OV5640_WriteReg(0x3212, 0xa3); // launch group 3
+}
+
+//对比度参数表
+const static uint8_t OV5640_Contrast_reg[][2]=
+{
+ 0x2C,0x1C,
+ 0x28,0x18,
+ 0x24,0x10,
+ 0x20,0x00,
+ 0x1C,0x1C,
+ 0x18,0x18,
+ 0x14,0x14,
+};
+
+/**
+  * @brief  设置对比度
+	* @param  cnst:对比度，参数范围[-3~+3]
+  * @retval 无
+  */
+void OV5640_ContrastConfig(int8_t cnst)
+{	
+	OV5640_WriteReg(0x3212, 0x03); // start group 3
+	OV5640_WriteReg(0x5586, OV5640_Contrast_reg[cnst+3][0]);
+	OV5640_WriteReg(0x5585, OV5640_Contrast_reg[cnst+3][1]);
+	OV5640_WriteReg(0x3212, 0x13); // end group 3
+	OV5640_WriteReg(0x3212, 0xa3); // launch group 3
+}
+
 //色彩饱和度参数表
 const static uint8_t OV5640_Saturation_reg[][6]=
 { 
@@ -1125,32 +997,8 @@ void OV5640_Color_Saturation(int8_t sat)
 	OV5640_WriteReg(0x3212, 0x13); // end group 3
 	OV5640_WriteReg(0x3212, 0xa3); // launch group 3
 	
-}	
-//对比度参数表
-const static uint8_t OV5640_Contrast_reg[][2]=
-{
- 0x2C,0x1C,
- 0x28,0x18,
- 0x24,0x10,
- 0x20,0x00,
- 0x1C,0x1C,
- 0x18,0x18,
- 0x14,0x14,
-};
+}			
 
-/**
-  * @brief  设置对比度
-	* @param  cnst:对比度，参数范围[-3~+3]
-  * @retval 无
-  */
-void OV5640_ContrastConfig(int8_t cnst)
-{	
-	OV5640_WriteReg(0x3212, 0x03); // start group 3
-	OV5640_WriteReg(0x5586, OV5640_Contrast_reg[cnst+3][0]);
-	OV5640_WriteReg(0x5585, OV5640_Contrast_reg[cnst+3][1]);
-	OV5640_WriteReg(0x3212, 0x13); // end group 3
-	OV5640_WriteReg(0x3212, 0xa3); // launch group 3
-}
 //曝光补偿设置参数表
 const static uint8_t OV5640_Exposure_reg[][6]=
 {
@@ -1194,11 +1042,11 @@ void OV5640_USER_Config(void)
 	OV5640_FrameRate_Set(cam_mode.frame_rate);
 	Delay(100);
 
-//	OV5640_ISPSize_Set(cam_mode.cam_isp_sx,
-//											 cam_mode.cam_isp_sy,
-//											 cam_mode.cam_isp_width,
-//											 cam_mode.cam_isp_height);
-//	Delay(100);
+	OV5640_ISPSize_Set(cam_mode.cam_isp_sx,
+											 cam_mode.cam_isp_sy,
+											 cam_mode.cam_isp_width,
+											 cam_mode.cam_isp_height);
+	Delay(100);
 
   OV5640_OutSize_Set(cam_mode.scaling,
 												cam_mode.cam_out_sx,
@@ -1226,240 +1074,43 @@ void OV5640_USER_Config(void)
 
 //	Delay(500);
 }
-//环境光模式参数表
-const static uint8_t OV5640_LightMode_reg[][7]=
-{ 
-	0x04,0X00,0X04,0X00,0X04,0X00,0X00,//Auto,自动 
-	0x06,0X1C,0X04,0X00,0X04,0XF3,0X01,//Sunny,日光
-	0x05,0X48,0X04,0X00,0X07,0XCF,0X01,//Office,办公室
-	0x06,0X48,0X04,0X00,0X04,0XD3,0X01,//Cloudy,阴天 
-	0x04,0X10,0X04,0X00,0X08,0X40,0X01,//Home,室内
-}; 
-/**
-  * @brief  配置光线模式
-  * @param  参数用于选择光线模式
-  *         0x00 Auto     自动
-  *         0x01 Sunny    光照
-  *         0x02 Cloudy   阴天
-  *         0x03 Office   办公室
-  *         0x04 Home     家里
-
-  * @retval None
-  */
-void OV5640_LightMode(uint8_t mode)
-{
-   OV5640_WriteReg(0x3212, 0x03); // start group 3
-	
-	OV5640_WriteReg(0x3406, OV5640_LightMode_reg[mode][0]);
-	OV5640_WriteReg(0x3400, OV5640_LightMode_reg[mode][1]);
-	OV5640_WriteReg(0x3401, OV5640_LightMode_reg[mode][2]);
-	OV5640_WriteReg(0x3402, OV5640_LightMode_reg[mode][3]);
-	OV5640_WriteReg(0x3403, OV5640_LightMode_reg[mode][4]);
-	OV5640_WriteReg(0x3404, OV5640_LightMode_reg[mode][5]);
-	OV5640_WriteReg(0x3405, OV5640_LightMode_reg[mode][6]);
-	
-	OV5640_WriteReg(0x3212, 0x13); // end group 3
-	OV5640_WriteReg(0x3212, 0xa3); // lanuch group 3
-}
 
 /**
-  * @brief  特殊效果
-  * @param  参数用于选择光线模式
-  *         0x00 Antique   复古  
-  *         0x01 Bluish    偏蓝
-  *         0x02 Greenish  偏绿 
-  *         0x03 Reddish   偏红
-  *         0x04 B&W       黑白
-  *         0x05 Negative  反相
-  *         0x06 B&W negative  黑白反相
-  *         0x07 Normal     正常 
-
-  * @retval None
+  * @brief  获取时钟
+  * @param  None        	
+  * @retval 返回OV5640的系统时钟，返回值乘以10000后，单位为Hz
   */
-void OV5640_SpecialEffects(uint8_t mode)
+int OV5640_get_sysclk(void)
 {
-  switch(mode)
-  {
-    case 0:
-   // Antique
-    OV5640_WriteReg(0xff, 0x00);
-    OV5640_WriteReg(0x7c, 0x00);
-    OV5640_WriteReg(0x7d, 0x18);
-    OV5640_WriteReg(0x7c, 0x05);
-    OV5640_WriteReg(0x7d, 0x40);
-    OV5640_WriteReg(0x7d, 0xa6);
-    break;
-    
-    case 1:    
-    //Bluish
-    OV5640_WriteReg(0xff, 0x00);
-    OV5640_WriteReg(0x7c, 0x00);
-    OV5640_WriteReg(0x7d, 0x18);
-    OV5640_WriteReg(0x7c,0x05);
-    OV5640_WriteReg(0x7d, 0xa0);
-    OV5640_WriteReg(0x7d, 0x40);
-    
-    break;
-    
-    case 2:
-    //Greenish
-    OV5640_WriteReg(0xff, 0x00);
-    OV5640_WriteReg(0x7c, 0x00);
-    OV5640_WriteReg(0x7d, 0x18);
-    OV5640_WriteReg(0x7c, 0x05);
-    OV5640_WriteReg(0x7d, 0x40);
-    OV5640_WriteReg(0x7d, 0x40);
-    break;
-    
-    case 3:
-   // Reddish
-    OV5640_WriteReg(0xff, 0x00);
-    OV5640_WriteReg(0x7c, 0x00);
-    OV5640_WriteReg(0x7d, 0x18);
-    OV5640_WriteReg(0x7c, 0x05);
-    OV5640_WriteReg(0x7d, 0x40);
-    OV5640_WriteReg(0x7d, 0xc0);
-    break;
-    
-    case 4:
-   // B&W
-    OV5640_WriteReg(0xff, 0x00);
-    OV5640_WriteReg(0x7c, 0x00);
-    OV5640_WriteReg(0x7d, 0x18);
-    OV5640_WriteReg(0x7c, 0x05);
-    OV5640_WriteReg(0x7d, 0x80);
-    OV5640_WriteReg(0x7d, 0x80);
-    break;
-    
-    case 5:
-    //Negative
-    OV5640_WriteReg(0xff, 0x00);
-    OV5640_WriteReg(0x7c, 0x00);
-    OV5640_WriteReg(0x7d, 0x40);
-    OV5640_WriteReg(0x7c, 0x05);
-    OV5640_WriteReg(0x7d, 0x80);
-    OV5640_WriteReg(0x7d, 0x80);
-    
-    break;
-    
-    case 6:
-    //B&W negative
-    OV5640_WriteReg(0xff, 0x00);
-    OV5640_WriteReg(0x7c, 0x00);
-    OV5640_WriteReg(0x7d, 0x58);
-    OV5640_WriteReg(0x7c, 0x05);
-    OV5640_WriteReg(0x7d, 0x80);
-    OV5640_WriteReg(0x7d, 0x80);
-    
-    break;
-    
-    case 7:
-    //Normal
-    OV5640_WriteReg(0xff, 0x00);
-    OV5640_WriteReg(0x7c, 0x00);
-    OV5640_WriteReg(0x7d, 0x00);
-    OV5640_WriteReg(0x7c, 0x05);
-    OV5640_WriteReg(0x7d, 0x80);
-    OV5640_WriteReg(0x7d, 0x80);
-    
-    break;
+	int XVCLK = 2400; // real clock/10000
 
-  }
-}
-
-
-/**
-  * @brief  Configures the OV5640 camera brightness.
-  * @param  Brightness: Brightness value, where Brightness can be: 
-  *         0x40 for Brightness +2,
-  *         0x30 for Brightness +1,
-  *         0x20 for Brightness 0,
-  *         0x10 for Brightness -1,
-  *         0x00 for Brightness -2,
-  * @retval None
-  */
-void OV5640_BrightnessConfig(int8_t Brightness)
-{
-	OV5640_WriteReg(0x3212, 0x03); // start group 3
-	
-	OV5640_WriteReg(0x5587, (Brightness<<4)&0xF0);
-
-	if(Brightness >= 0)	
-	{
-		OV5640_WriteReg(0x5588, 0x01);
+	// calculate sysclk
+	int temp1, temp2;
+	int Multiplier, PreDiv, VCO, SysDiv, Pll_rdiv, Bit_div2x, sclk_rdiv, sysclk;
+	int sclk_rdiv_map[] = {
+	1, 2, 4, 8};
+	temp1 = OV5640_ReadReg(0x3034);
+	temp2 = temp1 & 0x0f;
+	if (temp2 == 8 || temp2 == 10) {
+	Bit_div2x = temp2 / 2;
 	}
-	else
-	{
-		OV5640_WriteReg(0x5588, 0x09);
-	}
-		
-	OV5640_WriteReg(0x3212, 0x13); // end group 3
-	OV5640_WriteReg(0x3212, 0xa3); // launch group 3
+	temp1 = OV5640_ReadReg(0x3035);
+	SysDiv = temp1>>4;
+	if(SysDiv == 0) {
+	SysDiv = 16;
+		}
+	temp1 = OV5640_ReadReg(0x3036);
+	Multiplier = temp1;
+	temp1 = OV5640_ReadReg(0x3037);
+	PreDiv = temp1 & 0x0f;
+	Pll_rdiv = ((temp1 >> 4) & 0x01) + 1;
+	temp1 = OV5640_ReadReg(0x3108);
+	temp2 = temp1 & 0x03;
+	sclk_rdiv = sclk_rdiv_map[temp2];
+	VCO = XVCLK * Multiplier / PreDiv;
+	sysclk = VCO / SysDiv / Pll_rdiv * 2 / Bit_div2x / sclk_rdiv;
+	return sysclk;
 }
-
-/**
-  * @brief  Configures the OV5640 camera Black and white mode.
-  * @param  BlackWhite: BlackWhite value, where BlackWhite can be: 
-  *         0x18 for B&W,
-  *         0x40 for Negative,
-  *         0x58 for B&W negative,
-  *         0x00 for Normal,
-  * @retval None
-  */
-void OV5640_BandWConfig(uint8_t BlackWhite)
-{
-  OV5640_WriteReg(0xff, 0x00);
-  OV5640_WriteReg(0x7c, 0x00);
-  OV5640_WriteReg(0x7d, BlackWhite);
-  OV5640_WriteReg(0x7c, 0x05);
-  OV5640_WriteReg(0x7d, 0x80);
-  OV5640_WriteReg(0x7d, 0x80);
-}
-
-/**
-  * @brief  Configures the OV5640 camera color effects.
-  * @param  value1: Color effects value1
-  * @param  value2: Color effects value2
-  *         where value1 and value2 can be: 
-  *         value1 = 0x40, value2 = 0xa6 for Antique,
-  *         value1 = 0xa0, value2 = 0x40 for Bluish,
-  *         value1 = 0x40, value2 = 0x40 for Greenish,
-  *         value1 = 0x40, value2 = 0xc0 for Reddish,
-  * @retval None
-  */
-void OV5640_ColorEffectsConfig(uint8_t value1, uint8_t value2)
-{
-  OV5640_WriteReg(0xff, 0x00);
-  OV5640_WriteReg(0x7c, 0x00);
-  OV5640_WriteReg(0x7d, 0x18);
-  OV5640_WriteReg(0x7c, 0x05);
-  OV5640_WriteReg(0x7d, value1);
-  OV5640_WriteReg(0x7d, value2);
-}
-
-///**
-//  * @brief  Configures the OV5640 camera contrast.
-//  * @param  value1: Contrast value1
-//  * @param  value2: Contrast value2
-//  *         where value1 and value2 can be: 
-//  *         value1 = 0x28, value2 = 0x0c for Contrast +2,
-//  *         value1 = 0x24, value2 = 0x16 for Contrast +1,
-//  *         value1 = 0x20, value2 = 0x20 for Contrast 0,
-//  *         value1 = 0x1c, value2 = 0x2a for Contrast -1,
-//  *         value1 = 0x18, value2 = 0x34 for Contrast -2,
-//  * @retval None
-//  */
-//void OV5640_ContrastConfig(uint8_t value1, uint8_t value2)
-//{
-//  OV5640_WriteReg(0xff, 0x00);
-//  OV5640_WriteReg(0x7c, 0x00);
-//  OV5640_WriteReg(0x7d, 0x04);
-//  OV5640_WriteReg(0x7c, 0x07);
-//  OV5640_WriteReg(0x7d, 0x20);
-//  OV5640_WriteReg(0x7d, value1);
-//  OV5640_WriteReg(0x7d, value2);
-//  OV5640_WriteReg(0x7d, 0x06);
-//}
 
 /**
   * @brief  写一字节数据到OV5640寄存器
@@ -1720,409 +1371,8 @@ uint8_t OV5640_WriteFW(const uint8_t *pBuffer ,uint16_t BufferSize)
   * @}
   */ 
 
-
-
-extern U32 *bits;
-extern uint16_t lcd_width, lcd_height;
-extern uint16_t img_width, img_height;
-extern uint8_t fps;
-extern GUI_SEM *cam_sem;
-//记录传输了多少行
-//static uint16_t line_num =0;
-
-
-//void DMA2_Stream1_IRQHandler(void)
-//{
-//  rt_enter_critical(); 
-//  if(  DMA_GetITStatus(DMA2_Stream1,DMA_IT_TCIF1) == SET )    
-//  {
-//     
-////		/*行计数*/
-////		line_num++;
-
-////    if(line_num==img_height)
-////    {
-////      /*传输完一帧,计数复位*/
-////      line_num=0;
-////    }		
-//		/*DMA 一行一行传输*/
-//    OV5640_DMA_Config(((uint32_t)bits)+(lcd_width*2*(line_num))+
-//                      (cam_mode.lcd_sx)*2+cam_mode.lcd_sy*lcd_width*2,cam_mode.cam_out_width*2/4);
-//    DMA_ClearITPendingBit(DMA2_Stream1,DMA_IT_TCIF1);
-//	}
-//    /*行计数*/
-//		line_num++;
-//  if(line_num==(cam_mode.cam_out_height-1))
-//		{
-//			/*传输完一帧,计数复位*/
-//			line_num=0;
-//		}		
-//  rt_exit_critical();
-//}
-
-
-////使用帧中断重置line_num,可防止有时掉数据的时候DMA传送行数出现偏移
-//void DCMI_IRQHandler(void)
-//{
-//   	/* 进入临界段 */
-//   rt_enter_critical();
-//	if(DCMI_GetITStatus (DCMI_IT_FRAME) == SET)    
-//	{
-//      //GUI_SemWait(cam_sem, 0xFFFFFFFF);
-//		/*传输完一帧，计数复位*/
-//		line_num=0;
-//		fps++; //帧率计数
-//		//InvalidateRect(Cam_hwnd,NULL,FALSE);
-//		DCMI_ClearITPendingBit(DCMI_IT_FRAME); 
-//      GUI_SemPost(cam_sem);
-//	}
-//   rt_exit_critical();
-//}
 /**
   * @}
   */ 
-static void DMA_SetConfig(uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
-{
-//  /* Clear DBM bit */
-//  DMA2_Stream1->CR &= (uint32_t)(~DMA_SxCR_DBM);
-	
-  /* Configure DMA Stream data length */
-  DMA2_Stream1->NDTR = DataLength;
 
-  /* Peripheral to Memory */
-    /* Configure DMA Stream source address */
-  DMA2_Stream1->PAR = SrcAddress;
-    
-    /* Configure DMA Stream destination address */
-  DMA2_Stream1->M0AR = DstAddress;
-}
-
-void HAL_DCMI_Start_DMA(uint32_t pData, uint32_t Length)
-{  
-	DMA_InitTypeDef DMA_InitStructure;
-	NVIC_InitTypeDef NVIC_InitStructure;
-    /* Initialize the second memory address */
-    uint32_t SecondMemAddress = 0;
-
-	DMA_ITConfig(DMA2_Stream1, DMA_IT_TC | DMA_IT_TE | DMA_IT_HT,DISABLE);
-	DMA_ClearFlag(DMA2_Stream1, DMA_FLAG_TCIF1 | DMA_FLAG_TEIF1 | DMA_FLAG_HTIF1 | DMA_FLAG_DMEIF1 | DMA_FLAG_HTIF1);
-  
-	DMA_Cmd(DMA2_Stream1, DISABLE);
-	
-	DMA_StructInit(&DMA_InitStructure);
-	DMA_InitStructure.DMA_Channel = DMA_Channel_1;
-	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
-	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
- 	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
-	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;   
-	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable;//DMA_FIFOMode_Disable
-	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
-	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_INC4;
-  DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
-	DMA_Init(DMA2_Stream1, &DMA_InitStructure);
-
-//	DMA_ITConfig(DMA2_Stream1, /*DMA_IT_TC|*/DMA_IT_TE/*|DMA_IT_HT*/, ENABLE);
-	NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream1_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 7;//DMA2_Stream1_IRQn_Priority  TBD----- by Ken
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
-
-//  /* Process Locked */
-//  __HAL_LOCK(hdcmi);
-
-//  /* Lock the DCMI peripheral state */
-//  hdcmi->State = HAL_DCMI_STATE_BUSY;
-
-//  /* Check the parameters */
-//  assert_param(IS_DCMI_CAPTURE_MODE(DCMI_Mode));
-
-//  /* Configure the DCMI Mode */
-//  hdcmi->Instance->CR &= ~(DCMI_CR_CM);
-//  hdcmi->Instance->CR |=  (uint32_t)(DCMI_Mode);
-
-  /* Set the DMA memory0 conversion complete callback */
-//  hdcmi->DMA_Handle->XferCpltCallback = DCMI_DMAConvCplt;
-
-//  /* Set the DMA error callback */
-//  hdcmi->DMA_Handle->XferErrorCallback = DCMI_DMAError;
-
-  if(Length <= 0xFFFF)
-  {
-    /* Enable the DMA Stream */
-     /* Disable the peripheral */
-		DCMI_CaptureCmd(DISABLE);
-
-  /* Configure the source, destination address and the data length */
-  DMA_SetConfig((uint32_t)&DCMI->DR, (uint32_t)pData, Length);
-
-  /* Enable all interrupts */
-	DMA_ITConfig(DMA2_Stream1, DMA_IT_TC, ENABLE);
-		
-  }
-  else /* DCMI_DOUBLE_BUFFER Mode */
-  {
-    /* Set the DMA memory1 conversion complete callback */
-//    hdcmi->DMA_Handle->XferM1CpltCallback = DCMI_DMAConvCplt; 
-
-    /* Initialize transfer parameters */
-    XferCount = 1;
-    XferSize = Length;
-    pBuffPtr = pData;
-
-    /* Get the number of buffer */
-    while(XferSize > 0xFFFF)
-    {
-      XferSize  = XferSize/2;
-      XferCount = XferCount*2;
-    }
-		DMA_DoubleBufferModeCmd(DMA2_Stream1,ENABLE);//双缓冲模式开启
-    /* Update DCMI counter  and transfer number*/
-    XferCount = (XferCount - 2);
-    XferTransferNumber = XferCount;
-
-    /* Update second memory address */
-    SecondMemAddress = (uint32_t)(pData + (4*XferSize));
-
-    /* Start DMA multi buffer transfer */
-    DCMI_DMA_MultiBufferStart_IT((uint32_t)&DCMI->DR, (uint32_t)pData, SecondMemAddress,XferSize);
-  }
-	
-//	DMA_Cmd(DMA2_Stream1, ENABLE);
-	
-   /* Enable the Peripheral */
-		DCMI_CaptureCmd(ENABLE);
-
-
-}
-static void DMA_ChangeMemory(uint32_t Address, HAL_DMA_MemoryTypeDef memory)
-{
-  if(memory == MEMORY0)
-  {
-    /* change the memory0 address */
-    DMA2_Stream1->M0AR = Address;
-  }
-  else
-  {
-
-    /* change the memory1 address */
-    DMA2_Stream1->M1AR = Address;
-  }
-
-}
-
-void OV5640_Capture_Control(FunctionalState state)
-{
-		DMA_Cmd(DMA2_Stream1, state);//DMA2,Stream1
-  	DCMI_Cmd(state); 						//DCMI采集数据
-		DCMI_CaptureCmd(state);//DCMI捕获
-}
-
-
-extern uint8_t fps;
-
-void DCMI_Start(void)
-{
-
-	DMA_Cmd(DMA2_Stream1, ENABLE);			//重新传输
-
-	DCMI_CaptureCmd(ENABLE);
-}
-
-void DCMI_Stop(void)
-{	
-	
-	/*关闭dma*/
-    DMA_Cmd(DMA2_Stream1,DISABLE);
-	while(DMA_GetCmdStatus(DMA2_Stream1) != DISABLE){}
-
-//    DCMI_CaptureCmd(DISABLE);	
-		
-}
-
-uint8_t Ov5640_vsync = 0;	
-__IO int updata = 0;
-extern HWND Cam_hwnd;//主窗口句柄
-void DCMI_IRQHandler(void)
-{
-  uint32_t ulReturn;
-  /* 进入临界段，临界段可以嵌套 */
-  ulReturn = taskENTER_CRITICAL_FROM_ISR();
-  if(DCMI_GetITStatus(DCMI_IT_FRAME) == SET )
-  {
-		DCMI_ClearITPendingBit(DCMI_IT_FRAME);
-    DCMI_Stop();
-
-	  GUI_SemPostISR(cam_sem);
-
-	}
-  /* 退出临界段 */
-  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-}
-void DCMI_DMAConvCplt(void)
-{
-  uint32_t tmp = 0;
- 
-  DCMI_State= HAL_DCMI_STATE_READY;
-	
-
-  if(XferCount != 0)
-  {
-    /* Update memory 0 address location */
-    tmp = ((DMA2_Stream1->CR) & DMA_SxCR_CT);
-    if(((XferCount % 2) == 0) && (tmp != 0))
-    {
-      tmp = DMA2_Stream1->M0AR;
-      DMA_ChangeMemory((tmp + (8*XferSize)), MEMORY0);
-      XferCount--;
-			//dma_complete_counter++;
-
-    }
-    /* Update memory 1 address location */
-    else if((DMA2_Stream1->CR & DMA_SxCR_CT) == 0)
-    {
-      tmp = DMA2_Stream1->M1AR;
-      DMA_ChangeMemory((tmp + (8*XferSize)), MEMORY1);
-      XferCount--;
-			//dma_complete_counter++;
-
-    }
-  }
-  /* Update memory 0 address location */
-  else if((DMA2_Stream1->CR & DMA_SxCR_CT) != 0)
-  {
-    DMA2_Stream1->M0AR = pBuffPtr;
-  }
-  /* Update memory 1 address location */
-  else if((DMA2_Stream1->CR & DMA_SxCR_CT) == 0)
-  {
-    tmp = pBuffPtr;
-    DMA2_Stream1->M1AR = (tmp + (4*XferSize));
-    XferCount = XferTransferNumber;
-  }
-
-  if(DCMI_GetFlagStatus(DCMI_FLAG_FRAMERI) != RESET)
-  {
-    /* FRAME Callback */
-//    HAL_DCMI_FrameEventCallback(hdcmi);
-  }
-}
-void DCMI_DMA_MultiBufferStart_IT(uint32_t SrcAddress, uint32_t DstAddress, uint32_t SecondMemAddress, uint32_t DataLength)
-{
-
-  /* Current memory buffer used is Memory 0 */
-  if((DMA2_Stream1->CR & DMA_SxCR_CT) == 0)
-  {
-    DMA2_Stream1_State = HAL_DMA_STATE_BUSY_MEM0;
-  }
-  /* Current memory buffer used is Memory 1 */
-  else if((DMA2_Stream1->CR & DMA_SxCR_CT) != 0)
-  {
-    DMA2_Stream1_State = HAL_DMA_STATE_BUSY_MEM1;
-  }
-	
-	//清零，强制重新使用地址0开始接收数据
-	DMA2_Stream1->CR &= ~(DMA_SxCR_CT);
-
-  /* Check the parameters */
-  assert_param(IS_DMA_BUFFER_SIZE(DataLength));
-
-  /* Disable the peripheral */
-  DMA_Cmd(DMA2_Stream1, DISABLE);  
-
-  /* Enable the Double buffer mode */
-  DMA2_Stream1->CR |= (uint32_t)DMA_SxCR_DBM;
-
-  /* Configure DMA Stream destination address */
-  DMA2_Stream1->M1AR = SecondMemAddress;
-
-  /* Configure the source, destination address and the data length */
-  DMA_SetConfig(SrcAddress, DstAddress, DataLength); 
-	
-  /* Enable the transfer complete interrupt */
-  /* Enable the Half transfer interrupt */
-  /* Enable the transfer Error interrupt */
-  /* Enable the fifo Error interrupt */
-  /* Enable the direct mode Error interrupt */
-	DMA_ITConfig(DMA2_Stream1, DMA_IT_TC, ENABLE);
-  /* Enable the peripheral */
-  DMA_Cmd(DMA2_Stream1, ENABLE);
-
-}
-
-void DMA2_Stream1_IRQHandler(void)
-{
-//  rt_enter_critical();
-      /* Transfer Complete Interrupt management ***********************************/
-  if (DMA_GetFlagStatus(DMA2_Stream1,DMA_FLAG_TCIF1)==SET)
-  {
-//    if(DMA_GetFlagStatus(DMA2_Stream1, DMA_IT_TC) != RESET)
-    {
-      if(((DMA2_Stream1->CR) & (uint32_t)(DMA_SxCR_DBM)) != 0)
-      {
-
-        /* Clear the transfer complete flag */
-        DMA_ClearFlag(DMA2_Stream1,DMA_FLAG_TCIF1);
-
-        /* Current memory buffer used is Memory 1 */
-        if((DMA2_Stream1->CR & DMA_SxCR_CT) == 0)
-        {
-          /* Transfer complete Callback for memory0 */
-            DCMI_DMAConvCplt();
-        }
-        /* Current memory buffer used is Memory 0 */
-        else if((DMA2_Stream1->CR & DMA_SxCR_CT) != 0) 
-        {		
-
-          /* Transfer complete Callback for memory0 */
-            DCMI_DMAConvCplt();
-        }
-      }
-      /* Disable the transfer complete interrupt if the DMA mode is not CIRCULAR */
-      else
-      {
-        if(((DMA2_Stream1->CR) & (uint32_t)(DMA_SxCR_DBM)) == 0)
-        {
-          /* Disable the transfer complete interrupt */
-          DMA_ITConfig(DMA2_Stream1, DMA_IT_TC,DISABLE);
-        }
-        /* Clear the transfer complete flag */
-        DMA_ClearFlag(DMA2_Stream1,DMA_FLAG_TCIF1);
-        /* Update error code */
-
-        /* Change the DMA state */
-        DMA2_Stream1_State = HAL_DMA_STATE_READY_MEM0;
- 
-        /* Transfer complete callback */
-        DCMI_DMAConvCplt();
-      }
-    }
-  }
-//  rt_exit_critical();
-}
-
-//void OV5640_Capture_Control(FunctionalState state)
-//{
-//  switch(state)
-//  {
-//    case ENABLE:
-//    {
-////      HAL_DCMI_Stop(&DCMI_Handle);
-////      HAL_DMA_Abort(&DMA_Handle_dcmi);      
-//      break;
-//    }
-//    case DISABLE:
-//    {
-//      DCMI_CaptureCmd(DISABLE);
-//      DMA_Cmd(DMA2_Stream1,DISABLE);
-//      while(DMA_GetCmdStatus(DMA2_Stream1) != DISABLE){}
-
-//      
-//      break;
-//    }
-//  }
-//}
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

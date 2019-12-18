@@ -93,6 +93,7 @@ void  dma_mem_free(void *p);
 
 
 extern const char TargetBoard_IO[];
+void ILI9806G_OpenWindow ( uint16_t usX, uint16_t usY, uint16_t usWidth, uint16_t usHeight );
 
 /*=========================================================================================*/
 

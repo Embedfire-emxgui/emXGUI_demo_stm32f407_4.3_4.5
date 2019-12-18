@@ -416,9 +416,11 @@ void OV5640_Capture_Control(FunctionalState state);
 void DCMI_Stop(void);
 void DCMI_Start(void);
 
+//extern uint16_t *cam_buff00;
+//extern uint16_t *cam_buff01;
+//extern uint16_t cam_buff02[];
 extern int cur_index;
-
-extern uint8_t Ov5640_vsync;
+void ImagDisp(void);
 #endif /* __DCMI_OV5640_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

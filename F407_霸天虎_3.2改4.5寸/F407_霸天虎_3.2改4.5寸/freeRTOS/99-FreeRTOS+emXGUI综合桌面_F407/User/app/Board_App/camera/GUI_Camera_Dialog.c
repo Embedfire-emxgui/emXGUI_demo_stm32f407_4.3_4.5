@@ -1,11 +1,12 @@
 #include <emXGUI.h>
 #include <string.h>
 #include "Widget.h"
+#include "board.h"
 #include "./camera/bsp_ov5640.h"
 #include "x_libc.h"
 #include "./camera/ov5640_AF.h"
 
-extern uint8_t Ov5640_vsync;
+
 OV5640_IDTypeDef OV5640_Camera_ID;
 TaskHandle_t h_autofocus;
 BOOL update_flag = 0;//帧率更新标志
@@ -23,15 +24,13 @@ static uint8_t OV5640_State = 0;
 */
 static void Update_Dialog()
 {
-  /* ov7725 场信号线初始化 */
-  Ov5640_vsync = 0;
-//  VSYNC_Init();
-  
-  
+
 	while(1) //线程已创建了
 	{
     GUI_SemWait(cam_sem, 0xFFFFFFFF);
   
+
+//    OV7725_Read_Frame(cam_buff);    // 读一帧图像
     fps ++;                         // 帧率自加
 
     InvalidateRect(Cam_hwnd,NULL,FALSE);
@@ -62,7 +61,7 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         GUI_DEBUG("OV5640 ID:%x %x",OV5640_Camera_ID.PIDH ,OV5640_Camera_ID.PIDL);
         OV5640_State = 0;
         
-        pSurf =CreateSurface(SURF_RGB565, cam_mode.cam_out_width, cam_mode.cam_out_height, 0, (U16 *)cam_buff);   
+//        pSurf =CreateSurface(SURF_RGB565, cam_mode.cam_out_width, cam_mode.cam_out_height, 0, (U16 *)cam_buff);   
         cam_sem = GUI_SemCreate(0,1);//同步摄像头图像
       
       //创建自动对焦线程
@@ -96,19 +95,20 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       if(OV5640_State == 1)
       
       {
+        /* 初始化失败 */
         RECT RC;
         MSGBOX_OPTIONS ops;
-        const WCHAR *btn[] ={L"确认",L"取消"};      //对话框内按钮的文字
+        const WCHAR *btn[] = { L"确认",L"取消" };      //对话框内按钮的文字
 
-        ops.Flag =MB_ICONERROR;
-        ops.pButtonText =btn;
-        ops.ButtonCount =2;
-        RC.w = 140;
-        RC.h = 100;
+        ops.Flag = MB_ICONERROR;
+        ops.pButtonText = btn;
+        ops.ButtonCount = 2;
+        RC.w = 300;
+        RC.h = 200;
         RC.x = (GUI_XSIZE - RC.w) >> 1;
         RC.y = (GUI_YSIZE - RC.h) >> 1;
-        SelectDialogBox(hwnd, RC, L"没有检测到OV5640模块\n请重新检查连接。", L"错误", &ops);    // 显示错误提示框
-        PostCloseMessage(hwnd);                                                              // 发送关闭窗口的消息
+        SelectDialogBox(hwnd, RC, L"没有检测到ov5640摄像头\n请重新检查连接。", L"错误", &ops);    // 显示错误提示框
+        PostCloseMessage(hwnd);
       }
       
 			else if(OV5640_State == 0)
@@ -151,14 +151,26 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       }              
       if(OV5640_State == 2)
       {   
-        
-        hdc_mem =CreateDC(pSurf,NULL);
-        BitBlt(hdc, 50, 50, 320, 240,  hdc_mem, 0 , 0, SRCCOPY);
+//        pSurf =CreateSurface(SURF_RGB565, cam_mode.cam_out_width, cam_mode.cam_out_height, 0, (U16 *)cam_buff);   
+//        hdc_mem =CreateDC(pSurf,NULL);
+//        BitBlt(hdc, 0, 0, 800,480,  hdc, 0 , 0, SRCCOPY);
 
-        DeleteDC(hdc_mem);
-				HAL_DCMI_Start_DMA((uint32_t)cam_buff,cam_mode.cam_out_height*cam_mode.cam_out_width * 1);
+//        DeleteDC(hdc_mem);
+//				DCMI_Start();	
+//				HAL_DCMI_Start_DMA((uint32_t)cam_buff,cam_mode.cam_out_height*cam_mode.cam_out_width);
 
-        DCMI_Start();	
+				//扫描模式，横屏
+//				ILI9806G_GramScan(cam_mode.lcd_scan);
+				
+//				ILI9806G_Clear(0,0,LCD_X_LENGTH,LCD_Y_LENGTH);	/* 清屏，显示全黑 */
+
+//			/*DMA会把数据传输到液晶屏，开窗后数据按窗口排列 */
+//				ILI9806G_OpenWindow(0,
+//														0,
+//														640,
+//														480);	
+		
+				OV5640_Capture_Control(ENABLE);
       }
 
       EndPaint(hwnd,&ps);
@@ -177,7 +189,9 @@ static LRESULT WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         GUI_Thread_Delete(h_autofocus);
       }
       OV5640_Capture_Control(DISABLE);
-      GUI_VMEM_Free(cam_buff);      
+      GUI_VMEM_Free(cam_buff);
+
+      
       return PostQuitMessage(hwnd);	
     }
     default:
@@ -194,7 +208,7 @@ void	GUI_Camera_DIALOG(void)
 
 	wcex.Tag = WNDCLASS_TAG;  
   
-  cam_buff = (uint16_t *)GUI_VMEM_Alloc(320*240);
+  cam_buff = (uint16_t *)GUI_VMEM_Alloc(320*240*2);
   
 	wcex.Style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WinProc; //设置主窗口消息处理的回调函数.
