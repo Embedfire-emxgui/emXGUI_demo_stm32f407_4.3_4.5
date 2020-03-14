@@ -695,7 +695,7 @@ FRESULT BurnFile(void)
     printf("Erase Error\n");
     while(1);
   }
-#elif defined(STM32F10X_HD)  
+#elif defined(STM32F10X_HD) || defined(STM32F40_41xxx) 
   SPI_FLASH_BulkErase();
 #endif  
   /* 生成烧录目录信息文件 */
