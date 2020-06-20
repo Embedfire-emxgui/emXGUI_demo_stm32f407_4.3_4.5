@@ -274,7 +274,7 @@ void	GUI_Boot_Interface_Dialog(void *param)
 
         /* 若找不到资源，进入资源烧录应用 */      
         GUI_Thread_Create(GUI_RES_Writer_Dialog,  /* 任务入口函数 */
-                              "GUI_FLASH_WRITER",/* 任务名字 */
+                              "GUI_RES_Writer_Dialog",/* 任务名字 */
                               3*1024,  /* 任务栈大小 */
                               NULL, /* 任务入口函数参数 */
                               5,    /* 任务的优先级 */
@@ -286,7 +286,7 @@ void	GUI_Boot_Interface_Dialog(void *param)
 		 else
 		 {
 		         GUI_Thread_Create(GUI_Board_App_Desktop, /* 任务入口函数 */
-                              "GUI_FLASH_WRITER",     /* 任务名字 */
+                              "GUI_Board_App_Desktop",     /* 任务名字 */
                               16*1024,                 /* 任务栈大小 */
                               NULL,                   /* 任务入口函数参数 */
                               8,                      /* 任务的优先级 */
