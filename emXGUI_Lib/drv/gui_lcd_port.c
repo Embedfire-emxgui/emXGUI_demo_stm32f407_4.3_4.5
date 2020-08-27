@@ -141,7 +141,8 @@ SURFACE* GUI_DisplayInit(void)
   
 /***********************第4部分*************************/
   //清屏
-	pSurf->GL->FillArea(pSurf,0,0,LCD_XSIZE,LCD_YSIZE,pSurf->CC->MapRGB(0,0,0)); 
+
+	pSurf->GL->FillArea(pSurf, 0, 0, LCD_XSIZE, LCD_YSIZE, pSurf->CC->MapRGB(0,0,0)); 
 	//打开背光
   LCD_BkLight(TRUE);
   
