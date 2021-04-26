@@ -86,6 +86,7 @@ static INLINE void __lcd_write_start(u16 sx,u16 sy,u16 ex,u16 ey)
 	__lcd_write_dat(ey);
 
 	__lcd_write_cmd(CMD_SetPixel);
+  printf("%d,%d,%d,%d\n", sx, sy, ex, ey);
 }
 
 
@@ -391,9 +392,9 @@ static void NT35510_FSMC_Config ( void )
 	RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC,ENABLE);
 
 	//地址建立时间（ADDSET）为1个HCLK 5/168M=30ns
-	readWriteTiming.FSMC_AddressSetupTime      = 0x04;	 //地址建立时间
+	readWriteTiming.FSMC_AddressSetupTime      = 0x02;	 //地址建立时间
 	//数据保持时间（DATAST）+ 1个HCLK = 12/168M=72ns	
-	readWriteTiming.FSMC_DataSetupTime         = 0x0f;	 //数据建立时间
+	readWriteTiming.FSMC_DataSetupTime         = 0x02;	 //数据建立时间
 	//选择控制的模式
 	//模式B,异步NOR FLASH模式，与NT35510的8080时序匹配
 	readWriteTiming.FSMC_AccessMode            = FSMC_AccessMode_B;	
